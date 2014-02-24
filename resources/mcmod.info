@@ -1,0 +1,21 @@
+[
+{
+  "modid": "AdditionalEnchantments",
+  "name": "AdditionalEnchantments",
+  "description": "Add new Enchantments",
+  "version": "1.2",
+  "mcversion": "1.6.*",
+  "url": "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=6672",
+  "updateUrl": "",
+  "authors": [
+    "A.K."
+  ],
+  "credits": "By A.K.",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
