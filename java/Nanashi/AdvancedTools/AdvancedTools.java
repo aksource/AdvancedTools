@@ -26,8 +26,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1a-Unofficial", dependencies = "required-after:FML")
+@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1b-Unofficial", dependencies = "required-after:FML", useMetadata = true)
 //@NetworkMod(clientSideRequired=true, serverSideRequired=false)
 public class AdvancedTools
 {
@@ -138,7 +139,7 @@ public class AdvancedTools
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		this.hasMultiToolHolder = Loader.isModLoaded("MultiToolHolders");
+		hasMultiToolHolder = Loader.isModLoaded("MultiToolHolders");
 	}
 
 	public void entitySetup()
@@ -190,11 +191,11 @@ public class AdvancedTools
 		RedEnhancer = (new ItemEnhancer(0)).setUnlocalizedName("RedEnhancer").setCreativeTab(tabsAT)
 				.setTextureName(AdvancedTools.textureDomain + "EnhancerR");
 		GameRegistry.registerItem(RedEnhancer, "redenhancer");
-		list.add(this.RedEnhancer);
+		list.add(RedEnhancer);
 		BlueEnhancer = (new ItemEnhancer(1)).setUnlocalizedName("BlueEnhancer").setCreativeTab(tabsAT)
 				.setTextureName(AdvancedTools.textureDomain + "EnhancerB");
 		GameRegistry.registerItem(BlueEnhancer, "blueenhancer");
-		list.add(this.BlueEnhancer);
+		list.add(BlueEnhancer);
 		UGWoodShovel = (new ItemUGShovel(ToolMaterial.WOOD)).setUnlocalizedName("UpgradedWoodenShovel")
 				.setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "UGWoodshovel");
 		GameRegistry.registerItem(UGWoodShovel, "ugwoodshovel");
@@ -336,59 +337,58 @@ public class AdvancedTools
 	public void addRecipe()
 	{
 		Item[][] var1 = new Item[][] {
-				{ UGWoodShovel, UGWoodShovel, UGStoneShovel, UGIronShovel, UGDiamondShovel, UGGoldShovel,
+				{ UGWoodShovel, UGStoneShovel, UGIronShovel, UGDiamondShovel, UGGoldShovel,
 						InfiniteShovel },
-				{ UGWoodPickaxe, UGWoodPickaxe, UGStonePickaxe, UGIronPickaxe, UGDiamondPickaxe, UGGoldPickaxe,
+				{ UGWoodPickaxe, UGStonePickaxe, UGIronPickaxe, UGDiamondPickaxe, UGGoldPickaxe,
 						InfinitePickaxe },
-				{ UGWoodAxe, UGWoodAxe, UGStoneAxe, UGIronAxe, UGDiamondAxe, UGGoldAxe, InfiniteAxe } };
-		Item[] var2 = new Item[] { Items.stick, Items.stick, RedEnhancer, RedEnhancer, BlueEnhancer, BlueEnhancer,
+				{ UGWoodAxe, UGStoneAxe, UGIronAxe, UGDiamondAxe, UGGoldAxe, InfiniteAxe } };
+		Object[] var2 = new Object[] {"stickWood", RedEnhancer, RedEnhancer, BlueEnhancer, BlueEnhancer,
 				Items.ender_eye };
-		Object[] var3 = new Object[] { Blocks.log, Blocks.log2, Blocks.cobblestone, Items.iron_ingot, Items.diamond,
+		Object[] var3 = new Object[] { "logWood", "cobblestone", Items.iron_ingot, Items.diamond,
 				Items.gold_ingot, Blocks.end_stone };
 		String[][] var4 = new String[][] { { "X", "#", "Z" }, { "XXX", " # ", " Z " }, { "XX", "X#", " Z" } };
-		GameRegistry.addRecipe(new ItemStack(InfiniteSword, 1), new Object[] { " #X", "XY#", "ZX ", 'X',
-				Blocks.end_stone, 'Y', Items.ender_eye, 'Z', Items.stick, '#', Blocks.glowstone });
-		GameRegistry.addRecipe(new ItemStack(InfiniteHoe, 1), new Object[] { "XX", " Y", " Z", 'X', Blocks.end_stone,
-				'Y', Items.ender_eye, 'Z', Items.stick });
-		GameRegistry.addRecipe(new ItemStack(RedEnhancer, 2), new Object[] { " X ", "XZX", " X ", 'X',
-				Items.gold_nugget, 'Z', Items.redstone });
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.redstone), new Object[] { RedEnhancer, RedEnhancer });
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.gold_ingot), new Object[] { RedEnhancer, RedEnhancer,
-				RedEnhancer, RedEnhancer, RedEnhancer, RedEnhancer, RedEnhancer, RedEnhancer, RedEnhancer });
-		GameRegistry.addRecipe(new ItemStack(BlueEnhancer, 2), new Object[] { "RXR", "XZX", "RXR", 'X',
-				Items.gold_ingot, 'Z', Items.diamond, 'R', Items.redstone });
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.gold_ingot), new Object[] { BlueEnhancer, BlueEnhancer });
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.diamond), new Object[] { BlueEnhancer, BlueEnhancer,
-				BlueEnhancer, BlueEnhancer, BlueEnhancer, BlueEnhancer, BlueEnhancer, BlueEnhancer, BlueEnhancer });
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(InfiniteSword, 1),  " #X", "XY#", "ZX ", 'X',
+				Blocks.end_stone, 'Y', Items.ender_eye, 'Z', "stickWood", '#', Blocks.glowstone ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(InfiniteHoe, 1),  "XX", " Y", " Z", 'X', Blocks.end_stone,
+				'Y', Items.ender_eye, 'Z', "stickWood" ));
+		GameRegistry.addRecipe(new ItemStack(RedEnhancer, 2), " X ", "XZX", " X ", 'X',
+				Items.gold_nugget, 'Z', Items.redstone );
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.redstone),  RedEnhancer, RedEnhancer );
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.gold_ingot),  RedEnhancer, RedEnhancer,
+				RedEnhancer, RedEnhancer, RedEnhancer, RedEnhancer, RedEnhancer, RedEnhancer, RedEnhancer);
+		GameRegistry.addRecipe(new ItemStack(BlueEnhancer, 2),  "RXR", "XZX", "RXR", 'X',
+				Items.gold_ingot, 'Z', Items.diamond, 'R', Items.redstone );
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.gold_ingot),  BlueEnhancer, BlueEnhancer );
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.diamond),  BlueEnhancer, BlueEnhancer,
+				BlueEnhancer, BlueEnhancer, BlueEnhancer, BlueEnhancer, BlueEnhancer, BlueEnhancer, BlueEnhancer );
 
 		for (int var5 = 0; var5 < var1[0].length; ++var5) {
 			for (int var6 = 0; var6 < var1.length; ++var6) {
-				GameRegistry.addRecipe(new ItemStack(var1[var6][var5]), new Object[] { var4[var6], 'X', var3[var5],
-						'#', var2[var5], 'Z', Items.stick });
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(var1[var6][var5]),  var4[var6], 'X', var3[var5],
+						'#', var2[var5], 'Z', "stickWood" ));
 			}
 		}
 
-		GameRegistry.addRecipe(new ItemStack(BlazeBlade), new Object[] { " P#", "XEP", "IX ", 'I', Items.blaze_rod,
-				'X', Items.diamond, '#', Items.iron_ingot, 'E', BlueEnhancer, 'P', Items.blaze_powder });
-		GameRegistry.addRecipe(new ItemStack(IceHold), new Object[] { " P#", "XEP", "IX ", 'I', Items.stick, 'X',
-				Items.iron_ingot, '#', Items.water_bucket, 'E', BlueEnhancer, 'P', Blocks.snow });
-		GameRegistry.addRecipe(new ItemStack(AsmoSlasher), new Object[] { " P#", "XEP", "IX ", 'I', Items.stick, 'X',
-				Items.gold_ingot, '#', Items.iron_ingot, 'E', BlueEnhancer, 'P', Items.redstone });
-		GameRegistry.addRecipe(new ItemStack(PlanetGuardian), new Object[] { " ##", "#E#", "I# ", 'I', Items.stick,
-				'#', Items.iron_ingot, 'E', BlueEnhancer });
-		GameRegistry.addRecipe(new ItemStack(StormBringer), new Object[] { "  #", "XE ", "IX ", 'I', Items.stick, 'X',
-				Items.feather, '#', Items.iron_ingot, 'E', BlueEnhancer });
-		GameRegistry.addRecipe(new ItemStack(LuckLuck), new Object[] { "  #", "#E ", "I# ", 'I', Items.stick, '#',
-				Items.gold_ingot, 'E', RedEnhancer });
-		GameRegistry.addRecipe(new ItemStack(SmashBat), new Object[] { "#", "#", "#", '#', Blocks.log });
-		GameRegistry.addRecipe(new ItemStack(SmashBat), new Object[] { "#", "#", "#", '#', Blocks.log2 });
-		GameRegistry.addShapelessRecipe(new ItemStack(NEGI), new Object[] { Items.water_bucket, Items.wheat_seeds,
-				Blocks.dirt });
-		GameRegistry.addRecipe(new ItemStack(HolySaber), new Object[] { "XBX", "EAC", "XDX", 'A', BlazeBlade, 'B',
-				IceHold, 'C', AsmoSlasher, 'D', PlanetGuardian, 'E', StormBringer, 'X', Blocks.glowstone });
-		GameRegistry.addRecipe(new ItemStack(ThrowingKnife, 16), new Object[] { " X", "# ", 'X', Items.iron_ingot, '#',
-				Items.stick });
-		GameRegistry.addShapelessRecipe(new ItemStack(PoisonKnife), new Object[] { ThrowingKnife, Items.spider_eye });
+		GameRegistry.addRecipe(new ItemStack(BlazeBlade),  " P#", "XEP", "IX ", 'I', Items.blaze_rod,
+				'X', Items.diamond, '#', Items.iron_ingot, 'E', BlueEnhancer, 'P', Items.blaze_powder );
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(IceHold),  " P#", "XEP", "IX ", 'I', "stickWood", 'X',
+				Items.iron_ingot, '#', Items.water_bucket, 'E', BlueEnhancer, 'P', Blocks.snow ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AsmoSlasher),  " P#", "XEP", "IX ", 'I', "stickWood", 'X',
+				Items.gold_ingot, '#', Items.iron_ingot, 'E', BlueEnhancer, 'P', Items.redstone ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(PlanetGuardian),  " ##", "#E#", "I# ", 'I', "stickWood",
+				'#', Items.iron_ingot, 'E', BlueEnhancer ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StormBringer),  "  #", "XE ", "IX ", 'I', "stickWood", 'X',
+				Items.feather, '#', Items.iron_ingot, 'E', BlueEnhancer ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LuckLuck),  "  #", "#E ", "I# ", 'I', "stickWood", '#',
+				Items.gold_ingot, 'E', RedEnhancer ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(SmashBat),  "#", "#", "#", '#', "logWood" ));
+		GameRegistry.addShapelessRecipe(new ItemStack(NEGI),  Items.water_bucket, Items.wheat_seeds,
+				Blocks.dirt );
+		GameRegistry.addRecipe(new ItemStack(HolySaber),  "XBX", "EAC", "XDX", 'A', BlazeBlade, 'B',
+				IceHold, 'C', AsmoSlasher, 'D', PlanetGuardian, 'E', StormBringer, 'X', Blocks.glowstone );
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ThrowingKnife, 16),  " X", "# ", 'X', Items.iron_ingot, '#',
+				"stickWood" ));
+		GameRegistry.addShapelessRecipe(new ItemStack(PoisonKnife), ThrowingKnife, Items.spider_eye );
 	}
 
 	public static String getUniqueStrings(Object obj)
@@ -416,7 +416,6 @@ public class AdvancedTools
 		double PlayerposZ = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double) var1;
 		Vec3 PlayerPosition = Vec3.createVectorHelper(PlayerposX, PlayerposY, PlayerposZ);
 		Vec3 PlayerLookVec = PlayerPosition.addVector(viewX * Dislimit, viewY * Dislimit, viewZ * Dislimit);
-		MovingObjectPosition MOP = world.rayTraceBlocks(PlayerPosition, PlayerLookVec, true);
-		return MOP;
+		return  world.rayTraceBlocks(PlayerPosition, PlayerLookVec, true);
 	}
 }
