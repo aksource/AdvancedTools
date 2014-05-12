@@ -268,16 +268,10 @@ public class ItemUGTool extends ItemTool
 	{
 		int range = getRange(var1);
 		int toolMaterialOrd = this.toolMaterial.ordinal();
-		if(!var3.isSneaking()){
-			++range;
-			if(range > this.rangeArray[toolMaterialOrd]){
-				range = 0;
-			}
-		}else{
-			--range;
-			if(range < 0){
-				range = this.rangeArray[toolMaterialOrd];
-			}
+		if(!var3.isSneaking()) {
+			range = (range + 1) % (this.rangeArray[toolMaterialOrd] + 1);
+		} else {
+			range = (this.rangeArray[toolMaterialOrd] + 1 + range - 1) % (this.rangeArray[toolMaterialOrd] + 1);
 		}
 		var1.getTagCompound().setInteger("range", range);
 		return range;
@@ -285,13 +279,17 @@ public class ItemUGTool extends ItemTool
 	private int getRange(ItemStack item)
 	{
 		int range;
-		if(item.hasTagCompound() && item.getTagCompound().hasKey("range")){
-			range = item.getTagCompound().getInteger("range");
-		}else{
-			range = AdvancedTools.UGTools_DestroyRangeLV;
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setInteger("range", range);
+		NBTTagCompound nbt;
+		if(!item.hasTagCompound()) {
+			nbt = new NBTTagCompound();
 			item.setTagCompound(nbt);
+		}
+		nbt = item.getTagCompound();
+		if(nbt.hasKey("range")) {
+			range = item.getTagCompound().getInteger("range");
+		} else {
+			range = AdvancedTools.UGTools_DestroyRangeLV;
+			nbt.setInteger("range", range);
 		}
 		return range;
 	}

@@ -28,7 +28,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1b-Unofficial", dependencies = "required-after:FML", useMetadata = true)
+@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1c-Unofficial", dependencies = "required-after:FML", useMetadata = true)
 //@NetworkMod(clientSideRequired=true, serverSideRequired=false)
 public class AdvancedTools
 {
