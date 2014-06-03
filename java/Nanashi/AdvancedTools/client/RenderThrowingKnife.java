@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import Nanashi.AdvancedTools.Entity_ThrowingKnife;
+import Nanashi.AdvancedTools.entity.Entity_ThrowingKnife;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderThrowingKnife extends Render
 {
-    private ResourceLocation tex = new ResourceLocation(AdvancedTools.textureassets,"textures/items/knife.png");
+    private static final ResourceLocation tex = new ResourceLocation(AdvancedTools.textureassets,"textures/items/knife.png");
 	public void renderKnife(Entity_ThrowingKnife var1, double var2, double var4, double var6, float var8, float var9)
     {
         GL11.glPushMatrix();
@@ -147,6 +147,7 @@ public class RenderThrowingKnife extends Render
      * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
      * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
      */
+    @Override
     public void doRender(Entity var1, double var2, double var4, double var6, float var8, float var9)
     {
         this.renderKnife((Entity_ThrowingKnife)var1, var2, var4, var6, var8, var9);

@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import Nanashi.AdvancedTools.Entity_GoldCreeper;
+import Nanashi.AdvancedTools.entity.Entity_GoldCreeper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

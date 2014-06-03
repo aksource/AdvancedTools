@@ -1,19 +1,18 @@
 package Nanashi.AdvancedTools.client;
 
+import Nanashi.AdvancedTools.AdvancedTools;
+import Nanashi.AdvancedTools.entity.Entity_FireZombie;
+import Nanashi.AdvancedTools.entity.Entity_ZombieWarrior;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelZombie;
 import net.minecraft.client.model.ModelZombieVillager;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.ResourceLocation;
-import Nanashi.AdvancedTools.AdvancedTools;
-import Nanashi.AdvancedTools.Entity_FireZombie;
-import Nanashi.AdvancedTools.Entity_ZombieWarrior;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderAdvZombie extends RenderBiped
@@ -105,25 +104,25 @@ public class RenderAdvZombie extends RenderBiped
 		super.rotateCorpse(par1EntityZombie, par2, par3, par4);
 	}
 
-	protected void func_130005_c(EntityLiving par1EntityLiving, float par2)
-	{
-		this.func_82428_a((EntityZombie)par1EntityLiving, par2);
-	}
-
-	protected ResourceLocation func_110856_a(EntityLiving par1EntityLiving)
-	{
-		return this.func_110863_a((EntityZombie)par1EntityLiving);
-	}
-
-	public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
-	{
-		this.func_82426_a((EntityZombie)par1EntityLiving, par2, par4, par6, par8, par9);
-	}
-
-	protected int func_130006_a(EntityLiving par1EntityLiving, int par2, float par3)
-	{
-		return this.func_82429_a((EntityZombie)par1EntityLiving, par2, par3);
-	}
+//	protected void func_130005_c(EntityLiving par1EntityLiving, float par2)
+//	{
+//		this.func_82428_a((EntityZombie)par1EntityLiving, par2);
+//	}
+//
+//	protected ResourceLocation func_110856_a(EntityLiving par1EntityLiving)
+//	{
+//		return this.func_110863_a((EntityZombie)par1EntityLiving);
+//	}
+//
+//	public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
+//	{
+//		this.func_82426_a((EntityZombie)par1EntityLiving, par2, par4, par6, par8, par9);
+//	}
+//
+//	protected int func_130006_a(EntityLiving par1EntityLiving, int par2, float par3)
+//	{
+//		return this.func_82429_a((EntityZombie)par1EntityLiving, par2, par3);
+//	}
 
 	/**
 	 * Queries whether should render the specified pass or not.
@@ -143,10 +142,10 @@ public class RenderAdvZombie extends RenderBiped
 		this.func_82430_a((EntityZombie)par1EntityLivingBase, par2, par3, par4);
 	}
 
-	public void renderPlayer(EntityLivingBase par1EntityLivingBase, double par2, double par4, double par6, float par8, float par9)
-	{
-		this.func_82426_a((EntityZombie)par1EntityLivingBase, par2, par4, par6, par8, par9);
-	}
+//	public void renderPlayer(EntityLivingBase par1EntityLivingBase, double par2, double par4, double par6, float par8, float par9)
+//	{
+//		this.func_82426_a((EntityZombie)par1EntityLivingBase, par2, par4, par6, par8, par9);
+//	}
 
 	/**
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.

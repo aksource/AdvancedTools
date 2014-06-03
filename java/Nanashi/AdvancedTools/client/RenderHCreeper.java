@@ -22,7 +22,7 @@ public class RenderHCreeper extends RenderLiving
 	private static final ResourceLocation creeperTextures = new ResourceLocation(AdvancedTools.textureassets, "textures/mob/hscreeper.png");
 
 	/** The creeper model. */
-	private ModelBase creeperModel = new ModelCreeper(2.0F);
+	private static final ModelBase creeperModel = new ModelCreeper(2.0F);
 
 	public RenderHCreeper()
 	{
@@ -134,20 +134,11 @@ public class RenderHCreeper extends RenderLiving
 		return -1;
 	}
 
-	protected int func_77061_b(EntityCreeper par1EntityCreeper, int par2, float par3)
-	{
-		return -1;
-	}
-
-	protected ResourceLocation getCreeperTextures(EntityCreeper par1EntityCreeper)
-	{
-		return creeperTextures;
-	}
-
 	/**
 	 * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
 	 * entityLiving, partialTickTime
 	 */
+    @Override
 	protected void preRenderCallback(EntityLivingBase par1EntityLivingBase, float par2)
 	{
 		this.updateCreeperScale((EntityCreeper)par1EntityLivingBase, par2);
@@ -156,6 +147,7 @@ public class RenderHCreeper extends RenderLiving
 	/**
 	 * Returns an ARGB int color back. Args: entityLiving, lightBrightness, partialTickTime
 	 */
+    @Override
 	protected int getColorMultiplier(EntityLivingBase par1EntityLivingBase, float par2, float par3)
 	{
 		return this.updateCreeperColorMultiplier((EntityCreeper)par1EntityLivingBase, par2, par3);
@@ -164,21 +156,24 @@ public class RenderHCreeper extends RenderLiving
 	/**
 	 * Queries whether should render the specified pass or not.
 	 */
+    @Override
 	protected int shouldRenderPass(EntityLivingBase par1EntityLivingBase, int par2, float par3)
 	{
 		return this.renderCreeperPassModel((EntityCreeper)par1EntityLivingBase, par2, par3);
 	}
 
+    @Override
 	protected int inheritRenderPass(EntityLivingBase par1EntityLivingBase, int par2, float par3)
 	{
-		return this.func_77061_b((EntityCreeper)par1EntityLivingBase, par2, par3);
+        return -1;
 	}
 
 	/**
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
 	 */
+    @Override
 	protected ResourceLocation getEntityTexture(Entity par1Entity)
 	{
-		return this.getCreeperTextures((EntityCreeper)par1Entity);
+        return creeperTextures;
 	}
 }

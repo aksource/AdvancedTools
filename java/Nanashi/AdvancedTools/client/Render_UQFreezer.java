@@ -9,13 +9,12 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import Nanashi.AdvancedTools.Entity_IHFrozenMob;
+import Nanashi.AdvancedTools.entity.Entity_IHFrozenMob;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Render_UQFreezer extends Render
 {
-	private ResourceLocation tex = new ResourceLocation("/textures/blocks/glass.png");
 	public void doRender(Entity var1, double var2, double var4, double var6, float var8, float var9)
 	{
 		Entity_IHFrozenMob var10 = (Entity_IHFrozenMob)var1;

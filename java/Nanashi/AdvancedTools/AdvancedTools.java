@@ -2,6 +2,8 @@ package Nanashi.AdvancedTools;
 
 import java.util.ArrayList;
 
+import Nanashi.AdvancedTools.entity.*;
+import Nanashi.AdvancedTools.item.*;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
@@ -28,12 +30,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1c-Unofficial", dependencies = "required-after:FML", useMetadata = true)
-//@NetworkMod(clientSideRequired=true, serverSideRequired=false)
+@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1d-Unofficial", dependencies = "required-after:Forge@[10.12.1.1090,)", useMetadata = true)
 public class AdvancedTools
 {
 	public static int UGTools_DestroyRangeLV;
-	public static int UGTools_SaftyCounter;
+	public static int UGTools_SafetyCounter;
 	public static String[] addBlockForPickaxe;
 	public static String[] addBlockForShovel;
 	public static String[] addBlockForAxe;
@@ -85,15 +86,15 @@ public class AdvancedTools
 	public static Item InfiniteHoe;
 	public static Item GenocideBlade;
 
-	public static String textureDomain = "advancedtools:";
-	public static String textureassets = "advancedtools";
+	public static final String textureDomain = "advancedtools:";
+	public static final String textureassets = "advancedtools";
 
 	@Mod.Instance("AdvancedTools")
 	public static AdvancedTools instance;
 	@SidedProxy(clientSide = "Nanashi.AdvancedTools.client.ClientProxy", serverSide = "Nanashi.AdvancedTools.CommonProxy")
 	public static CommonProxy proxy;
 	public static final CreativeTabs tabsAT = new CreativeTabAT("AdvancedTools");
-	public static ArrayList<Item> list = new ArrayList<Item>();
+	public static final ArrayList<Item> list = new ArrayList<>();
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -101,7 +102,7 @@ public class AdvancedTools
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		UGTools_DestroyRangeLV = config.get(Configuration.CATEGORY_GENERAL, "Destroy Range Lv", 1).getInt();
-		UGTools_SaftyCounter = config.get(Configuration.CATEGORY_GENERAL, "Safty Counter", 100).getInt();
+        UGTools_SafetyCounter = config.get(Configuration.CATEGORY_GENERAL, "Safty Counter", 100).getInt();
 		spawnHiGradeMob = config.get(Configuration.CATEGORY_GENERAL, "Spawn Hi-Grade Mobs", true).getBoolean(true);
 		dropGather = config.get(Configuration.CATEGORY_GENERAL, "dropGather", false,
 				"drop block gather under player's foot").getBoolean(false);

@@ -11,8 +11,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import Nanashi.AdvancedTools.Entity_HighSkeleton;
-import Nanashi.AdvancedTools.Entity_SkeletonSniper;
+import Nanashi.AdvancedTools.entity.Entity_HighSkeleton;
+import Nanashi.AdvancedTools.entity.Entity_SkeletonSniper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
