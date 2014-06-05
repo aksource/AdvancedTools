@@ -16,10 +16,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemUQAsmoSlasher extends ItemUniqueArms
 {
-	public ItemUQAsmoSlasher(ToolMaterial var2)
-	{
-		super(var2);
-	}
+//	public ItemUQAsmoSlasher(ToolMaterial var2)
+//	{
+//		super(var2);
+//	}
 
 	public ItemUQAsmoSlasher(ToolMaterial var2, int var3)
 	{
@@ -114,6 +114,7 @@ public class ItemUQAsmoSlasher extends ItemUniqueArms
 	}
 	@SideOnly(Side.CLIENT)
 	@Override
+    @SuppressWarnings("unchecked")
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
 		par3List.add("Ability : Lightning Caller");

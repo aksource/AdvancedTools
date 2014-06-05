@@ -13,6 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -41,6 +42,7 @@ public class AdvancedTools
 	public static boolean spawnHiGradeMob;
 	public static boolean hasMultiToolHolder;
 	public static boolean dropGather;
+    public static int digUnder;
 
 	public static boolean spawnFireZombie;
 	public static boolean spawnGoldCreeper;
@@ -102,10 +104,13 @@ public class AdvancedTools
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		UGTools_DestroyRangeLV = config.get(Configuration.CATEGORY_GENERAL, "Destroy Range Lv", 1).getInt();
-        UGTools_SafetyCounter = config.get(Configuration.CATEGORY_GENERAL, "Safty Counter", 100).getInt();
+        UGTools_SafetyCounter = config.get(Configuration.CATEGORY_GENERAL, "Safety Counter", 100).getInt();
 		spawnHiGradeMob = config.get(Configuration.CATEGORY_GENERAL, "Spawn Hi-Grade Mobs", true).getBoolean(true);
 		dropGather = config.get(Configuration.CATEGORY_GENERAL, "dropGather", false,
 				"drop block gather under player's foot").getBoolean(false);
+        digUnder = config.get(Configuration.CATEGORY_GENERAL, "digUnder", 1, "How depth to dig at digging block side. default:1").getInt();
+        digUnder = MathHelper.clamp_int(digUnder, 0, 256);
+
 		addBlockForPickaxe = config.get(
 				Configuration.CATEGORY_GENERAL,
 				"blocklistForUGPickaxe",
@@ -124,6 +129,7 @@ public class AdvancedTools
 		spawnHighSpeedCreeper = config.get("Mob Spawn Setting", "HighSpeedCreeper", true).getBoolean(true);
 		spawnSkeletonSniper = config.get("Mob Spawn Setting", "SkeletonSniper", true).getBoolean(true);
 		spawnZombieWarrior = config.get("Mob Spawn Setting", "ZombieWarrior", true).getBoolean(true);
+
 		config.save();
 		this.itemSetup();
 	}

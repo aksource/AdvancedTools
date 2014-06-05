@@ -120,15 +120,15 @@ public class ItemUGTool extends ItemTool
 			if (side == 2 || side == 3){
 				minZ = z;
 				maxZ = z;
-				minY += range - 1;
-				maxY += range - 1;
+				minY += range - AdvancedTools.digUnder;
+				maxY += range - AdvancedTools.digUnder;
 			}
 
 			if (side == 4 || side == 5){
 				minX = x;
 				maxX = x;
-				minY += range - 1;
-				maxY += range - 1;
+				minY += range - AdvancedTools.digUnder;
+				maxY += range - AdvancedTools.digUnder;
 			}
 		}else{
 			minX = x - this.cDestroyRange;
