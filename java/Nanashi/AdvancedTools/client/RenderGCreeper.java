@@ -20,8 +20,8 @@ public class RenderGCreeper extends RenderLiving
 {
 	/** The creeper model. */
 	private ModelBase creeperModel = new ModelCreeper(2.0F);
-	private ResourceLocation tex = new ResourceLocation(AdvancedTools.textureassets, "textures/mob/gcreeper.png");
-	private ResourceLocation power = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
+	private static final ResourceLocation tex = new ResourceLocation(AdvancedTools.textureassets, "textures/mob/gcreeper.png");
+	private static final ResourceLocation power = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
 	public RenderGCreeper()
 	{
 		super(new ModelCreeper(), 0.5F);
