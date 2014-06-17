@@ -31,7 +31,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1d-Unofficial", dependencies = "required-after:Forge@[10.12.1.1090,)", useMetadata = true)
+@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1e-Unofficial", dependencies = "required-after:Forge@[10.12.1.1090,)", useMetadata = true)
 public class AdvancedTools
 {
 	public static int UGTools_DestroyRangeLV;
