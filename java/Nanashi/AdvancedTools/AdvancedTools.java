@@ -1,6 +1,7 @@
 package Nanashi.AdvancedTools;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import Nanashi.AdvancedTools.entity.*;
 import Nanashi.AdvancedTools.item.*;
@@ -31,7 +32,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "2.1e-Unofficial", dependencies = "required-after:Forge@[10.12.1.1090,)", useMetadata = true)
+@Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "@VERSION@", dependencies = "required-after:Forge@[10.12.1.1090,)", useMetadata = true)
 public class AdvancedTools
 {
 	public static int UGTools_DestroyRangeLV;
@@ -97,6 +98,7 @@ public class AdvancedTools
 	public static CommonProxy proxy;
 	public static final CreativeTabs tabsAT = new CreativeTabAT("AdvancedTools");
 	public static final ArrayList<Item> list = new ArrayList<>();
+    public static final Logger LOGGER = Logger.getLogger("AdvancedTools");
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -151,7 +153,7 @@ public class AdvancedTools
 
 	public void entitySetup()
 	{
-		EntityRegistry.registerModEntity(Entity_ThrowingKnife.class, "ThrowingKnife", 0, this, 250, 1, true);
+		EntityRegistry.registerModEntity(Entity_ThrowingKnife.class, "ThrowingKnife", 0, this, 250, 5, true);
 		EntityRegistry.registerModEntity(Entity_HighSkeleton.class, "HighSkeleton", 1, this, 250, 1, true);
 		EntityRegistry.registerModEntity(Entity_SkeletonSniper.class, "SkeletonSniper", 2, this, 250, 1, true);
 		EntityRegistry.registerModEntity(Entity_ZombieWarrior.class, "ZombieWarrior", 3, this, 250, 1, true);
