@@ -3,8 +3,8 @@
   "modid": "AdvancedTools",
   "name": "AdvancedTools",
   "description": "New Tools and Mobs",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "$version",
+  "mcversion": "$mcversion",
   "url": "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=6672",
   "updateUrl": "",
   "authors": [

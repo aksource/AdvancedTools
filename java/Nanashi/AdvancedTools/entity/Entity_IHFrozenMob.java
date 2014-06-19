@@ -16,11 +16,11 @@ public class Entity_IHFrozenMob extends Entity
 	EntityPlayer player;
 	EntityAITasks entityTasks;
 	int FrozenRest;
-//
-//	public Entity_IHFrozenMob(World var1)
-//	{
-//		super(var1);
-//	}
+
+	public Entity_IHFrozenMob(World var1)
+	{
+		super(var1);
+	}
 
 	public Entity_IHFrozenMob(World var1, EntityLiving var2, EntityPlayer var3)
 	{

@@ -25,15 +25,7 @@ public class Item_ThrowingKnife extends Item
 	{
 		return true;
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		if(this.getUnlocalizedName().equals("item.ThrowingKnife"))
-//			this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "ThrowingKnife");
-//		else if(this.getUnlocalizedName().equals("item.PoisonKnife"))
-//			this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "PoisonKnife");
-//	}
+
 	@Override
 	public ItemStack onItemRightClick(ItemStack var1, World var2, EntityPlayer var3)
 	{

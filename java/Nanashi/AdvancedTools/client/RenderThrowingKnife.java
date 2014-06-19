@@ -16,21 +16,22 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderThrowingKnife extends Render
 {
     private static final ResourceLocation tex = new ResourceLocation(AdvancedTools.textureassets,"textures/items/knife.png");
-	public void renderKnife(Entity_ThrowingKnife var1, double var2, double var4, double var6, float var8, float var9)
-    {
-        GL11.glPushMatrix();
-        GL11.glTranslatef((float)var2, (float)var4, (float)var6);
-        GL11.glRotatef(var1.prevRotationYaw + (var1.rotationYaw - var1.prevRotationYaw) * var9 - 90.0F, 0.0F, 1.0F, 0.0F);
 
-        if (var1.isPoison())
+	public void renderKnife(Entity_ThrowingKnife entity, double x, double y, double z, float var8, float partialTick)
+    {
+        this.bindEntityTexture(entity);
+        GL11.glPushMatrix();
+        GL11.glTranslated(x, y, z);
+        GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTick - 90.0F, 0.0F, 1.0F, 0.0F);
+
+        if (entity.isPoison())
         {
-            GL11.glRotatef(var1.prevRotationPitch + (var1.rotationPitch - var1.prevRotationPitch) * var9, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTick, 0.0F, 0.0F, 1.0F);
         }
         else
         {
-            GL11.glRotatef(var1.exRotate, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(entity.exRotate, 0.0F, 0.0F, 1.0F);
         }
-        this.bindEntityTexture(var1);
         Tessellator var10 = Tessellator.instance;
         byte var11 = 0;
         float var12 = 0.0F;
@@ -141,12 +142,6 @@ public class RenderThrowingKnife extends Render
         GL11.glPopMatrix();
     }
 
-    /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
-     */
     @Override
     public void doRender(Entity var1, double var2, double var4, double var6, float var8, float var9)
     {
@@ -154,10 +149,6 @@ public class RenderThrowingKnife extends Render
     }
 
 	@Override
-
-	/**
-	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-	 */
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		return tex;
 	}

@@ -51,19 +51,19 @@ public class Entity_SBWindEdge extends Entity
 		}
 	}
 
-//	public Entity_SBWindEdge(World var1)
-//	{
-//		super(var1);
-//		this.Init();
-//	}
-//
-//	public Entity_SBWindEdge(World var1, double var2, double var4, double var6)
-//	{
-//		super(var1);
-//		this.Init();
-//		this.setPosition(var2, var4, var6);
-//		this.yOffset = 0.0F;
-//	}
+	public Entity_SBWindEdge(World var1)
+	{
+		super(var1);
+		this.Init();
+	}
+
+	public Entity_SBWindEdge(World var1, double var2, double var4, double var6)
+	{
+		super(var1);
+		this.Init();
+		this.setPosition(var2, var4, var6);
+		this.yOffset = 0.0F;
+	}
 
 	public Entity_SBWindEdge(World var1, EntityLivingBase var2, float var3)
 	{
