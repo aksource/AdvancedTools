@@ -232,7 +232,7 @@ public class ItemUGTool extends ItemTool
 	{
 		int var5 = world.getBlockMetadata(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ);
         var2.onBlockHarvested(world, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, var5, var4);
-		if (var2.removedByPlayer(world, var4, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ)){
+		if (var2.removedByPlayer(world, var4, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, true)){
 			var2.onBlockDestroyedByPlayer(world, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, var5);
 			if(AdvancedTools.dropGather){
 				var2.harvestBlock(world, var4, MathHelper.ceiling_double_int( var4.posX), MathHelper.ceiling_double_int( var4.posY), MathHelper.ceiling_double_int( var4.posZ), var5);
