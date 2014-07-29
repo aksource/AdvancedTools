@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import Nanashi.AdvancedTools.AdvancedTools;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -56,7 +57,12 @@ public class ItemUGPickaxe extends ItemUGTool
 		return var2 != null && (var2.getMaterial() == Material.iron || var2.getMaterial() == Material.rock) ? this.efficiencyOnProperMaterial : super.getDigSpeed(var1, var2, meta);
 	}
 
-	public boolean doChainDestruction(Block var1)
+    @Override
+    public Set<String> getToolClasses(ItemStack stack) {
+        return ImmutableSet.of("pickaxe");
+    }
+
+    public boolean doChainDestruction(Block var1)
 	{
 		return checkArrays(var1, AdvancedTools.addBlockForPickaxe) && this.func_150897_b(var1);
 	}

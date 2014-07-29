@@ -4,8 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import Nanashi.AdvancedTools.AdvancedTools;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 
 public class ItemUGShovel extends ItemUGTool
 {
@@ -25,6 +27,11 @@ public class ItemUGShovel extends ItemUGTool
 	{
 		return blocksEffectiveAgainst.contains(var1);
 	}
+
+    @Override
+    public Set<String> getToolClasses(ItemStack stack) {
+        return ImmutableSet.of("shovel");
+    }
 
 	public boolean doChainDestruction(Block var1)
 	{
