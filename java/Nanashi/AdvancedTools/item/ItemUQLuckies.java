@@ -1,5 +1,6 @@
 package Nanashi.AdvancedTools.item;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -7,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 
 public class ItemUQLuckies extends ItemUniqueArms
 {

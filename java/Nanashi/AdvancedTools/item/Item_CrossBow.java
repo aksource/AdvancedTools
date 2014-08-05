@@ -1,6 +1,8 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -11,8 +13,6 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Item_CrossBow extends ItemBow
 {

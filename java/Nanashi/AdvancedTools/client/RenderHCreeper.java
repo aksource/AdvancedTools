@@ -1,5 +1,8 @@
 package Nanashi.AdvancedTools.client;
 
+import Nanashi.AdvancedTools.AdvancedTools;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelCreeper;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -8,12 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
-import Nanashi.AdvancedTools.AdvancedTools;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderHCreeper extends RenderLiving

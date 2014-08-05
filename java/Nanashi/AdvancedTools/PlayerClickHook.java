@@ -1,12 +1,11 @@
 package Nanashi.AdvancedTools;
 
 import Nanashi.AdvancedTools.item.ItemUGTool;
-import net.minecraft.entity.player.EntityPlayer;
+import ak.MultiToolHolders.ItemMultiToolHolder;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import ak.MultiToolHolders.ItemMultiToolHolder;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class PlayerClickHook
 {

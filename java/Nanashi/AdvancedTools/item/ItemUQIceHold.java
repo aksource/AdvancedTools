@@ -1,9 +1,10 @@
 package Nanashi.AdvancedTools.item;
 
-import java.util.List;
-
 import Nanashi.AdvancedTools.AdvancedTools;
 import Nanashi.AdvancedTools.entity.Entity_IHFrozenMob;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -17,9 +18,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class ItemUQIceHold extends ItemUniqueArms
 {

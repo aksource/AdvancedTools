@@ -1,5 +1,10 @@
 package Nanashi.AdvancedTools.client;
 
+import Nanashi.AdvancedTools.AdvancedTools;
+import Nanashi.AdvancedTools.entity.Entity_HighSkeleton;
+import Nanashi.AdvancedTools.entity.Entity_SkeletonSniper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelSkeleton;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
@@ -7,14 +12,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
-import Nanashi.AdvancedTools.AdvancedTools;
-import Nanashi.AdvancedTools.entity.Entity_HighSkeleton;
-import Nanashi.AdvancedTools.entity.Entity_SkeletonSniper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderAdvSkeleton extends RenderBiped

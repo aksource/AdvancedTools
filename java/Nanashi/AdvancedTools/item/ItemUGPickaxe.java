@@ -1,14 +1,14 @@
 package Nanashi.AdvancedTools.item;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import Nanashi.AdvancedTools.AdvancedTools;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class ItemUGPickaxe extends ItemUGTool
 {

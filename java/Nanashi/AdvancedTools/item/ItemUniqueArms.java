@@ -1,13 +1,13 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 
 public class ItemUniqueArms extends ItemSword
 {

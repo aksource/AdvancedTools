@@ -1,9 +1,5 @@
 package Nanashi.AdvancedTools.item;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import Nanashi.AdvancedTools.AdvancedTools;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
@@ -13,6 +9,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ItemUGAxe extends ItemUGTool
 {
