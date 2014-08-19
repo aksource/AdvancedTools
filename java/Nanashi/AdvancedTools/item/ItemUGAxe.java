@@ -17,6 +17,7 @@ import java.util.Set;
 public class ItemUGAxe extends ItemUGTool
 {
     public static final Set<Block> blocksEffectiveAgainst = new HashSet<>();
+    public static final Set<Material> materialEffectiveAgainst = new HashSet<>();
 	public ItemUGAxe(ToolMaterial var2, float var3)
 	{
 		super(3, var2, blocksEffectiveAgainst, var3);
@@ -30,7 +31,7 @@ public class ItemUGAxe extends ItemUGTool
 	@Override
 	public boolean func_150897_b(Block var1)
 	{
-		return var1.getMaterial() == Material.wood;
+        return blocksEffectiveAgainst.contains(var1) || materialEffectiveAgainst.contains(var1.getMaterial());
 	}
 
 	@Override
@@ -44,88 +45,89 @@ public class ItemUGAxe extends ItemUGTool
         return ImmutableSet.of("axe");
     }
 
+    @Override
 	public boolean doChainDestruction(Block var1)
 	{
 		return checkArrays(var1, AdvancedTools.addBlockForAxe) && this.func_150897_b(var1);
 	}
+
 	@Override
-    @SuppressWarnings("unchecked")
-	protected ArrayList searchAroundBlock(World world, ChunkPosition var1, ChunkPosition var2, ChunkPosition var3, Block var4, ItemStack var5, EntityPlayer var6)
+	protected ArrayList<ChunkPosition> searchAroundBlock(World world, ChunkPosition var1, ChunkPosition minChunkPos, ChunkPosition maxChunkPos, Block var4, ItemStack var5, EntityPlayer var6)
 	{
-		ArrayList var7 = new ArrayList();
+		ArrayList<ChunkPosition> var7 = new ArrayList<ChunkPosition>();
 		ChunkPosition[] var8 = new ChunkPosition[17];
 
-		if (var1.chunkPosY < var3.chunkPosY){
+		if (var1.chunkPosY < maxChunkPos.chunkPosY){
 			var8[0] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY + 1, var1.chunkPosZ);
 		}
 
-		if (var1.chunkPosZ > var2.chunkPosZ){
+		if (var1.chunkPosZ > minChunkPos.chunkPosZ){
 			var8[1] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ - 1);
 		}
 
-		if (var1.chunkPosZ < var3.chunkPosZ){
+		if (var1.chunkPosZ < maxChunkPos.chunkPosZ){
 			var8[2] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ + 1);
 		}
 
-		if (var1.chunkPosX > var2.chunkPosX){
+		if (var1.chunkPosX > minChunkPos.chunkPosX){
 			var8[3] = new ChunkPosition(var1.chunkPosX - 1, var1.chunkPosY, var1.chunkPosZ);
 		}
 
-		if (var1.chunkPosX < var3.chunkPosX){
+		if (var1.chunkPosX < maxChunkPos.chunkPosX){
 			var8[4] = new ChunkPosition(var1.chunkPosX + 1, var1.chunkPosY, var1.chunkPosZ);
 		}
 
 		if (checkArrays(var4, AdvancedTools.addBlockForAxe)){
-			if (var1.chunkPosZ > var2.chunkPosZ && var1.chunkPosX > var2.chunkPosX){
+			if (var1.chunkPosZ > minChunkPos.chunkPosZ && var1.chunkPosX > minChunkPos.chunkPosX){
 				var8[5] = new ChunkPosition(var1.chunkPosX - 1, var1.chunkPosY, var1.chunkPosZ - 1);
 			}
 
-			if (var1.chunkPosZ < var3.chunkPosZ && var1.chunkPosX > var2.chunkPosX){
+			if (var1.chunkPosZ < maxChunkPos.chunkPosZ && var1.chunkPosX > minChunkPos.chunkPosX){
 				var8[6] = new ChunkPosition(var1.chunkPosX - 1, var1.chunkPosY, var1.chunkPosZ + 1);
 			}
 
-			if (var1.chunkPosZ > var2.chunkPosZ && var1.chunkPosX < var3.chunkPosX){
+			if (var1.chunkPosZ > minChunkPos.chunkPosZ && var1.chunkPosX < maxChunkPos.chunkPosX){
 				var8[7] = new ChunkPosition(var1.chunkPosX + 1, var1.chunkPosY, var1.chunkPosZ - 1);
 			}
 
-			if (var1.chunkPosZ < var3.chunkPosZ && var1.chunkPosX < var3.chunkPosX){
+			if (var1.chunkPosZ < maxChunkPos.chunkPosZ && var1.chunkPosX < maxChunkPos.chunkPosX){
 				var8[8] = new ChunkPosition(var1.chunkPosX + 1, var1.chunkPosY, var1.chunkPosZ + 1);
 			}
 
-			if (var1.chunkPosY < var3.chunkPosY){
-				if (var1.chunkPosZ > var2.chunkPosZ){
+			if (var1.chunkPosY < maxChunkPos.chunkPosY){
+				if (var1.chunkPosZ > minChunkPos.chunkPosZ){
 					var8[13] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY + 1, var1.chunkPosZ - 1);
 				}
 
-				if (var1.chunkPosZ < var3.chunkPosZ){
+				if (var1.chunkPosZ < maxChunkPos.chunkPosZ){
 					var8[14] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY + 1, var1.chunkPosZ + 1);
 				}
 
-				if (var1.chunkPosX > var2.chunkPosX){
+				if (var1.chunkPosX > minChunkPos.chunkPosX){
 					var8[15] = new ChunkPosition(var1.chunkPosX - 1, var1.chunkPosY + 1, var1.chunkPosZ);
 				}
 
-				if (var1.chunkPosX < var3.chunkPosX){
+				if (var1.chunkPosX < maxChunkPos.chunkPosX){
 					var8[16] = new ChunkPosition(var1.chunkPosX + 1, var1.chunkPosY + 1, var1.chunkPosZ);
 				}
 
-				if (var1.chunkPosZ > var2.chunkPosZ && var1.chunkPosX > var2.chunkPosX){
+				if (var1.chunkPosZ > minChunkPos.chunkPosZ && var1.chunkPosX > minChunkPos.chunkPosX){
 					var8[9] = new ChunkPosition(var1.chunkPosX - 1, var1.chunkPosY + 1, var1.chunkPosZ - 1);
 				}
 
-				if (var1.chunkPosZ < var3.chunkPosZ && var1.chunkPosX > var2.chunkPosX){
+				if (var1.chunkPosZ < maxChunkPos.chunkPosZ && var1.chunkPosX > minChunkPos.chunkPosX){
 					var8[10] = new ChunkPosition(var1.chunkPosX - 1, var1.chunkPosY + 1, var1.chunkPosZ + 1);
 				}
 
-				if (var1.chunkPosZ > var2.chunkPosZ && var1.chunkPosX < var3.chunkPosX){
+				if (var1.chunkPosZ > minChunkPos.chunkPosZ && var1.chunkPosX < maxChunkPos.chunkPosX){
 					var8[11] = new ChunkPosition(var1.chunkPosX + 1, var1.chunkPosY + 1, var1.chunkPosZ - 1);
 				}
 
-				if (var1.chunkPosZ < var3.chunkPosZ && var1.chunkPosX < var3.chunkPosX){
+				if (var1.chunkPosZ < maxChunkPos.chunkPosZ && var1.chunkPosX < maxChunkPos.chunkPosX){
 					var8[12] = new ChunkPosition(var1.chunkPosX + 1, var1.chunkPosY + 1, var1.chunkPosZ + 1);
 				}
 			}
-		}else if (var1.chunkPosY > var2.chunkPosY){
+		}else if (var1.chunkPosY > minChunkPos.chunkPosY){
 			var8[5] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY - 1, var1.chunkPosZ);
 		}
 
@@ -147,5 +149,10 @@ public class ItemUGAxe extends ItemUGTool
 		blocksEffectiveAgainst.add(Blocks.wooden_slab);
 		blocksEffectiveAgainst.add(Blocks.pumpkin);
 		blocksEffectiveAgainst.add(Blocks.lit_pumpkin);
+        blocksEffectiveAgainst.add(Blocks.fence);
+        blocksEffectiveAgainst.add(Blocks.fence_gate);
+
+        materialEffectiveAgainst.add(Material.wood);
+        materialEffectiveAgainst.add(Material.cactus);
 	}
 }

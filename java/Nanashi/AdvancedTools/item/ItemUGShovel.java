@@ -3,6 +3,7 @@ package Nanashi.AdvancedTools.item;
 import Nanashi.AdvancedTools.AdvancedTools;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 public class ItemUGShovel extends ItemUGTool
 {
     public static final Set<Block> blocksEffectiveAgainst = new HashSet<>();
+    public static final Set<Material> materialEffectiveAgainst = new HashSet<>();
 	public ItemUGShovel(ToolMaterial var2, float var3)
 	{
 		super(1, var2, blocksEffectiveAgainst, var3);
@@ -25,7 +27,7 @@ public class ItemUGShovel extends ItemUGTool
 	@Override
 	public boolean func_150897_b(Block var1)
 	{
-		return blocksEffectiveAgainst.contains(var1);
+		return blocksEffectiveAgainst.contains(var1) || materialEffectiveAgainst.contains(var1.getMaterial());
 	}
 
     @Override
@@ -48,5 +50,12 @@ public class ItemUGShovel extends ItemUGTool
 		blocksEffectiveAgainst.add(Blocks.farmland);
 		blocksEffectiveAgainst.add(Blocks.soul_sand);
 		blocksEffectiveAgainst.add(Blocks.mycelium);
+
+        materialEffectiveAgainst.add(Material.grass);
+        materialEffectiveAgainst.add(Material.clay);
+        materialEffectiveAgainst.add(Material.craftedSnow);
+        materialEffectiveAgainst.add(Material.sand);
+        materialEffectiveAgainst.add(Material.ground);
+        materialEffectiveAgainst.add(Material.snow);
 	}
 }

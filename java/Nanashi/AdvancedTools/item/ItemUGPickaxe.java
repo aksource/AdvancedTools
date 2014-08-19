@@ -13,6 +13,7 @@ import java.util.Set;
 public class ItemUGPickaxe extends ItemUGTool
 {
     public static final Set<Block> blocksEffectiveAgainst = new HashSet<>();
+    public static final Set<Material> materialEffectiveAgainst = new HashSet<>();
 	public ItemUGPickaxe(ToolMaterial var2, float var3)
 	{
 		super(2, var2, blocksEffectiveAgainst, var3);
@@ -26,30 +27,7 @@ public class ItemUGPickaxe extends ItemUGTool
 	@Override
 	public boolean func_150897_b(Block var1)
 	{
-		return this.toolMaterial.getHarvestLevel() >= var1.getHarvestLevel(0);
-//		if (var1 == Blocks.obsidian){
-//			return this.toolMaterial.getHarvestLevel() == 3;
-//		}else if (var1 != Blocks.diamond_block && var1 != Blocks.diamond_ore){
-//			if (var1 != Blocks.gold_block && var1 != Blocks.gold_ore){
-//				if (var1 != Blocks.iron_block && var1 != Blocks.iron_ore){
-//					if (var1 != Blocks.lapis_block && var1 != Blocks.lapis_ore){
-//						if (var1 != Blocks.redstone_ore && var1 != Blocks.lit_redstone_ore){
-//                            return var1.getMaterial() == Material.rock || blocksEffectiveAgainst.contains(var1) || var1.getMaterial() == Material.iron;
-//						}else{
-//							return this.toolMaterial.getHarvestLevel() >= 2;
-//						}
-//					}else{
-//						return this.toolMaterial.getHarvestLevel() >= 1;
-//					}
-//				}else{
-//					return this.toolMaterial.getHarvestLevel() >= 1;
-//				}
-//			}else{
-//				return this.toolMaterial.getHarvestLevel() >= 2;
-//			}
-//		}else{
-//			return this.toolMaterial.getHarvestLevel() >= 2;
-//		}
+		return var1.getHarvestTool(0).equals("pickaxe") && this.toolMaterial.getHarvestLevel() >= var1.getHarvestLevel(0);
 	}
 	@Override
 	public float getDigSpeed(ItemStack var1, Block var2, int meta)
@@ -105,5 +83,12 @@ public class ItemUGPickaxe extends ItemUGTool
 		blocksEffectiveAgainst.add(Blocks.golden_rail);
 		blocksEffectiveAgainst.add(Blocks.activator_rail);
 		blocksEffectiveAgainst.add(Blocks.packed_ice);
+
+        materialEffectiveAgainst.add(Material.rock);
+        materialEffectiveAgainst.add(Material.iron);
+        materialEffectiveAgainst.add(Material.anvil);
+        materialEffectiveAgainst.add(Material.coral);
+        materialEffectiveAgainst.add(Material.ice);
+        materialEffectiveAgainst.add(Material.packedIce);
 	}
 }
