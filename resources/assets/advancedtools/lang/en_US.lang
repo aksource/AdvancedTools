@@ -1,0 +1,45 @@
+﻿
+item.RedEnhancer.name=RedEnhancer
+item.BlueEnhancer.name=BlueEnhancer
+item.UpgradedWoodenShovel.name=UpgradedWoodenShovel
+item.UpgradedStoneShovel.name=UpgradedStoneShovel
+item.UpgradedIronShovel.name=UpgradedIronShovel
+item.UpgradedDiamondShovel.name=UpgradedDiamondShovel
+item.UpgradedGoldenShovel.name=UpgradedGoldenShovel
+item.UpgradedWoodenPickaxe.name=UpgradedWoodenPickaxe
+item.UpgradedStonePickaxe.name=UpgradedStonePickaxe
+item.UpgradedIronPickaxe.name=UpgradedIronPickaxe
+item.UpgradedDiamondPickaxe.name=UpgradedDiamondPickaxe
+item.UpgradedGoldenPickaxe.name=UpgradedGoldenPickaxe
+item.UpgradedWoodenAxe.name=UpgradedWoodenAxe
+item.UpgradedStoneAxe.name=UpgradedStoneAxe
+item.UpgradedIronAxe.name=UpgradedIronAxe
+item.UpgradedDiamondAxe.name=UpgradedDiamondAxe
+item.UpgradedGoldenAxe.name=UpgradedGoldenAxe
+item.BlazeBlade.name=Blaze Blade
+item.FreezeHold.name=Freeze Hold
+item.AsmoSlasher.name=Asmo Slasher
+item.Planet Guardian.name=Planet Guardian
+item.StormBringer.name=Storm Bringer
+item.NEGI.name=N E G I
+item.Lucky&Lucky.name=Lucky&Lucky
+item.SmashBat.name=Smash Bat
+item.DevilSword.name=Devil Sword
+item.HolySaber.name=Holy Saber
+item.ThrowingKnife.name=Throwing Knife
+item.PoisonKnife.name=Poison Knife
+item.A_CrossBow.name=Automatic Crossbow
+item.InfiniteSword.name=Infinite Possibility
+item.InfinityPickaxe.name=InfinityPickaxe
+item.InfinityAxe.name=InfinityAxe
+item.InfinityShovel.name=InfinityShovel
+item.InfinityHoe.name=Infinity Hoe
+item.GenocideBlade.name=Genocide Blade
+
+entity.AdvancedTools.HighSkeleton.name=HighSkeleton
+entity.AdvancedTools.SkeletonSniper.name=SkeletonSniper
+entity.AdvancedTools.ZombieWarrior.name=ZombieWarrior
+entity.AdvancedTools.FireZombie.name=FireZombie
+entity.AdvancedTools.HighSpeedCreeper.name=HighSpeedCreeper
+entity.AdvancedTools.GoldCreeper.name=GoldCreeper
+
