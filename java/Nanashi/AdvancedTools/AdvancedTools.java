@@ -25,6 +25,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -165,35 +166,44 @@ public class AdvancedTools
 		EntityRegistry.registerModEntity(Entity_PGPowerBomb.class, "PGPowerBomb", 9, this, 250, 1, true);
 		EntityRegistry.registerModEntity(Entity_SBWindEdge.class, "SBWindEdge", 10, this, 250, 1, true);
 		if (spawnHiGradeMob) {
-			for (int i = 0; i < BiomeGenBase.getBiomeGenArray().length; i++) {
-				if (BiomeGenBase.getBiomeGenArray()[i] != null
-						&& BiomeGenBase.getBiomeGenArray()[i] != BiomeGenBase.hell
-						&& BiomeGenBase.getBiomeGenArray()[i] != BiomeGenBase.mushroomIsland
-						&& BiomeGenBase.getBiomeGenArray()[i] != BiomeGenBase.mushroomIslandShore
-						&& BiomeGenBase.getBiomeGenArray()[i] != BiomeGenBase.sky
-						&& BiomeGenBase.getBiomeGenArray()[i].getSpawnableList(EnumCreatureType.monster).size() >= 5) {
+			for (BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
+				if (biome != null
+						&& isSpawnableBiomeType(biome)
+						&& biome.getSpawnableList(EnumCreatureType.monster).size() >= 5) {
 					if (spawnHighSkeleton)
 						EntityRegistry.addSpawn(Entity_HighSkeleton.class, 2, 1, 4, EnumCreatureType.monster,
-								BiomeGenBase.getBiomeGenArray()[i]);
+                                biome);
 					if (spawnSkeletonSniper)
 						EntityRegistry.addSpawn(Entity_SkeletonSniper.class, 3, 1, 4, EnumCreatureType.monster,
-								BiomeGenBase.getBiomeGenArray()[i]);
+                                biome);
 					if (spawnZombieWarrior)
 						EntityRegistry.addSpawn(Entity_ZombieWarrior.class, 2, 1, 4, EnumCreatureType.monster,
-								BiomeGenBase.getBiomeGenArray()[i]);
+                                biome);
 					if (spawnFireZombie)
 						EntityRegistry.addSpawn(Entity_FireZombie.class, 3, 1, 4, EnumCreatureType.monster,
-								BiomeGenBase.getBiomeGenArray()[i]);
+                                biome);
 					if (spawnHighSpeedCreeper)
 						EntityRegistry.addSpawn(Entity_HighSpeedCreeper.class, 3, 4, 4, EnumCreatureType.monster,
-								BiomeGenBase.getBiomeGenArray()[i]);
+                                biome);
 					if (spawnGoldCreeper)
 						EntityRegistry.addSpawn(Entity_GoldCreeper.class, 1, 1, 4, EnumCreatureType.monster,
-								BiomeGenBase.getBiomeGenArray()[i]);
+                                biome);
 				}
 			}
 		}
 	}
+
+    private boolean isSpawnableBiomeType(BiomeGenBase biome) {
+        BiomeDictionary.Type[] types = BiomeDictionary.getTypesForBiome(biome);
+        for (BiomeDictionary.Type type : types) {
+            if (type == BiomeDictionary.Type.NETHER
+                    || type == BiomeDictionary.Type.MUSHROOM
+                    || type == BiomeDictionary.Type.END) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 	public void itemSetup()
 	{
