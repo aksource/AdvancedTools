@@ -15,7 +15,7 @@ public class PlayerClickHook
 		ItemStack holdItem = event.entityPlayer.getCurrentEquippedItem();
 		if (event.action == Action.LEFT_CLICK_BLOCK && holdItem != null) {
 			if (AdvancedTools.hasMultiToolHolder && holdItem.getItem() instanceof ItemMultiToolHolder) {
-				holdItem = ((ItemMultiToolHolder) holdItem.getItem()).getInventoryFromItemStack(holdItem).getStackInSlot(((ItemMultiToolHolder) holdItem.getItem()).getSlotNumFromItemStack(holdItem));
+				holdItem = ((ItemMultiToolHolder) holdItem.getItem()).getInventoryFromItemStack(holdItem).getStackInSlot(ItemMultiToolHolder.getSlotNumFromItemStack(holdItem));
 			}
 			if (holdItem != null && holdItem.getItem() instanceof ItemUGTool) {
 				ItemUGTool ugTool = (ItemUGTool) holdItem.getItem();
