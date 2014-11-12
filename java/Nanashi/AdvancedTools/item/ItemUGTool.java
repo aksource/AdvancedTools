@@ -18,6 +18,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
@@ -34,24 +35,24 @@ public abstract class ItemUGTool extends ItemTool
 	private int breakcount;
 	public int side;
 
-	protected ItemUGTool(int var2, ToolMaterial var3, Set var4, float var5)
-	{
+	protected ItemUGTool(int var2, ToolMaterial var3, Set var4, float var5) {
 		super(var2, var3, var4);
 		this.cDestroyRange = AdvancedTools.UGTools_SafetyCounter;
 		this.saftyCount = AdvancedTools.UGTools_SafetyCounter;
 		this.setMaxDamage((int)(var5 * (float)this.getMaxDamage()));
 	}
 
-	public abstract boolean doChainDestruction(Block var1);
+	public abstract boolean doChainDestruction(Block var1, int var2);
+
+    public abstract boolean isProperTool(Block block, int meta);
 
 	@Override
-	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
+	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		getRange(par1ItemStack);
 	}
+
 	@Override
-	public Item setUnlocalizedName(String var1)
-	{
+	public Item setUnlocalizedName(String var1) {
 		super.setUnlocalizedName(var1);
 
 		if (this.BaseName == null){
@@ -60,34 +61,34 @@ public abstract class ItemUGTool extends ItemTool
 
 		return this;
 	}
-	@Override
-	public boolean onBlockDestroyed(ItemStack item, World world, Block blockid, int x, int y, int z, EntityLivingBase breaker)
-	{
+
+    @Override
+	public boolean onBlockDestroyed(ItemStack item, World world, Block block, int x, int y, int z, EntityLivingBase breaker) {
 		if (!world.isRemote){
 			item.damageItem(1, breaker);
 			this.breakcount = 0;
 			int range = getRange(item);
-			if (this.canHarvestBlock(blockid, item) && range != 0 && breaker instanceof EntityPlayer) {
-                this.destroyAroundBlock(item, world, blockid, x, y, z, (EntityPlayer) breaker, range);
+            int meta = world.getBlockMetadata(x, y, z);
+			if (range != 0 && breaker instanceof EntityPlayer && ForgeHooks.canHarvestBlock(block, (EntityPlayer) breaker, meta)) {
+                this.destroyAroundBlock(item, world, block, meta, x, y, z, (EntityPlayer) breaker, range);
                 item.damageItem(this.breakcount, breaker);
             }
             return true;
 		}
 		return false;
 	}
-	private boolean destroyAroundBlock(ItemStack var1, World world, Block blockid, int x, int y, int z, EntityPlayer var6, int range)
-	{
-		this.searchAndDestroyBlock(world,x, y, z, side, blockid, var1, var6, range);
+
+	private boolean destroyAroundBlock(ItemStack var1, World world, Block block, int meta, int x, int y, int z, EntityPlayer var6, int range) {
+		this.searchAndDestroyBlock(world,x, y, z, side, block, meta, var1, var6, range);
 		return true;
 	}
 
-	protected void searchAndDestroyBlock(World world, int x, int y, int z, int side, Block block, ItemStack var6, EntityPlayer var7, int range)
-	{
+	protected void searchAndDestroyBlock(World world, int x, int y, int z, int side, Block block, int meta, ItemStack var6, EntityPlayer var7, int range) {
 		ArrayList<ChunkPosition> var8 = new ArrayList<>();
 		var8.add(new ChunkPosition(x, y, z));
 		int minX, minY, minZ, maxX, maxY, maxZ;
 
-		if (!this.doChainDestruction(block)){
+		if (!this.doChainDestruction(block, meta)){
 			minX = x - range;
 			minY = y - range;
 			minZ = z - range;
@@ -141,10 +142,8 @@ public abstract class ItemUGTool extends ItemTool
 		}
 	}
 
-	protected ArrayList<ChunkPosition> searchAroundBlock(World world,ChunkPosition var1, ChunkPosition minChunkPos, ChunkPosition maxChunkPos, Block var4, ItemStack var5, EntityPlayer var6)
-	{
+	protected ArrayList<ChunkPosition> searchAroundBlock(World world,ChunkPosition var1, ChunkPosition minChunkPos, ChunkPosition maxChunkPos, Block var4, ItemStack var5, EntityPlayer var6) {
 		ArrayList<ChunkPosition> var7 = new ArrayList<>();
-//		ChunkPosition[] var8 = new ChunkPosition[6];
 
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
             int directionIndex = direction.ordinal();
@@ -156,37 +155,6 @@ public abstract class ItemUGTool extends ItemTool
                 }
             }
         }
-
-//		if (var1.chunkPosY > minChunkPos.chunkPosY){
-//			var8[0] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY - 1, var1.chunkPosZ);
-//		}
-//
-//		if (var1.chunkPosY < maxChunkPos.chunkPosY){
-//			var8[1] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY + 1, var1.chunkPosZ);
-//		}
-//
-//		if (var1.chunkPosZ > minChunkPos.chunkPosZ){
-//			var8[2] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ - 1);
-//		}
-//
-//		if (var1.chunkPosZ < maxChunkPos.chunkPosZ){
-//			var8[3] = new ChunkPosition(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ + 1);
-//		}
-//
-//		if (var1.chunkPosX > minChunkPos.chunkPosX){
-//			var8[4] = new ChunkPosition(var1.chunkPosX - 1, var1.chunkPosY, var1.chunkPosZ);
-//		}
-//
-//		if (var1.chunkPosX < maxChunkPos.chunkPosX){
-//			var8[5] = new ChunkPosition(var1.chunkPosX + 1, var1.chunkPosY, var1.chunkPosZ);
-//		}
-
-//		for (ChunkPosition chunkPosition : var8){
-//			if (chunkPosition != null && this.destroyBlock(world, chunkPosition, var4, var5, var6)){
-//				var7.add(chunkPosition);
-//			}
-//		}
-
 		return var7;
 	}
 
@@ -202,8 +170,7 @@ public abstract class ItemUGTool extends ItemTool
         }
     }
 
-	protected boolean destroyBlock(World world, ChunkPosition var1, Block block, ItemStack var3, EntityPlayer var4)
-	{
+	protected boolean destroyBlock(World world, ChunkPosition var1, Block block, ItemStack var3, EntityPlayer var4) {
 		Block var5 = world.getBlock(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ);
 
 		if (var5 == Blocks.air){
@@ -223,24 +190,11 @@ public abstract class ItemUGTool extends ItemTool
         if (!rsList.contains(block) && !dirtList.contains(block) && var5 != block) {
             return false;
         }
-//
-//        if (block != Blocks.redstone_ore && block != Blocks.lit_redstone_ore){
-//            if (block != Blocks.dirt && block != Blocks.grass){
-//                if (var5 != block){
-//                    return false;
-//                }
-//            }else if (var5 != Blocks.dirt && var5 != Blocks.grass){
-//                return false;
-//            }
-//        }else if (var5 != Blocks.redstone_ore && var5 != Blocks.lit_redstone_ore){
-//            return false;
-//        }
 
         return this.checkAndDestroy(world, var1, var5, var3, var4);
 	}
 
-	private boolean checkAndDestroy(World world, ChunkPosition var1, Block var2, ItemStack var3, EntityPlayer var4)
-	{
+	private boolean checkAndDestroy(World world, ChunkPosition var1, Block var2, ItemStack var3, EntityPlayer var4) {
 		int var5 = world.getBlockMetadata(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ);
         var2.onBlockHarvested(world, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, var5, var4);
 		if (var2.removedByPlayer(world, var4, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, true)){
@@ -261,9 +215,9 @@ public abstract class ItemUGTool extends ItemTool
 		}
         return false;
 	}
+
 	@Override
-	public ItemStack onItemRightClick(ItemStack var1, World var2, EntityPlayer var3)
-	{
+	public ItemStack onItemRightClick(ItemStack var1, World var2, EntityPlayer var3) {
 		if (!var2.isRemote) {
 			EntityPlayerMP player = (EntityPlayerMP) var3;
 			int range = this.setRange(var1, var3);
@@ -278,8 +232,7 @@ public abstract class ItemUGTool extends ItemTool
 		return var1;
 	}
 
-	private int setRange(ItemStack var1, EntityPlayer var3)
-	{
+	private int setRange(ItemStack var1, EntityPlayer var3) {
 		int range = getRange(var1);
 		int toolMaterialOrd = this.toolMaterial.ordinal();
 		if(!var3.isSneaking()) {
@@ -290,8 +243,8 @@ public abstract class ItemUGTool extends ItemTool
 		var1.getTagCompound().setInteger("range", range);
 		return range;
 	}
-	private int getRange(ItemStack item)
-	{
+
+	private int getRange(ItemStack item) {
 		int range;
 		NBTTagCompound nbt;
 		if(!item.hasTagCompound()) {
@@ -307,10 +260,10 @@ public abstract class ItemUGTool extends ItemTool
 		}
 		return range;
 	}
+
 	@SideOnly(Side.CLIENT)
     @SuppressWarnings({"unchecked", "rawtype"})
-	public void addInformation(ItemStack item, EntityPlayer player, List par3List, boolean par4)
-	{
+	public void addInformation(ItemStack item, EntityPlayer player, List par3List, boolean par4) {
 		super.addInformation(item, player, par3List, par4);
 		int range = getRange(item);
 		if (range == 0){
@@ -319,8 +272,8 @@ public abstract class ItemUGTool extends ItemTool
 			par3List.add("Range: " + (range * 2 + 1) + "x" + (range * 2 + 1));
 		}
 	}
-	public boolean checkArrays(Block block, String[] blockList)
-	{
+
+	public boolean checkArrays(Block block, String[] blockList) {
 		String uIdName = AdvancedTools.getUniqueStrings(block);
         return Arrays.asList(blockList).contains(uIdName);
 	}

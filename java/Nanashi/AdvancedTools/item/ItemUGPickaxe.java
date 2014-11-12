@@ -1,7 +1,7 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -17,34 +17,41 @@ public class ItemUGPickaxe extends ItemUGTool
 	public ItemUGPickaxe(ToolMaterial var2, float var3)
 	{
 		super(2, var2, blocksEffectiveAgainst, var3);
+        setHarvestLevel("pickaxe", var2.getHarvestLevel());
 	}
 
-	public ItemUGPickaxe(ToolMaterial var2)
-	{
-		super(2, var2, blocksEffectiveAgainst, 1.0F);
-	}
+//	public ItemUGPickaxe(ToolMaterial var2)
+//	{
+//		super(2, var2, blocksEffectiveAgainst, 1.0F);
+//	}
+
+    @Override
+    public boolean canHarvestBlock(Block var1, ItemStack itemStack) {
+        return materialEffectiveAgainst.contains(var1.getMaterial());
+    }
 
 	@Override
-	public boolean func_150897_b(Block var1)
-	{
-		return var1.getHarvestTool(0).equals("pickaxe") && this.toolMaterial.getHarvestLevel() >= var1.getHarvestLevel(0);
+	public float getDigSpeed(ItemStack var1, Block var2, int meta) {
+		return var2 != null && (materialEffectiveAgainst.contains(var2.getMaterial())) ? this.efficiencyOnProperMaterial : super.getDigSpeed(var1, var2, meta);
 	}
-	@Override
-	public float getDigSpeed(ItemStack var1, Block var2, int meta)
-	{
-		return var2 != null && (var2.getMaterial() == Material.iron || var2.getMaterial() == Material.rock) ? this.efficiencyOnProperMaterial : super.getDigSpeed(var1, var2, meta);
+
+//    @Override
+//    public Set<String> getToolClasses(ItemStack stack) {
+//        return ImmutableSet.of("pickaxe");
+//    }
+
+    @Override
+    public boolean doChainDestruction(Block var1, int var2) {
+		return checkArrays(var1, AdvancedTools.addBlockForPickaxe)
+                && (isProperTool(var1, var2) && this.toolMaterial.getHarvestLevel() >= var1.getHarvestLevel(var2));
 	}
 
     @Override
-    public Set<String> getToolClasses(ItemStack stack) {
-        return ImmutableSet.of("pickaxe");
+    public boolean isProperTool(Block block, int meta) {
+        return Optional.fromNullable(block.getHarvestTool(meta)).or("").equals("pickaxe");
     }
 
-    public boolean doChainDestruction(Block var1)
-	{
-		return checkArrays(var1, AdvancedTools.addBlockForPickaxe) && this.func_150897_b(var1);
-	}
-	static{
+    static{
 		blocksEffectiveAgainst.add(Blocks.cobblestone);
 		blocksEffectiveAgainst.add(Blocks.double_stone_slab);
 		blocksEffectiveAgainst.add(Blocks.stone_slab);

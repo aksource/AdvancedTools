@@ -215,7 +215,7 @@ public class AdvancedTools
 				.setTextureName(AdvancedTools.textureDomain + "EnhancerB");
 		GameRegistry.registerItem(BlueEnhancer, "blueenhancer");
 		list.add(BlueEnhancer);
-		UGWoodShovel = (new ItemUGShovel(ToolMaterial.WOOD)).setUnlocalizedName("UpgradedWoodenShovel")
+		UGWoodShovel = (new ItemUGShovel(ToolMaterial.WOOD, 1.0F)).setUnlocalizedName("UpgradedWoodenShovel")
 				.setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "UGWoodshovel");
 		GameRegistry.registerItem(UGWoodShovel, "ugwoodshovel");
 		list.add(UGWoodShovel);
@@ -235,7 +235,7 @@ public class AdvancedTools
 				.setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "UGGoldshovel");
 		GameRegistry.registerItem(UGGoldShovel, "uggoldshovel");
 		list.add(UGGoldShovel);
-		UGWoodPickaxe = (new ItemUGPickaxe(ToolMaterial.WOOD)).setUnlocalizedName("UpgradedWoodenPickaxe")
+		UGWoodPickaxe = (new ItemUGPickaxe(ToolMaterial.WOOD, 1.0F)).setUnlocalizedName("UpgradedWoodenPickaxe")
 				.setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "UGWoodpickaxe");
 		GameRegistry.registerItem(UGWoodPickaxe, "ugwoodpickaxe");
 		list.add(UGWoodPickaxe);
@@ -255,7 +255,7 @@ public class AdvancedTools
 				.setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "UGGoldpickaxe");
 		GameRegistry.registerItem(UGGoldPickaxe, "uggoldpickaxe");
 		list.add(UGGoldPickaxe);
-		UGWoodAxe = (new ItemUGAxe(ToolMaterial.WOOD)).setUnlocalizedName("UpgradedWoodenAxe").setCreativeTab(tabsAT)
+		UGWoodAxe = (new ItemUGAxe(ToolMaterial.WOOD, 1.0F)).setUnlocalizedName("UpgradedWoodenAxe").setCreativeTab(tabsAT)
 				.setTextureName(AdvancedTools.textureDomain + "UGWoodaxe");
 		GameRegistry.registerItem(UGWoodAxe, "ugwoodaxe");
 		list.add(UGWoodAxe);
@@ -332,15 +332,15 @@ public class AdvancedTools
 				.setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "Infinitysword");
 		GameRegistry.registerItem(InfiniteSword, "infinitesword");
 		list.add(InfiniteSword);
-		InfinitePickaxe = (new ItemUGPickaxe(ToolMaterial.EMERALD)).setUnlocalizedName("InfinityPickaxe")
+		InfinitePickaxe = (new ItemUGPickaxe(ToolMaterial.EMERALD, 1.0F)).setUnlocalizedName("InfinityPickaxe")
 				.setMaxDamage(0).setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "Infinitypickaxe");
 		GameRegistry.registerItem(InfinitePickaxe, "infinitepickaxe");
 		list.add(InfinitePickaxe);
-		InfiniteAxe = (new ItemUGAxe(ToolMaterial.GOLD)).setUnlocalizedName("InfinityAxe").setMaxDamage(0)
+		InfiniteAxe = (new ItemUGAxe(ToolMaterial.GOLD, 1.0F)).setUnlocalizedName("InfinityAxe").setMaxDamage(0)
 				.setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "Infinityaxe");
 		GameRegistry.registerItem(InfiniteAxe, "infiniteaxe");
 		list.add(InfiniteAxe);
-		InfiniteShovel = (new ItemUGShovel(ToolMaterial.GOLD)).setUnlocalizedName("InfinityShovel").setMaxDamage(0)
+		InfiniteShovel = (new ItemUGShovel(ToolMaterial.GOLD, 1.0F)).setUnlocalizedName("InfinityShovel").setMaxDamage(0)
 				.setCreativeTab(tabsAT).setTextureName(AdvancedTools.textureDomain + "Infinityshovel");
 		GameRegistry.registerItem(InfiniteShovel, "infiniteshovel");
 		list.add(InfiniteShovel);

@@ -1,7 +1,7 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,37 +21,42 @@ public class ItemUGAxe extends ItemUGTool
 	public ItemUGAxe(ToolMaterial var2, float var3)
 	{
 		super(3, var2, blocksEffectiveAgainst, var3);
+        setHarvestLevel("axe", var2.getHarvestLevel());
 	}
 
-	public ItemUGAxe(ToolMaterial var2)
-	{
-		super(3, var2, blocksEffectiveAgainst, 1.0F);
-	}
+//	public ItemUGAxe(ToolMaterial var2)
+//	{
+//		super(3, var2, blocksEffectiveAgainst, 1.0F);
+//	}
+
+//	@Override
+//	public boolean func_150897_b(Block var1)
+//	{
+//        return blocksEffectiveAgainst.contains(var1) || materialEffectiveAgainst.contains(var1.getMaterial());
+//	}
 
 	@Override
-	public boolean func_150897_b(Block var1)
-	{
-        return blocksEffectiveAgainst.contains(var1) || materialEffectiveAgainst.contains(var1.getMaterial());
-	}
-
-	@Override
-    public float getDigSpeed(ItemStack par1ItemStack, Block par2Block, int meta)
-    {
+    public float getDigSpeed(ItemStack par1ItemStack, Block par2Block, int meta) {
         return par2Block != null && (par2Block.getMaterial() == Material.wood || par2Block.getMaterial() == Material.plants || par2Block.getMaterial() == Material.vine) ? this.efficiencyOnProperMaterial : super.getDigSpeed(par1ItemStack, par2Block, meta);
     }
 
+//    @Override
+//    public Set<String> getToolClasses(ItemStack stack) {
+//        return ImmutableSet.of("axe");
+//    }
+
     @Override
-    public Set<String> getToolClasses(ItemStack stack) {
-        return ImmutableSet.of("axe");
+	public boolean doChainDestruction(Block var1, int var2) {
+		return checkArrays(var1, AdvancedTools.addBlockForAxe)
+                && (blocksEffectiveAgainst.contains(var1) || materialEffectiveAgainst.contains(var1.getMaterial()));
+	}
+
+    @Override
+    public boolean isProperTool(Block block, int meta) {
+        return Optional.fromNullable(block.getHarvestTool(meta)).or("").equals("axe");
     }
 
     @Override
-	public boolean doChainDestruction(Block var1)
-	{
-		return checkArrays(var1, AdvancedTools.addBlockForAxe) && this.func_150897_b(var1);
-	}
-
-	@Override
 	protected ArrayList<ChunkPosition> searchAroundBlock(World world, ChunkPosition var1, ChunkPosition minChunkPos, ChunkPosition maxChunkPos, Block var4, ItemStack var5, EntityPlayer var6)
 	{
 		ArrayList<ChunkPosition> var7 = new ArrayList<ChunkPosition>();

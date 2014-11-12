@@ -1,11 +1,10 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,29 +16,37 @@ public class ItemUGShovel extends ItemUGTool
 	public ItemUGShovel(ToolMaterial var2, float var3)
 	{
 		super(1, var2, blocksEffectiveAgainst, var3);
+        setHarvestLevel("shovel", var2.getHarvestLevel());
 	}
 
-	public ItemUGShovel(ToolMaterial var2)
-	{
-		super(1, var2, blocksEffectiveAgainst, 1.0F);
-	}
+//	public ItemUGShovel(ToolMaterial var2)
+//	{
+//		super(1, var2, blocksEffectiveAgainst, 1.0F);
+//	}
 
-	@Override
-	public boolean func_150897_b(Block var1)
-	{
-		return blocksEffectiveAgainst.contains(var1) || materialEffectiveAgainst.contains(var1.getMaterial());
+//	@Override
+//	public boolean func_150897_b(Block var1)
+//	{
+//		return blocksEffectiveAgainst.contains(var1) || materialEffectiveAgainst.contains(var1.getMaterial());
+//	}
+
+//    @Override
+//    public Set<String> getToolClasses(ItemStack stack) {
+//        return ImmutableSet.of("shovel");
+//    }
+
+    @Override
+	public boolean doChainDestruction(Block var1, int var2) {
+		return checkArrays(var1, AdvancedTools.addBlockForShovel)
+                && (blocksEffectiveAgainst.contains(var1) || materialEffectiveAgainst.contains(var1.getMaterial()));
 	}
 
     @Override
-    public Set<String> getToolClasses(ItemStack stack) {
-        return ImmutableSet.of("shovel");
+    public boolean isProperTool(Block block, int meta) {
+        return Optional.fromNullable(block.getHarvestTool(meta)).or("").equals("shovel");
     }
 
-	public boolean doChainDestruction(Block var1)
-	{
-		return checkArrays(var1, AdvancedTools.addBlockForShovel) && this.func_150897_b(var1);
-	}
-	static{
+    static{
 		blocksEffectiveAgainst.add(Blocks.grass);
 		blocksEffectiveAgainst.add(Blocks.gravel);
 		blocksEffectiveAgainst.add(Blocks.dirt);
