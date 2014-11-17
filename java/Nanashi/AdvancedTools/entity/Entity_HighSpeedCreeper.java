@@ -61,7 +61,7 @@ public class Entity_HighSpeedCreeper extends EntityCreeper
     @Override
 	public boolean attackEntityFrom(DamageSource var1, float var2)
 	{
-		return !var1.damageType.equals("arrow") || super.attackEntityFrom(var1, var2);
+		return !var1.damageType.equals("arrow") && super.attackEntityFrom(var1, var2);
 	}
 
 	/**
