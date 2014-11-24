@@ -204,10 +204,13 @@ public abstract class ItemUGTool extends ItemTool
 			}else{
 				var2.harvestBlock(world, var4, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, var5);
 			}
-            int exp = var2.getExpDrop(world, var5, EnchantmentHelper.getFortuneModifier(var4));
-            var2.dropXpOnBlockBreak(world, MathHelper.ceiling_double_int(var4.posX), MathHelper.ceiling_double_int(var4.posY), MathHelper.ceiling_double_int(var4.posZ), exp);
 
-			if (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, var3) <= 0){
+            if (!isSilkTouch(var3)) {
+                int exp = var2.getExpDrop(world, var5, EnchantmentHelper.getFortuneModifier(var4));
+                var2.dropXpOnBlockBreak(world, MathHelper.ceiling_double_int(var4.posX), MathHelper.ceiling_double_int(var4.posY), MathHelper.ceiling_double_int(var4.posZ), exp);
+            }
+
+            if (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, var3) <= 0){
 				this.breakcount++;
 			}
 
@@ -277,4 +280,8 @@ public abstract class ItemUGTool extends ItemTool
 		String uIdName = AdvancedTools.getUniqueStrings(block);
         return Arrays.asList(blockList).contains(uIdName);
 	}
+
+    public boolean isSilkTouch(ItemStack itemStack) {
+        return itemStack.isItemEnchanted() && EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, itemStack) > 0;
+    }
 }
