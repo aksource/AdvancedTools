@@ -14,14 +14,17 @@ import net.minecraft.world.World;
 
 public class ItemUQHolySaber extends ItemUniqueArms
 {
+	private float baseDmgValue;
 	public ItemUQHolySaber(ToolMaterial var2)
 	{
 		super(var2);
+		this.baseDmgValue = 4.0F + var2.getDamageVsEntity();
 	}
 
 	public ItemUQHolySaber(ToolMaterial var2, int var3)
 	{
 		super(var2, var3);
+		this.baseDmgValue = var3;
 	}
 //	@Override
 //	@SideOnly(Side.CLIENT)
@@ -62,7 +65,8 @@ public class ItemUQHolySaber extends ItemUniqueArms
 				var2 = 10;
 			}
 		}
-        ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, var2, 0);
+        ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, this.baseDmgValue + var2, 0);
+		player.getAttributeMap().applyAttributeModifiers(itemstack.getAttributeModifiers());
 		return false;
 	}
 }
