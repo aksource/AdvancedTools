@@ -1,8 +1,8 @@
 package Nanashi.AdvancedTools.entity;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -63,16 +63,16 @@ public class Entity_FireZombie extends EntityZombie
 		return super.attackEntityAsMob(var1);
 	}
 
-	@Override
-	protected void attackEntity(Entity var1, float var2)
-	{
-		if (this.attackTime <= 0 && var2 < 2.0F && var1.boundingBox.maxY > this.boundingBox.minY
-				&& var1.boundingBox.minY < this.boundingBox.maxY) {
-			var1.setFire(5);
-			this.attackTime = 20;
-			this.attackEntityAsMob(var1);
-		}
-	}
+//	@Override
+//	protected void attackEntityWithRangedAttack(Entity var1, float var2)
+//	{
+//		if (this.getLastAttackerTime() <= 0 && var2 < 2.0F && var1.getBoundingBox().maxY > this.getBoundingBox().minY
+//				&& var1.getBoundingBox().minY < this.getBoundingBox().maxY) {
+//			var1.setFire(5);
+//			this.ge = 20;
+//			this.attackEntityAsMob(var1);
+//		}
+//	}
 
 	@Override
 	public void onDeath(DamageSource var1)

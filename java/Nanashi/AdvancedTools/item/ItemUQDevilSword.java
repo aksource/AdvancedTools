@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools.item;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,12 +24,7 @@ public class ItemUQDevilSword extends ItemUniqueArms
 	{
 		super(var2, var3);
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//    	this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "GenocideBlade");
-//	}
+
 	@Override
 	public void onUpdate(ItemStack var1, World var2, Entity var3, int var4, boolean var5)
 	{

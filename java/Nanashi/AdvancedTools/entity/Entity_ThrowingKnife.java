@@ -106,20 +106,20 @@ public class Entity_ThrowingKnife extends EntityThrowable
 		}
 
 		++this.ticksInAir;
-		Vec3 var17 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-		Vec3 var3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-		MovingObjectPosition var4 = this.worldObj.func_147447_a(var17, var3, false, true, false);
-		var17 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-		var3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+		Vec3 var17 = new Vec3(this.posX, this.posY, this.posZ);
+		Vec3 var3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+		MovingObjectPosition var4 = this.worldObj.rayTraceBlocks(var17, var3, false, true, false);
+		var17 = new Vec3(this.posX, this.posY, this.posZ);
+		var3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
 		if (var4 != null)
 		{
-			var3 = Vec3.createVectorHelper(var4.hitVec.xCoord, var4.hitVec.yCoord, var4.hitVec.zCoord);
+			var3 = new Vec3(var4.hitVec.xCoord, var4.hitVec.yCoord, var4.hitVec.zCoord);
 		}
 
 		Entity var5 = null;
         @SuppressWarnings("unchecked")
-		List<Entity> var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+		List<Entity> var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 		double var7 = 0.0D;
 
 		for (Entity var10 : var6)
@@ -127,7 +127,7 @@ public class Entity_ThrowingKnife extends EntityThrowable
 			if (var10.canBeCollidedWith() && (var10 != this.Master || this.ticksInAir >= 10))
 			{
 				float var11 = 0.3F;
-				AxisAlignedBB var12 = var10.boundingBox.expand((double)var11, (double)var11, (double)var11);
+				AxisAlignedBB var12 = var10.getEntityBoundingBox().expand((double)var11, (double)var11, (double)var11);
 				MovingObjectPosition var13 = var12.calculateIntercept(var17, var3);
 
 				if (var13 != null)
@@ -290,11 +290,12 @@ public class Entity_ThrowingKnife extends EntityThrowable
     protected float getGravityVelocity() {
         return 0.01F;
     }
-    @Override
-	public float getShadowSize()
-	{
-		return 0.0F;
-	}
+
+//    @Override
+//	public float getShadowSize()
+//	{
+//		return 0.0F;
+//	}
 
 	public void setPoison(boolean var1)
 	{

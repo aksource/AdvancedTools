@@ -1,7 +1,8 @@
 package Nanashi.AdvancedTools.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -16,21 +17,12 @@ import java.util.List;
 
 public class ItemUQAsmoSlasher extends ItemUniqueArms
 {
-//	public ItemUQAsmoSlasher(ToolMaterial var2)
-//	{
-//		super(var2);
-//	}
 
 	public ItemUQAsmoSlasher(ToolMaterial var2, int var3)
 	{
 		super(var2);
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "AsmoSlasher");
-//	}
+
 	@Override
     public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase)
     {
@@ -68,7 +60,7 @@ public class ItemUQAsmoSlasher extends ItemUniqueArms
 					double var9 = Math.PI * (double)var18 / 4.0D;
 					double var11 = var3.posX + 5.5D * Math.sin(var9);
 					double var13 = var3.posZ + 5.5D * Math.cos(var9);
-					double var15 = (double)var2.getHeightValue((int)(var11 - 0.5D), (int)(var13 - 0.5D));
+					double var15 = (double)var2.getHorizon(new BlockPos(var11 - 0.5D, 0, var13 - 0.5D)).getY();
 					EntityLightningBolt var17 = new EntityLightningBolt(var2, var11, var15, var13);
 
 //					if (!var2.isRemote)
@@ -88,7 +80,7 @@ public class ItemUQAsmoSlasher extends ItemUniqueArms
 				double var10 = var3.posZ;
 				var8 -= 6.0D * Math.sin((double)(var3.rotationYaw / 180.0F) * Math.PI);
 				var10 += 6.0D * Math.cos((double)(var3.rotationYaw / 180.0F) * Math.PI);
-				double var12 = (double)var2.getHeightValue((int)(var8 - 0.5D), (int)(var10 - 0.5D));
+				double var12 = (double)var2.getHorizon(new BlockPos(var8 - 0.5D, 0, var10 - 0.5D)).getY();
 				EntityLightningBolt var14 = new EntityLightningBolt(var2, var8, var12, var10);
 
 //				if (!var2.isRemote)
@@ -110,7 +102,7 @@ public class ItemUQAsmoSlasher extends ItemUniqueArms
 	@Override
 	public EnumAction getItemUseAction(ItemStack var1)
 	{
-		return EnumAction.bow;
+		return EnumAction.BOW;
 	}
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -124,7 +116,7 @@ public class ItemUQAsmoSlasher extends ItemUniqueArms
 	{
 		int var4 = var3.getFoodStats().getFoodLevel();
 
-		if (var4 > 6 && var2.canBlockSeeTheSky((int)(var3.posX - 0.5D), (int)var3.posY, (int)(var3.posZ - 0.5D)))
+		if (var4 > 6 && var2.canBlockSeeSky(new BlockPos(var3.posX, var3.posY, var3.posZ).add(-0.5D, 0, -0.5D)))
 		{
 			var3.setItemInUse(var1, this.getMaxItemUseDuration(var1));
 		}

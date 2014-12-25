@@ -9,6 +9,8 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class ItemSpecialSet extends Item
@@ -21,7 +23,7 @@ public class ItemSpecialSet extends Item
         this.r = var2;
     }
     @Override
-    public boolean hasEffect(ItemStack var1, int pass)
+    public boolean hasEffect(ItemStack var1)
     {
         return true;
     }
@@ -31,52 +33,53 @@ public class ItemSpecialSet extends Item
         return this.r;
     }
     @Override
-    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, BlockPos blockPos, EnumFacing par7, float par8, float par9, float par10)
     {
-        if (par7 == 0)
-        {
-            --par5;
-        }
+        blockPos.add(par7.getFrontOffsetX(), par7.getFrontOffsetY(), par7.getFrontOffsetZ());
+//        if (par7 == EnumFacing.DOWN)
+//        {
+//            blockPos.add(0, );
+//        }
+//
+//        if (par7 == EnumFacing.UP)
+//        {
+//            ++par5;
+//        }
+//
+//        if (par7 == EnumFacing.NORTH)
+//        {
+//            --par6;
+//        }
+//
+//        if (par7 == EnumFacing.SOUTH)
+//        {
+//            ++par6;
+//        }
+//
+//        if (par7 == EnumFacing.WEST)
+//        {
+//            --par4;
+//        }
+//
+//        if (par7 == EnumFacing.EAST)
+//        {
+//            ++par4;
+//        }
 
-        if (par7 == 1)
-        {
-            ++par5;
-        }
-
-        if (par7 == 2)
-        {
-            --par6;
-        }
-
-        if (par7 == 3)
-        {
-            ++par6;
-        }
-
-        if (par7 == 4)
-        {
-            --par4;
-        }
-
-        if (par7 == 5)
-        {
-            ++par4;
-        }
-
-        if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6, par7, par1ItemStack))
+        if (!par2EntityPlayer.func_175151_a/*canPlayerEdit*/(blockPos, par7, par1ItemStack))
         {
             return false;
         }
         else
         {
-            Block var8 = par3World.getBlock(par4, par5, par6);
-            Block var9 = par3World.getBlock(par4 + 1, par5, par6);
+            Block var8 = par3World.getBlockState(blockPos).getBlock();
+            Block var9 = par3World.getBlockState(new BlockPos(blockPos).add(0, +1, 0)).getBlock();
 
             if (var8 == Blocks.air && var9 == Blocks.air)
             {
-            	par3World.playSoundEffect((double)par4 + 0.5D, (double)par5 + 0.5D, (double)par6 + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
-            	par3World.setBlock(par4, par5, par6, Blocks.chest);
-                TileEntityChest var10 = (TileEntityChest)par3World.getTileEntity(par4, par5, par6);
+            	par3World.playSoundEffect((double)blockPos.getX() + 0.5D, (double) blockPos.getY() + 0.5D, (double)blockPos.getZ() + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+            	par3World.setBlockState(blockPos, Blocks.chest.getDefaultState());
+                TileEntityChest var10 = (TileEntityChest)par3World.getTileEntity(blockPos);
 
                 if (var10 != null)
                 {
@@ -109,8 +112,9 @@ public class ItemSpecialSet extends Item
                     var10.setInventorySlotContents(26, new ItemStack(AdvancedTools.PoisonKnife, 16));
                 }
 
-                par3World.setBlock(par4 + 1, par5, par6, Blocks.chest);
-                var10 = (TileEntityChest)par3World.getTileEntity(par4 + 1, par5, par6);
+                BlockPos neighbor = new BlockPos(blockPos).add(1, 0, 0);
+                par3World.setBlockState(neighbor, Blocks.chest.getDefaultState());
+                var10 = (TileEntityChest)par3World.getTileEntity(neighbor);
 
                 if (var10 != null)
                 {

@@ -1,6 +1,5 @@
 package Nanashi.AdvancedTools.item;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -11,24 +10,23 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class ItemUQHolySaber extends ItemUniqueArms
 {
+	private float baseDmgValue;
 	public ItemUQHolySaber(ToolMaterial var2)
 	{
 		super(var2);
+		this.baseDmgValue = 4.0F + var2.getDamageVsEntity();
 	}
 
 	public ItemUQHolySaber(ToolMaterial var2, int var3)
 	{
 		super(var2, var3);
+		this.baseDmgValue = var3;
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "HolySaber");
-//	}
+
 	@Override
 	public void onUpdate(ItemStack var1, World var2, Entity var3, int var4, boolean var5)
 	{
@@ -62,7 +60,8 @@ public class ItemUQHolySaber extends ItemUniqueArms
 				var2 = 10;
 			}
 		}
-        ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, var2, 0);
+		ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, this.baseDmgValue + var2, 0);
+		player.getAttributeMap().applyAttributeModifiers(itemstack.getAttributeModifiers());
 		return false;
 	}
 }

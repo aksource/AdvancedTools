@@ -70,15 +70,15 @@ public class Entity_ZombieWarrior extends EntityZombie
 	/**
 	 * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
 	 */
-	@Override
-	protected void attackEntity(Entity var1, float var2)
-	{
-		if (this.attackTime <= 0 && var2 < 2.0F && var1.boundingBox.maxY > this.boundingBox.minY && var1.boundingBox.minY < this.boundingBox.maxY)
-		{
-			this.attackTime = 20;
-			this.attackEntityAsMob(var1);
-		}
-	}
+//	@Override
+//	protected void attackEntity(Entity var1, float var2)
+//	{
+//		if (this.attackTime <= 0 && var2 < 2.0F && var1.boundingBox.maxY > this.boundingBox.minY && var1.boundingBox.minY < this.boundingBox.maxY)
+//		{
+//			this.attackTime = 20;
+//			this.attackEntityAsMob(var1);
+//		}
+//	}
 
 	/**
 	 * knocks back this entity

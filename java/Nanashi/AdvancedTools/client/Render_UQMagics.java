@@ -1,13 +1,18 @@
 package Nanashi.AdvancedTools.client;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 @SideOnly(Side.CLIENT)
 public class Render_UQMagics extends Render
 {
+    protected Render_UQMagics(RenderManager p_i46179_1_) {
+        super(p_i46179_1_);
+    }
+
     /**
      * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
      * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
@@ -22,7 +27,6 @@ public class Render_UQMagics extends Render
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
 	 */
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 }

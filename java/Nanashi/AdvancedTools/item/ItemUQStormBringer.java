@@ -1,8 +1,9 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.entity.Entity_SBWindEdge;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,12 +28,7 @@ public class ItemUQStormBringer extends ItemUniqueArms
 	{
 		super(var2);
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "StormBringer");
-//	}
+
 	@Override
 	public void onUpdate(ItemStack var1, World var2, Entity var3, int var4, boolean var5)
 	{
@@ -68,24 +64,23 @@ public class ItemUQStormBringer extends ItemUniqueArms
 						float var14 = 0.0628F * (float)var9;
 						double var15 = 0.9D * Math.cos((double)var14);
 						double var17 = 0.9D * -Math.sin((double)var14);
-						var2.spawnParticle("explode", var3.posX, var3.posY - 0.85D + 0.5D * (double)var8, var3.posZ, var15, 0.0D, var17);
+						var2.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, var3.posX, var3.posY - 0.85D + 0.5D * (double)var8, var3.posZ, var15, 0.0D, var17);
 					}
 				}
 
-				List var19 = var2.getEntitiesWithinAABB(EntityLivingBase.class, var3.boundingBox.expand(8.0D, 2.0D, 8.0D));
+                @SuppressWarnings("unchecked")
+				List<EntityLivingBase> var19 = var2.getEntitiesWithinAABB(EntityLivingBase.class, var3.getEntityBoundingBox().expand(8.0D, 2.0D, 8.0D));
 
-				for (var9 = 0; var9 < var19.size(); ++var9)
+				for (EntityLivingBase entityLivingBase : var19)
 				{
-					EntityLivingBase var21 = (EntityLivingBase)var19.get(var9);
-
-					if (var21 != var3)
+					if (entityLivingBase != var3)
 					{
 						DamageSource var11 = DamageSource.causePlayerDamage(var3);
-						var21.attackEntityFrom(var11, 0);
-						var12 = var21.posX - var3.posX;
-						double var22 = var21.posZ - var3.posZ;
+                        entityLivingBase.attackEntityFrom(var11, 0);
+						var12 = entityLivingBase.posX - var3.posX;
+						double var22 = entityLivingBase.posZ - var3.posZ;
 						double var16 = Math.atan2(var22, var12);
-						var21.addVelocity(Math.cos(var16) * 8.0D, var21.motionY * 1.7D, Math.sin(var16) * 8.0D);
+                        entityLivingBase.addVelocity(Math.cos(var16) * 8.0D, entityLivingBase.motionY * 1.7D, Math.sin(var16) * 8.0D);
 					}
 				}
 			}
@@ -144,7 +139,7 @@ public class ItemUQStormBringer extends ItemUniqueArms
 	@Override
 	public EnumAction getItemUseAction(ItemStack var1)
 	{
-		return EnumAction.bow;
+		return EnumAction.BOW;
 	}
 
 	@SideOnly(Side.CLIENT)

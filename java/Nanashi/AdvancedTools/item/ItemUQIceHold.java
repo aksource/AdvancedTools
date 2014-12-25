@@ -2,9 +2,7 @@ package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
 import Nanashi.AdvancedTools.entity.Entity_IHFrozenMob;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -14,10 +12,15 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -35,12 +38,7 @@ public class ItemUQIceHold extends ItemUniqueArms
 		super(var2);
 		this.dmg = var3;
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "IceHold");
-//	}
+
 	@Override
 	public boolean onLeftClickEntity(ItemStack itemstack, EntityPlayer player, Entity var1)
 	{
@@ -72,14 +70,15 @@ public class ItemUQIceHold extends ItemUniqueArms
 			int var11;
 			int var12;
 			int var13;
-
+            BlockPos blockPos;
 			if (var7 >= 1.0F)
 			{
 				int var8 = (int)var3.posX;
 				int var9 = (int)var3.posY - 2;
 				var10 = (int)var3.posZ;
 
-				if (!var2.canMineBlock(var3, var8, var9, var10))
+                blockPos = new BlockPos(var3.posX, var3.posY - 2, var3.posZ);
+				if (!var2.canMineBlockBody(var3, blockPos))
 				{
 					return;
 				}
@@ -90,39 +89,39 @@ public class ItemUQIceHold extends ItemUniqueArms
 					{
 						for (var13 = -6; var13 <= 6; ++var13)
 						{
-							if (Math.sqrt((double)(var12 * var12 + var13 * var13)) <= 5.8D && var2.isAirBlock(var8 + var12, var9 + 1 + var11, var10 + var13))
+                            BlockPos blockPos1 = new BlockPos(blockPos).add(var12, var11, var13);
+							if (Math.sqrt((double)(var12 * var12 + var13 * var13)) <= 5.8D && var2.isAirBlock(blockPos1.offsetUp()))
 							{
-								var2.spawnParticle("explode", (double)(var8 + var12), (double)(var9 + 1 + var11), (double)(var10 + var13), 0.0D, 0.0D, 0.0D);
-								Material var14 = var2.getBlock(var8 + var12, var9 + var11, var10 + var13).getMaterial();
-
-								if (var14 == Material.water && var2.getBlockMetadata(var8, var9 + var11, var10) == 0)
+								var2.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (double)(var8 + var12), (double)(var9 + 1 + var11), (double)(var10 + var13), 0.0D, 0.0D, 0.0D);
+                                Material var14 = var2.getBlockState(blockPos1).getBlock().getMaterial();
+								if (var14 == Material.water && ((Integer) var2.getBlockState(new BlockPos(blockPos).add(0, var11, 0)).getValue(BlockLiquid.LEVEL)) == 0)
 								{
-									var2.setBlock(var8 + var12, var9 + var11, var10 + var13, Blocks.ice);
+									var2.setBlockState(blockPos1, Blocks.ice.getDefaultState());
 								}
-								else if (var2.getBlock(var8 + var12, var9 + 1 + var11, var10 + var13) == Blocks.air && Blocks.snow_layer.canPlaceBlockAt(var2, var8 + var12, var9 + 1 + var11, var10 + var13))
+								else if (var2.getBlockState(blockPos1.offsetUp()).getBlock() == Blocks.air && Blocks.snow_layer.canPlaceBlockAt(var2, blockPos1.offsetUp()))
 								{
-									var2.setBlock(var8 + var12, var9 + 1 + var11, var10 + var13, Blocks.snow_layer);
+									var2.setBlockState(blockPos1.offsetUp(), Blocks.snow_layer.getDefaultState());
 								}
 							}
 						}
 					}
 				}
 
-				List var19 = var2.getEntitiesWithinAABB(EntityLiving.class, var3.boundingBox.expand(5.0D, 1.0D, 5.0D));
+                @SuppressWarnings("unchecked")
+				List<EntityLiving> var19 = var2.getEntitiesWithinAABB(EntityLiving.class, var3.getEntityBoundingBox().expand(5.0D, 1.0D, 5.0D));
 
-				for (var12 = 0; var12 < var19.size(); ++var12)
+				for (EntityLiving entityLiving : var19)
 				{
-					EntityLiving var21 = (EntityLiving)var19.get(var12);
 					DamageSource var24 = DamageSource.causePlayerDamage(var3);
 
-					if (var21 instanceof EntityEnderman)
+					if (entityLiving instanceof EntityEnderman)
 					{
-						var21.attackEntityFrom(var24, this.dmg * 3);
+                        entityLiving.attackEntityFrom(var24, this.dmg * 3);
 					}
 					else
 					{
-						var21.attackEntityFrom(var24, 0);
-						Entity_IHFrozenMob var15 = new Entity_IHFrozenMob(var2, var21, var3);
+                        entityLiving.attackEntityFrom(var24, 0);
+						Entity_IHFrozenMob var15 = new Entity_IHFrozenMob(var2, entityLiving, var3);
 
 						if (!var2.isRemote)
 						{
@@ -133,7 +132,7 @@ public class ItemUQIceHold extends ItemUniqueArms
 			}
 			else
 			{
-				MovingObjectPosition var16 = AdvancedTools.setMousePoint(var2, var3);
+				MovingObjectPosition var16 = AdvancedTools.getMousePoint(var2, var3);
 				boolean var17 = false;
 
 				if (var16 != null && var16.typeOfHit == MovingObjectType.ENTITY)
@@ -174,26 +173,28 @@ public class ItemUQIceHold extends ItemUniqueArms
 
 					if (var16.typeOfHit == MovingObjectType.BLOCK)
 					{
-						var10 = var16.blockX;
-						var11 = var16.blockY;
-						var12 = var16.blockZ;
-
+						var10 = var16.func_178782_a().getX();
+						var11 = var16.func_178782_a().getY();
+						var12 = var16.func_178782_a().getZ();
+                        blockPos = var16.func_178782_a();
 						for (var13 = -3; var13 <= 3; ++var13)
 						{
 							for (int var25 = -3; var25 <= 3; ++var25)
 							{
-								if (Math.sqrt((double)(var13 * var13 + var25 * var25)) <= 2.8D && var2.isAirBlock(var10 + var13, var11 + 1, var12 + var25))
+                                BlockPos blockPos2 = new BlockPos(blockPos).add(var13, 0, var25);
+								if (Math.sqrt((double)(var13 * var13 + var25 * var25)) <= 2.8D && var2.isAirBlock(blockPos2.offsetUp()))
 								{
-									var2.spawnParticle("explode", (double)(var10 + var13), (double)(var11 + 1), (double)(var12 + var25), 0.0D, 0.0D, 0.0D);
-									Material var23 = var2.getBlock(var10 + var13, var11, var12 + var25).getMaterial();
+									var2.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (double)(var10 + var13), (double)(var11 + 1), (double)(var12 + var25), 0.0D, 0.0D, 0.0D);
+									Material var23 = var2.getBlockState(blockPos2).getBlock().getMaterial();
+                                    BlockPos blockPos3 = new BlockPos(blockPos).add(var13, 0, var25);
 
-									if (var23 == Material.water && var2.getBlockMetadata(var10, var11, var12) == 0)
+									if (var23 == Material.water && ((Integer) var2.getBlockState(blockPos).getValue(BlockLiquid.LEVEL)) == 0)
 									{
-										var2.setBlock(var10 + var13, var11, var12 + var25, Blocks.ice);
+										var2.setBlockState(blockPos3, Blocks.ice.getDefaultState());
 									}
-									else if (var2.getBlock(var10 + var13, var11 + 1, var12 + var25) == Blocks.air && Blocks.snow.canPlaceBlockAt(var2, var10 + var13, var11 + 1, var12 + var25))
+									else if (var2.getBlockState(blockPos3.offsetUp()).getBlock() == Blocks.air && Blocks.snow.canPlaceBlockAt(var2, blockPos3.offsetUp()))
 									{
-										var2.setBlock(var10 + var13, var11 + 1, var12 + var25, Blocks.snow);
+										var2.setBlockState(blockPos3.offsetUp(), Blocks.snow.getDefaultState());
 									}
 								}
 							}
@@ -216,7 +217,7 @@ public class ItemUQIceHold extends ItemUniqueArms
 	@Override
 	public EnumAction getItemUseAction(ItemStack var1)
 	{
-		return EnumAction.bow;
+		return EnumAction.BOW;
 	}
 
 	@SideOnly(Side.CLIENT)

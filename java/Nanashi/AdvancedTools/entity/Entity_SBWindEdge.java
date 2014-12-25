@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools.entity;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,7 @@ public class Entity_SBWindEdge extends Entity
 	private int yTile;
 	private int zTile;
 //	private Block inTile;
-	private int inData;
+//	private int inData;
 	private boolean inGround;
 	public boolean doesArrowBelongToPlayer;
 	public Entity FB_Master;
@@ -29,7 +29,7 @@ public class Entity_SBWindEdge extends Entity
 		this.yTile = -1;
 		this.zTile = -1;
 //		this.inTile = Blocks.air;
-		this.inData = 0;
+//		this.inData = 0;
 		this.inGround = false;
 		this.ticksInAir = 0;
 //		this.expower = 2.0F;
@@ -42,7 +42,7 @@ public class Entity_SBWindEdge extends Entity
 
 		for (int var1 = 0; var1 < 10; ++var1)
 		{
-			this.worldObj.spawnParticle("explode", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+			this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
@@ -57,14 +57,14 @@ public class Entity_SBWindEdge extends Entity
 		super(var1);
 		this.Init();
 		this.setPosition(var2, var4, var6);
-		this.yOffset = 0.0F;
+//		this.yOffset = 0.0F;
 	}
 
 	public Entity_SBWindEdge(World var1, EntityLivingBase var2, float var3)
 	{
 		super(var1);
 		this.Init();
-		this.yOffset = 0.0F;
+//		this.yOffset = 0.0F;
 		this.doesArrowBelongToPlayer = false;
 		this.FB_Master = var2;
 		this.doesArrowBelongToPlayer = var2 instanceof EntityPlayer;
@@ -121,14 +121,15 @@ public class Entity_SBWindEdge extends Entity
 				this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, (double)var1) * 180.0D / Math.PI);
 			}
 
-			Block var31 = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
+            BlockPos blockPos = new BlockPos(this.xTile, this.yTile, this.zTile);
+			IBlockState var31 = this.worldObj.getBlockState(blockPos);
 
 			//			 if (var31 > 0)
 			//			 {
-			var31.setBlockBoundsBasedOnState(this.worldObj, this.xTile, this.yTile, this.zTile);
-			AxisAlignedBB var2 = var31.getCollisionBoundingBoxFromPool(this.worldObj, this.xTile, this.yTile, this.zTile);
+			var31.getBlock().setBlockBoundsBasedOnState(this.worldObj, blockPos);
+			AxisAlignedBB var2 = var31.getBlock().getCollisionBoundingBox(this.worldObj, blockPos, var31);
 
-			if (var2 != null && var2.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ)))
+			if (var2 != null && var2.isVecInside(new Vec3(this.posX, this.posY, this.posZ)))
 			{
 				this.inGround = true;
 			}
@@ -137,19 +138,19 @@ public class Entity_SBWindEdge extends Entity
 			if (!this.inGround && this.ticksInAir <= 15)
 			{
 				++this.ticksInAir;
-				Vec3 var32 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-				Vec3 var3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-				MovingObjectPosition var4 = this.worldObj.func_147447_a(var32, var3, false, true, false);
-				var32 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-				var3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+				Vec3 var32 = new Vec3(this.posX, this.posY, this.posZ);
+				Vec3 var3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+				MovingObjectPosition var4 = this.worldObj.rayTraceBlocks(var32, var3, false, true, false);
+				var32 = new Vec3(this.posX, this.posY, this.posZ);
+				var3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
 				if (var4 != null)
 				{
-					var3 = Vec3.createVectorHelper(var4.hitVec.xCoord, var4.hitVec.yCoord, var4.hitVec.zCoord);
+					var3 = new Vec3(var4.hitVec.xCoord, var4.hitVec.yCoord, var4.hitVec.zCoord);
 				}
 
 				Entity var5 = null;
-				List var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+				List var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 				double var7 = 0.0D;
 				Entity var10;
 				if (!this.worldObj.isRemote)
@@ -161,7 +162,7 @@ public class Entity_SBWindEdge extends Entity
 						if (var10.canBeCollidedWith() && (var10 != this.FB_Master || this.ticksInAir >= 5))
 						{
 							float var11 = 0.3F;
-							AxisAlignedBB var12 = var10.boundingBox.expand((double)var11, (double)var11, (double)var11);
+							AxisAlignedBB var12 = var10.getEntityBoundingBox().expand((double)var11, (double)var11, (double)var11);
 							MovingObjectPosition var13 = var12.calculateIntercept(var32, var3);
 
 							if (var13 != null)
@@ -208,11 +209,11 @@ public class Entity_SBWindEdge extends Entity
 					}
 					else
 					{
-						this.xTile = var4.blockX;
-						this.yTile = var4.blockY;
-						this.zTile = var4.blockZ;
+						this.xTile = var4.func_178782_a().getX();
+						this.yTile = var4.func_178782_a().getY();
+						this.zTile = var4.func_178782_a().getZ();
 //						this.inTile = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
-						this.inData = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
+//						this.inData = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
 						this.motionX = (double)((float)(var4.hitVec.xCoord - this.posX));
 						this.motionY = (double)((float)(var4.hitVec.yCoord - this.posY));
 						this.motionZ = (double)((float)(var4.hitVec.zCoord - this.posZ));
@@ -238,7 +239,7 @@ public class Entity_SBWindEdge extends Entity
 				for (var15 = 0; var15 < 10; ++var15)
 				{
 					float var16 = 0.1F * (float)var15;
-					this.worldObj.spawnParticle("explode", this.posX + var35 * (double)var16, this.posY + 0.5D + var37 * (double)var16, this.posZ + var38 * (double)var16, 0.0D, 0.0D, 0.0D);
+					this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX + var35 * (double)var16, this.posY + 0.5D + var37 * (double)var16, this.posZ + var38 * (double)var16, 0.0D, 0.0D, 0.0D);
 				}
 
 				for (var15 = 0; var15 < 40; ++var15)
@@ -251,7 +252,7 @@ public class Entity_SBWindEdge extends Entity
 					double var25 = var21 * Math.cos(var40) + var23 * Math.sin(var18) * Math.sin(var40);
 					double var27 = var23 * Math.cos(var18);
 					double var29 = -var21 * Math.sin(var40) + var23 * Math.sin(var18) * Math.cos(var40);
-					this.worldObj.spawnParticle("explode", this.posX, this.posY + 0.5D, this.posZ, var25, var27, var29);
+					this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY + 0.5D, this.posZ, var25, var27, var29);
 				}
 
 				float var39 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
@@ -303,7 +304,7 @@ public class Entity_SBWindEdge extends Entity
 		var1.setShort("yTile", (short)this.yTile);
 		var1.setShort("zTile", (short)this.zTile);
 		//		 var1.setByte("inTile", (byte)this.inTile);
-		var1.setByte("inData", (byte)this.inData);
+//		var1.setByte("inData", (byte)this.inData);
 		var1.setByte("inGround", (byte)(this.inGround ? 1 : 0));
 		var1.setBoolean("player", this.doesArrowBelongToPlayer);
 	}
@@ -317,7 +318,7 @@ public class Entity_SBWindEdge extends Entity
 		this.yTile = var1.getShort("yTile");
 		this.zTile = var1.getShort("zTile");
 		//		 this.inTile = var1.getByte("inTile") & 255;
-		this.inData = var1.getByte("inData") & 255;
+//		this.inData = var1.getByte("inData") & 255;
 		this.inGround = var1.getByte("inGround") == 1;
 		this.doesArrowBelongToPlayer = var1.getBoolean("player");
 	}

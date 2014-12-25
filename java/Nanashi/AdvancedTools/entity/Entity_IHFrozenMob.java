@@ -1,6 +1,7 @@
 package Nanashi.AdvancedTools.entity;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAITasks;
@@ -93,7 +94,7 @@ public class Entity_IHFrozenMob extends Entity
 					this.rotationYaw = this.frozen.rotationYaw;
 					this.frozen.onGround = false;
 					if (this.frozen instanceof EntityMob){
-						((EntityMob)this.frozen).attackTime = 20;
+//						((EntityMob)this.frozen).attackTime = 20;
 						this.frozen.setAttackTarget(this.frozen);
 						this.frozen.setLastAttacker(this.frozen);
 					}
@@ -104,7 +105,7 @@ public class Entity_IHFrozenMob extends Entity
 						double var6 = this.posX + var2 * Math.sin(var4);
 						double var8 = this.posY + (double)this.height * this.rand.nextDouble();
 						double var10 = this.posZ + var2 * Math.cos(var4);
-						this.worldObj.spawnParticle("explode", var6, var8, var10, 0.0D, 0.0D, 0.0D);
+						this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, var6, var8, var10, 0.0D, 0.0D, 0.0D);
 					}
 				}else{
 					this.setDead();

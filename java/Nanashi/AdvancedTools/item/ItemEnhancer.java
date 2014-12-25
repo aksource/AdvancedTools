@@ -13,26 +13,19 @@ public class ItemEnhancer extends Item
         super();
         this.id = var1;
     }
-//    @Override
-//    @SideOnly(Side.CLIENT)
-//    public void registerIcons(IIconRegister par1IconRegister)
-//    {
-//    	if(id == 0)
-//    		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "EnhancerR");
-//    	else
-//    		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "EnhancerB");
-//    }
+
     @Override
-    public boolean hasEffect(ItemStack par1ItemStack, int pass)
+    public boolean hasEffect(ItemStack par1ItemStack)
     {
         return true;
     }
+
     @Override
     public EnumRarity getRarity(ItemStack var1)
     {
         if(this.id == 0)
-        	return EnumRarity.uncommon;
+        	return EnumRarity.UNCOMMON;
         else
-        	return EnumRarity.rare;
+        	return EnumRarity.RARE;
     }
 }

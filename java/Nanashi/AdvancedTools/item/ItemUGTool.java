@@ -1,9 +1,8 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,12 +13,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.ChunkPosition;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +33,7 @@ public abstract class ItemUGTool extends ItemTool
 	private int[] rangeArray = new int[]{2,4,7,9,9};
 	private int saftyCount;
 	private int breakcount;
-	public int side;
+	public EnumFacing side;
 
 	protected ItemUGTool(int var2, ToolMaterial var3, Set var4, float var5) {
 		super(var2, var3, var4);
@@ -42,9 +42,9 @@ public abstract class ItemUGTool extends ItemTool
 		this.setMaxDamage((int)(var5 * (float)this.getMaxDamage()));
 	}
 
-	public abstract boolean doChainDestruction(Block var1, int var2);
+	public abstract boolean doChainDestruction(IBlockState state);
 
-    public abstract boolean isProperTool(Block block, int meta);
+    public abstract boolean isProperTool(IBlockState state);
 
 	@Override
 	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
@@ -63,14 +63,14 @@ public abstract class ItemUGTool extends ItemTool
 	}
 
     @Override
-	public boolean onBlockDestroyed(ItemStack item, World world, Block block, int x, int y, int z, EntityLivingBase breaker) {
+	public boolean onBlockDestroyed(ItemStack item, World world, Block block, BlockPos blockPos, EntityLivingBase breaker) {
 		if (!world.isRemote){
 			item.damageItem(1, breaker);
 			this.breakcount = 0;
+            IBlockState state = world.getBlockState(blockPos);
 			int range = getRange(item);
-            int meta = world.getBlockMetadata(x, y, z);
-			if (range != 0 && breaker instanceof EntityPlayer && ForgeHooks.canHarvestBlock(block, (EntityPlayer) breaker, meta)) {
-                this.destroyAroundBlock(item, world, block, meta, x, y, z, (EntityPlayer) breaker, range);
+			if (range != 0 && breaker instanceof EntityPlayer && ForgeHooks.canHarvestBlock(block, (EntityPlayer) breaker, world, blockPos)) {
+                this.destroyAroundBlock(item, world, state, blockPos, (EntityPlayer) breaker, range);
                 item.damageItem(this.breakcount, breaker);
             }
             return true;
@@ -78,59 +78,59 @@ public abstract class ItemUGTool extends ItemTool
 		return false;
 	}
 
-	private boolean destroyAroundBlock(ItemStack var1, World world, Block block, int meta, int x, int y, int z, EntityPlayer var6, int range) {
-		this.searchAndDestroyBlock(world,x, y, z, side, block, meta, var1, var6, range);
+	private boolean destroyAroundBlock(ItemStack var1, World world, IBlockState state, BlockPos blockPos, EntityPlayer var6, int range) {
+		this.searchAndDestroyBlock(world, blockPos, side, state, var1, var6, range);
 		return true;
 	}
 
-	protected void searchAndDestroyBlock(World world, int x, int y, int z, int side, Block block, int meta, ItemStack var6, EntityPlayer var7, int range) {
-		ArrayList<ChunkPosition> var8 = new ArrayList<>();
-		var8.add(new ChunkPosition(x, y, z));
+	protected void searchAndDestroyBlock(World world, BlockPos blockPos, EnumFacing side, IBlockState state, ItemStack var6, EntityPlayer var7, int range) {
+		ArrayList<BlockPos> var8 = new ArrayList<>();
+		var8.add(blockPos);
 		int minX, minY, minZ, maxX, maxY, maxZ;
 
-		if (!this.doChainDestruction(block, meta)){
-			minX = x - range;
-			minY = y - range;
-			minZ = z - range;
-			maxX = x + range;
-			maxY = y + range;
-			maxZ = z + range;
+		if (!this.doChainDestruction(state)){
+			minX = blockPos.getX() - range;
+			minY = blockPos.getY() - range;
+			minZ = blockPos.getZ() - range;
+			maxX = blockPos.getX() + range;
+			maxY = blockPos.getY() + range;
+			maxZ = blockPos.getZ() + range;
 
-			if (side == 0 || side == 1){
-				minY = y;
-				maxY = y;
+			if (side == EnumFacing.DOWN || side == EnumFacing.UP){
+				minY = blockPos.getY();
+				maxY = blockPos.getY();
 			}
 
-			if (side == 2 || side == 3){
-				minZ = z;
-				maxZ = z;
+			if (side == EnumFacing.NORTH || side == EnumFacing.SOUTH){
+				minZ = blockPos.getZ();
+				maxZ = blockPos.getZ();
 				minY += range - AdvancedTools.digUnder;
 				maxY += range - AdvancedTools.digUnder;
 			}
 
-			if (side == 4 || side == 5){
-				minX = x;
-				maxX = x;
+			if (side == EnumFacing.WEST || side == EnumFacing.EAST){
+				minX = blockPos.getX();
+				maxX = blockPos.getX();
 				minY += range - AdvancedTools.digUnder;
 				maxY += range - AdvancedTools.digUnder;
 			}
 		}else{
-			minX = x - this.cDestroyRange;
-			minY = y - this.cDestroyRange;
-			minZ = z - this.cDestroyRange;
-			maxX = x + this.cDestroyRange;
-			maxY = y + this.cDestroyRange;
-			maxZ = z + this.cDestroyRange;
+			minX = blockPos.getX() - this.cDestroyRange;
+			minY = blockPos.getY() - this.cDestroyRange;
+			minZ = blockPos.getZ() - this.cDestroyRange;
+			maxX = blockPos.getX() + this.cDestroyRange;
+			maxY = blockPos.getY() + this.cDestroyRange;
+			maxZ = blockPos.getZ() + this.cDestroyRange;
 		}
 
-		ChunkPosition minChunkPos = new ChunkPosition(minX, minY, minZ);
-		ChunkPosition maxChunkPos = new ChunkPosition(maxX, maxY, maxZ);
+        BlockPos minChunkPos = new BlockPos(minX, minY, minZ);
+        BlockPos maxChunkPos = new BlockPos(maxX, maxY, maxZ);
 
 		for (int var17 = 0; var17 < this.saftyCount; ++var17){
-			ArrayList<ChunkPosition> var18 = new ArrayList<>();
+			ArrayList<BlockPos> var18 = new ArrayList<>();
 
-			for (ChunkPosition chunkPosition : var8) {
-				var18.addAll(this.searchAroundBlock(world, chunkPosition, minChunkPos, maxChunkPos, block, var6, var7));
+			for (BlockPos chunkPosition : var8) {
+				var18.addAll(this.searchAroundBlock(world, chunkPosition, minChunkPos, maxChunkPos, state, var6, var7));
 			}
 
 			if (var18.isEmpty()){
@@ -142,14 +142,14 @@ public abstract class ItemUGTool extends ItemTool
 		}
 	}
 
-	protected ArrayList<ChunkPosition> searchAroundBlock(World world,ChunkPosition var1, ChunkPosition minChunkPos, ChunkPosition maxChunkPos, Block var4, ItemStack var5, EntityPlayer var6) {
-		ArrayList<ChunkPosition> var7 = new ArrayList<>();
+	protected ArrayList<BlockPos> searchAroundBlock(World world,BlockPos var1, BlockPos minChunkPos, BlockPos maxChunkPos, IBlockState var4, ItemStack var5, EntityPlayer var6) {
+		ArrayList<BlockPos> var7 = new ArrayList<>();
 
-        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+        for (EnumFacing direction : EnumFacing.values()) {
             int directionIndex = direction.ordinal();
-            ChunkPosition chunkpos;
+            BlockPos chunkpos;
             if (checkBlockPositionInRange(var1, minChunkPos, maxChunkPos, directionIndex)) {
-                chunkpos = new ChunkPosition(var1.chunkPosX + direction.offsetX, var1.chunkPosY + direction.offsetY, var1.chunkPosZ + direction.offsetZ);
+                chunkpos = new BlockPos(var1).add(direction.getFrontOffsetX(), direction.getFrontOffsetY(), direction.getFrontOffsetZ());
                 if (this.destroyBlock(world, chunkpos, var4, var5, var6)) {
                     var7.add(chunkpos);
                 }
@@ -158,20 +158,20 @@ public abstract class ItemUGTool extends ItemTool
 		return var7;
 	}
 
-    public boolean checkBlockPositionInRange(ChunkPosition check, ChunkPosition min, ChunkPosition max, int index) {
+    public boolean checkBlockPositionInRange(BlockPos check, BlockPos min, BlockPos max, int index) {
         switch (index) {
-            case 0 : return check.chunkPosY > min.chunkPosY;
-            case 1 : return check.chunkPosY < max.chunkPosY;
-            case 2 : return check.chunkPosZ > min.chunkPosZ;
-            case 3 : return check.chunkPosZ < max.chunkPosZ;
-            case 4 : return check.chunkPosX > min.chunkPosX;
-            case 5 : return check.chunkPosX < max.chunkPosX;
+            case 0 : return check.getY() > min.getY();
+            case 1 : return check.getY() < max.getY();
+            case 2 : return check.getZ() > min.getZ();
+            case 3 : return check.getZ() < max.getZ();
+            case 4 : return check.getX() > min.getX();
+            case 5 : return check.getX() < max.getX();
             default : return false;
         }
     }
 
-	protected boolean destroyBlock(World world, ChunkPosition var1, Block block, ItemStack var3, EntityPlayer var4) {
-		Block var5 = world.getBlock(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ);
+	protected boolean destroyBlock(World world, BlockPos var1, IBlockState state, ItemStack var3, EntityPlayer var4) {
+		Block var5 = world.getBlockState(var1).getBlock();
 
 		if (var5 == Blocks.air){
 			return false;
@@ -179,35 +179,35 @@ public abstract class ItemUGTool extends ItemTool
         List<Block> rsList = Arrays.asList(Blocks.redstone_ore, Blocks.lit_redstone_ore);
         List<Block> dirtList = Arrays.asList(Blocks.dirt, Blocks.grass);
 
-        if (rsList.contains(block) && !rsList.contains(var5)) {
+        if (rsList.contains(state.getBlock()) && !rsList.contains(var5)) {
             return false;
         }
 
-        if (dirtList.contains(block) && !dirtList.contains(var5)) {
+        if (dirtList.contains(state.getBlock()) && !dirtList.contains(var5)) {
             return false;
         }
 
-        if (!rsList.contains(block) && !dirtList.contains(block) && var5 != block) {
+        if (!rsList.contains(state.getBlock()) && !dirtList.contains(state.getBlock()) && var5 != state.getBlock()) {
             return false;
         }
 
-        return this.checkAndDestroy(world, var1, var5, var3, var4);
+        return this.checkAndDestroy(world, var1, state, var3, var4);
 	}
 
-	private boolean checkAndDestroy(World world, ChunkPosition var1, Block var2, ItemStack var3, EntityPlayer var4) {
-		int var5 = world.getBlockMetadata(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ);
-        var2.onBlockHarvested(world, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, var5, var4);
-		if (var2.removedByPlayer(world, var4, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, true)){
-			var2.onBlockDestroyedByPlayer(world, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, var5);
+	private boolean checkAndDestroy(World world, BlockPos var1, IBlockState var2, ItemStack var3, EntityPlayer var4) {
+//		int var5 = world.getBlockMetadata(var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ);
+        var2.getBlock().onBlockHarvested(world, var1, var2, var4);
+		if (var2.getBlock().removedByPlayer(world, var1, var4, true)){
+			var2.getBlock().onBlockDestroyedByPlayer(world, var1, var2);
 			if(AdvancedTools.dropGather){
-				var2.harvestBlock(world, var4, MathHelper.ceiling_double_int( var4.posX), MathHelper.ceiling_double_int( var4.posY), MathHelper.ceiling_double_int( var4.posZ), var5);
+				var2.getBlock().harvestBlock(world, var4, new BlockPos(var4.posX, var4.posY, var4.posZ), var2, null);
 			}else{
-				var2.harvestBlock(world, var4, var1.chunkPosX, var1.chunkPosY, var1.chunkPosZ, var5);
+				var2.getBlock().harvestBlock(world, var4, var1, var2, null);
 			}
 
             if (!isSilkTouch(var3)) {
-                int exp = var2.getExpDrop(world, var5, EnchantmentHelper.getFortuneModifier(var4));
-                var2.dropXpOnBlockBreak(world, MathHelper.ceiling_double_int(var4.posX), MathHelper.ceiling_double_int(var4.posY), MathHelper.ceiling_double_int(var4.posZ), exp);
+                int exp = var2.getBlock().getExpDrop(world, var1, EnchantmentHelper.getFortuneModifier(var4));
+                var2.getBlock().dropXpOnBlockBreak(world, new BlockPos(var4.posX, var4.posY, var4.posZ), exp);
             }
 
             if (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, var3) <= 0){

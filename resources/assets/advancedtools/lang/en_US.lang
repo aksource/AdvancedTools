@@ -35,6 +35,7 @@ item.InfinityAxe.name=InfinityAxe
 item.InfinityShovel.name=InfinityShovel
 item.InfinityHoe.name=Infinity Hoe
 item.GenocideBlade.name=Genocide Blade
+item.spawnItem.name=Spawn Item for AT Mob
 
 entity.AdvancedTools.HighSkeleton.name=HighSkeleton
 entity.AdvancedTools.SkeletonSniper.name=SkeletonSniper

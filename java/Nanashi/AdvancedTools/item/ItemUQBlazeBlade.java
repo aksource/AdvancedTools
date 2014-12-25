@@ -1,8 +1,8 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.entity.Entity_BBFireBall;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -25,12 +25,7 @@ public class ItemUQBlazeBlade extends ItemUniqueArms
 	{
 		super(var2);
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "BlazeBlade");
-//	}
+
 	@Override
 	public void onUpdate(ItemStack var1, World var2, Entity var3, int var4, boolean var5)
 	{
@@ -109,7 +104,7 @@ public class ItemUQBlazeBlade extends ItemUniqueArms
 	@Override
 	public EnumAction getItemUseAction(ItemStack var1)
 	{
-		return EnumAction.bow;
+		return EnumAction.BOW;
 	}
 
 	@SideOnly(Side.CLIENT)

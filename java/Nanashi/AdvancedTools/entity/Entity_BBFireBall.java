@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools.entity;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,8 +17,8 @@ public class Entity_BBFireBall extends Entity
 	private int xTile;
 	private int yTile;
 	private int zTile;
-	private Block inTile;
-	private int inData;
+//	private Block inTile;
+//	private int inData;
 	private boolean inGround;
 	private boolean explodeFlag;
 	public boolean doesArrowBelongToPlayer;
@@ -31,8 +31,8 @@ public class Entity_BBFireBall extends Entity
 		this.xTile = -1;
 		this.yTile = -1;
 		this.zTile = -1;
-		this.inTile = Blocks.air;
-		this.inData = 0;
+//		this.inTile = Blocks.air;
+//		this.inData = 0;
 		this.inGround = false;
 		this.explodeFlag = false;
 		this.ticksInAir = 0;
@@ -47,7 +47,7 @@ public class Entity_BBFireBall extends Entity
 
 		if (!this.isWet())
 		{
-			List var2 = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, this.boundingBox.expand((double)var1, (double)var1, (double)var1));
+			List var2 = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, this.getEntityBoundingBox().expand((double) var1, (double) var1, (double) var1));
 			int var3;
 
 			for (var3 = 0; var3 < var2.size(); ++var3)
@@ -56,24 +56,26 @@ public class Entity_BBFireBall extends Entity
 				var4.setFire(5);
 			}
 
-			var3 = MathHelper.floor_double(this.posX);
-			int var8 = MathHelper.floor_double(this.posY);
-			int var5 = MathHelper.floor_double(this.posZ);
+//			var3 = MathHelper.floor_double(this.posX);
+//			int var8 = MathHelper.floor_double(this.posY);
+//			int var5 = MathHelper.floor_double(this.posZ);
+            BlockPos blockPos = new BlockPos(this.posX, this.posY, this.posZ);
 
-			if (this.worldObj.getBlock(var3, var8, var5) == Blocks.air && Blocks.fire.canPlaceBlockAt(this.worldObj, var3, var8, var5))
+			if (this.worldObj.getBlockState(blockPos).getBlock() == Blocks.air && Blocks.fire.canPlaceBlockAt(this.worldObj, blockPos))
 			{
-				this.worldObj.setBlock(var3, var8, var5, Blocks.fire);
+				this.worldObj.setBlockState(blockPos, Blocks.fire.getDefaultState());
 			}
 
 			for (int var6 = 0; var6 < 4; ++var6)
 			{
-				var3 = MathHelper.floor_double(this.posX) + this.rand.nextInt(3) - 1;
-				var8 = MathHelper.floor_double(this.posY) + this.rand.nextInt(3) - 1;
-				var5 = MathHelper.floor_double(this.posZ) + this.rand.nextInt(3) - 1;
+//				var3 = MathHelper.floor_double(this.posX) + this.rand.nextInt(3) - 1;
+//				var8 = MathHelper.floor_double(this.posY) + this.rand.nextInt(3) - 1;
+//				var5 = MathHelper.floor_double(this.posZ) + this.rand.nextInt(3) - 1;
+                blockPos = new BlockPos(this.posX + this.rand.nextInt(3) - 1, this.posY + this.rand.nextInt(3) - 1, this.posZ + this.rand.nextInt(3) - 1);
 
-				if (this.worldObj.getBlock(var3, var8, var5) == Blocks.air && Blocks.fire.canPlaceBlockAt(this.worldObj, var3, var8, var5))
+				if (this.worldObj.getBlockState(blockPos).getBlock() == Blocks.air && Blocks.fire.canPlaceBlockAt(this.worldObj, blockPos))
 				{
-					this.worldObj.setBlock(var3, var8, var5, Blocks.fire);
+					this.worldObj.setBlockState(blockPos, Blocks.fire.getDefaultState());
 				}
 			}
 
@@ -90,7 +92,7 @@ public class Entity_BBFireBall extends Entity
 		{
 			for (int var7 = 0; var7 < 10; ++var7)
 			{
-				this.worldObj.spawnParticle("explode", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+				this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
 			}
 		}
 	}
@@ -106,14 +108,14 @@ public class Entity_BBFireBall extends Entity
 		super(var1);
 		this.Init();
 		this.setPosition(var2, var4, var6);
-		this.yOffset = 0.0F;
+//		this.yOffset = 0.0F;
 	}
 
 	public Entity_BBFireBall(World var1, EntityLivingBase var2, float var3, boolean var4)
 	{
 		super(var1);
 		this.Init();
-		this.yOffset = 0.0F;
+//		this.yOffset = 0.0F;
 		this.explodeFlag = var4;
 		this.doesArrowBelongToPlayer = false;
 		this.FB_Master = var2;
@@ -167,14 +169,16 @@ public class Entity_BBFireBall extends Entity
 			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, (double)var1) * 180.0D / Math.PI);
 		}
 
-		Block var17 = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
+        BlockPos blockPos = new BlockPos(this.xTile, this.yTile, this.zTile);
 
-		if (var17 != Blocks.air)
+		IBlockState var17 = this.worldObj.getBlockState(blockPos);
+
+		if (var17.getBlock() != Blocks.air)
 		{
-			var17.setBlockBoundsBasedOnState(this.worldObj, this.xTile, this.yTile, this.zTile);
-			AxisAlignedBB var2 = var17.getCollisionBoundingBoxFromPool(this.worldObj, this.xTile, this.yTile, this.zTile);
+			var17.getBlock().setBlockBoundsBasedOnState(this.worldObj, blockPos);
+			AxisAlignedBB var2 = var17.getBlock().getCollisionBoundingBox(this.worldObj, blockPos, this.worldObj.getBlockState(blockPos));
 
-			if (var2 != null && var2.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ)))
+			if (var2 != null && var2.isVecInside(new Vec3(this.posX, this.posY, this.posZ)))
 			{
 				this.inGround = true;
 			}
@@ -183,19 +187,19 @@ public class Entity_BBFireBall extends Entity
 		if (!this.inGround && this.ticksInAir <= 15)
 		{
 			++this.ticksInAir;
-			Vec3 var18 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-			Vec3 var3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-			MovingObjectPosition var4 = this.worldObj.func_147447_a(var18, var3, false, true, false);
-			var18 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-			var3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+			Vec3 var18 = new Vec3(this.posX, this.posY, this.posZ);
+			Vec3 var3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+			MovingObjectPosition var4 = this.worldObj.rayTraceBlocks(var18, var3, false, true, false);
+			var18 = new Vec3(this.posX, this.posY, this.posZ);
+			var3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
 			if (var4 != null)
 			{
-				var3 = Vec3.createVectorHelper(var4.hitVec.xCoord, var4.hitVec.yCoord, var4.hitVec.zCoord);
+				var3 = new Vec3(var4.hitVec.xCoord, var4.hitVec.yCoord, var4.hitVec.zCoord);
 			}
 
 			Entity var5 = null;
-			List var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+			List var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 			double var7 = 0.0D;
 			Entity var10;
 			if (!this.worldObj.isRemote)
@@ -207,7 +211,7 @@ public class Entity_BBFireBall extends Entity
 					if (var10.canBeCollidedWith() && (var10 != this.FB_Master || this.ticksInAir >= 5))
 					{
 						float var11 = 0.3F;
-						AxisAlignedBB var12 = var10.boundingBox.expand((double)var11, (double)var11, (double)var11);
+						AxisAlignedBB var12 = var10.getEntityBoundingBox().expand((double)var11, (double)var11, (double)var11);
 						MovingObjectPosition var13 = var12.calculateIntercept(var18, var3);
 
 						if (var13 != null)
@@ -253,11 +257,11 @@ public class Entity_BBFireBall extends Entity
 				}
 				else
 				{
-					this.xTile = var4.blockX;
-					this.yTile = var4.blockY;
-					this.zTile = var4.blockZ;
-					this.inTile = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
-					this.inData = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
+					this.xTile = var4.func_178782_a().getX();//BlockPosから取得
+					this.yTile = var4.func_178782_a().getY();
+//					this.zTile = var4.func_178782_a().getZ();
+//					this.inTile = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
+//					this.inData = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
 					this.motionX = (double)((float)(var4.hitVec.xCoord - this.posX));
 					this.motionY = (double)((float)(var4.hitVec.yCoord - this.posY));
 					this.motionZ = (double)((float)(var4.hitVec.zCoord - this.posZ));
@@ -282,11 +286,11 @@ public class Entity_BBFireBall extends Entity
 			for (int var15 = 0; var15 < 10; ++var15)
 			{
 				float var16 = 0.1F * (float)var15;
-				this.worldObj.spawnParticle("smoke", this.posX + var21 * (double)var16, this.posY + 0.5D + var20 * (double)var16, this.posZ + var23 * (double)var16, 0.0D, 0.0D, 0.0D);
+				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX + var21 * (double)var16, this.posY + 0.5D + var20 * (double)var16, this.posZ + var23 * (double)var16, 0.0D, 0.0D, 0.0D);
 
 				if (this.explodeFlag)
 				{
-					this.worldObj.spawnParticle("reddust", this.posX + var21 * (double)var16, this.posY + 0.5D + var20 * (double)var16, this.posZ + var23 * (double)var16, 0.0D, 0.0D, 0.0D);
+					this.worldObj.spawnParticle(EnumParticleTypes.REDSTONE, this.posX + var21 * (double)var16, this.posY + 0.5D + var20 * (double)var16, this.posZ + var23 * (double)var16, 0.0D, 0.0D, 0.0D);
 				}
 			}
 
@@ -338,7 +342,7 @@ public class Entity_BBFireBall extends Entity
 		var1.setShort("yTile", (short)this.yTile);
 		var1.setShort("zTile", (short)this.zTile);
 		//		 var1.setByte("inTile", (byte)this.inTile);
-		var1.setByte("inData", (byte)this.inData);
+//		var1.setByte("inData", (byte)this.inData);
 		var1.setByte("inGround", (byte)(this.inGround ? 1 : 0));
 		var1.setBoolean("player", this.doesArrowBelongToPlayer);
 	}
@@ -352,7 +356,7 @@ public class Entity_BBFireBall extends Entity
 		this.yTile = var1.getShort("yTile");
 		this.zTile = var1.getShort("zTile");
 		//		 this.inTile = var1.getByte("inTile") & 255;
-		this.inData = var1.getByte("inData") & 255;
+//		this.inData = var1.getByte("inData") & 255;
 		this.inGround = var1.getByte("inGround") == 1;
 		this.doesArrowBelongToPlayer = var1.getBoolean("player");
 	}

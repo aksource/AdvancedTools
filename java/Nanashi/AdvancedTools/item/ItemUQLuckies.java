@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools.item;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -22,12 +22,6 @@ public class ItemUQLuckies extends ItemUniqueArms
 		super(var2, var3);
 		dmg = var3;
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "Luckluck");
-//	}
 
 	public void onCreated(ItemStack var1, World var2, EntityPlayer var3)
 	{

@@ -1,8 +1,8 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.entity.Entity_PGPowerBomb;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
@@ -21,12 +21,6 @@ public class ItemUQPlanetGuardian extends ItemUniqueArms
 	{
 		super(var2);
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "PlanetGuardian");
-//	}
 
 	@Override
 	public void onPlayerStoppedUsing(ItemStack var1, World var2, EntityPlayer var3, int var4)
@@ -69,7 +63,7 @@ public class ItemUQPlanetGuardian extends ItemUniqueArms
 	@Override
 	public EnumAction getItemUseAction(ItemStack var1)
 	{
-		return EnumAction.bow;
+		return EnumAction.BOW;
 	}
 
 	@SideOnly(Side.CLIENT)

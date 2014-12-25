@@ -1,9 +1,5 @@
 package Nanashi.AdvancedTools.item;
 
-import Nanashi.AdvancedTools.AdvancedTools;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,19 +23,13 @@ public class Item_CrossBow extends ItemBow
 	{
 		return true;
 	}
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
-	{
-		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "CrossBow");
-	}
 
 	public void onPlayerStoppedUsing(ItemStack var1, World var2, EntityPlayer var3, int var4) {}
 
 
 	public EnumAction getItemUseAction(ItemStack var1)
 	{
-		return EnumAction.none;
+		return EnumAction.NONE;
 	}
 
 	public ItemStack onItemRightClick(ItemStack var1, World var2, EntityPlayer var3)

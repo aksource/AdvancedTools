@@ -4,10 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -26,7 +23,7 @@ public class Entity_PGPowerBomb extends Entity
 	{
 		super.setDead();
 		this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
-		List var1 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(5.0D, 5.0D, 5.0D));
+		List var1 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(5.0D, 5.0D, 5.0D));
 		int var2;
 
 		for (var2 = 0; var2 < var1.size(); ++var2)
@@ -48,7 +45,7 @@ public class Entity_PGPowerBomb extends Entity
 			double var5 = this.rand.nextDouble() * Math.PI * 2.0D;
 			double var7 = this.posX + var11 * Math.sin(var5);
 			double var9 = this.posZ + var11 * Math.cos(var5);
-			this.worldObj.spawnParticle("explode", var7, this.posY, var9, 0.0D, 0.0D, 0.0D);
+			this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, var7, this.posY, var9, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
@@ -63,7 +60,7 @@ public class Entity_PGPowerBomb extends Entity
 		super(var1);
 		this.Init();
 		this.setPosition(var2, var4, var6);
-		this.yOffset = 0.0F;
+//		this.yOffset = 0.0F;
 	}
 
 	public Entity_PGPowerBomb(World var1, EntityPlayer var2, float var3)
@@ -71,15 +68,15 @@ public class Entity_PGPowerBomb extends Entity
 		super(var1);
 		this.expower = var3;
 		this.Init();
-		this.yOffset = 0.0F;
+//		this.yOffset = 0.0F;
 		this.PB_Master = var2;
 		this.setLocationAndAngles(var2.posX, var2.posY + (double)var2.getEyeHeight(), var2.posZ, var2.rotationYaw, var2.rotationPitch);
 		double var4 = this.posX + 4.0D * (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI)) * (double)MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
 		double var6 = this.posZ + 4.0D * (double)MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * (double)MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
 		double var8 = this.posY + 4.0D * (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
-		Vec3 var10 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-		Vec3 var11 = Vec3.createVectorHelper(var4, var8, var6);
-		MovingObjectPosition var12 = this.worldObj.func_147447_a(var10, var11, false, true, false);
+		Vec3 var10 = new Vec3(this.posX, this.posY, this.posZ);
+		Vec3 var11 = new Vec3(var4, var8, var6);
+		MovingObjectPosition var12 = this.worldObj.rayTraceBlocks(var10, var11, false, true, false);
 
 		if (var12 == null)
 		{

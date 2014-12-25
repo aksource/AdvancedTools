@@ -2,8 +2,6 @@ package Nanashi.AdvancedTools.item;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -13,7 +11,10 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -30,15 +31,11 @@ public class Item_Negi extends ItemFood
 	{
 		return true;
 	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "NEGI");
-//	}
+
 	@Override
-	public ItemStack onEaten(ItemStack var1, World var2, EntityPlayer var3)
+	protected void onFoodEaten(ItemStack var1, World var2, EntityPlayer var3)
 	{
+        super.onFoodEaten(var1, var2, var3);
 		float var4 = 0.5F * (float)var1.getItemDamage() / (float)this.getMaxDamage();
 
 		if (var4 > 0.0F)
@@ -50,8 +47,6 @@ public class Item_Negi extends ItemFood
 		{
 			var3.addPotionEffect(new PotionEffect(Potion.heal.id, 1, 0));
 		}
-
-		return super.onEaten(var1, var2, var3);
 	}
 	@Override
 	public boolean hitEntity(ItemStack var1, EntityLivingBase var2, EntityLivingBase var3)
@@ -59,8 +54,9 @@ public class Item_Negi extends ItemFood
 		var1.damageItem(1, var3);
 		return true;
 	}
+
 	@Override
-	public boolean onBlockDestroyed(ItemStack par1, World par2, Block par3, int par4, int par5, int par6, EntityLivingBase par7)
+	public boolean onBlockDestroyed(ItemStack par1, World par2, Block par3, BlockPos blockPos, EntityLivingBase par7)
 	{
 		par1.damageItem(2, par7);
 		return true;
@@ -76,7 +72,7 @@ public class Item_Negi extends ItemFood
 	public Multimap getAttributeModifiers(ItemStack itemStack)
 	{
 		Multimap multimap = HashMultimap.create();
-		multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", (double)3, 0));
+		multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double)3, 0));
 		return multimap;
 	}
 	@SideOnly(Side.CLIENT)

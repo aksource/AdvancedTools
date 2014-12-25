@@ -4,6 +4,7 @@ import Nanashi.AdvancedTools.AdvancedTools;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -20,35 +21,25 @@ public class ItemUGPickaxe extends ItemUGTool
         setHarvestLevel("pickaxe", var2.getHarvestLevel());
 	}
 
-//	public ItemUGPickaxe(ToolMaterial var2)
-//	{
-//		super(2, var2, blocksEffectiveAgainst, 1.0F);
-//	}
-
     @Override
     public boolean canHarvestBlock(Block var1, ItemStack itemStack) {
         return materialEffectiveAgainst.contains(var1.getMaterial());
     }
 
 	@Override
-	public float getDigSpeed(ItemStack var1, Block var2, int meta) {
-		return var2 != null && (materialEffectiveAgainst.contains(var2.getMaterial())) ? this.efficiencyOnProperMaterial : super.getDigSpeed(var1, var2, meta);
-	}
-
-//    @Override
-//    public Set<String> getToolClasses(ItemStack stack) {
-//        return ImmutableSet.of("pickaxe");
-//    }
-
-    @Override
-    public boolean doChainDestruction(Block var1, int var2) {
-		return checkArrays(var1, AdvancedTools.addBlockForPickaxe)
-                && (isProperTool(var1, var2) && this.toolMaterial.getHarvestLevel() >= var1.getHarvestLevel(var2));
+	public float getDigSpeed(ItemStack var1, IBlockState state) {
+		return state.getBlock() != null && (materialEffectiveAgainst.contains(state.getBlock().getMaterial())) ? this.efficiencyOnProperMaterial : super.getDigSpeed(var1, state);
 	}
 
     @Override
-    public boolean isProperTool(Block block, int meta) {
-        return Optional.fromNullable(block.getHarvestTool(meta)).or("").equals("pickaxe");
+    public boolean doChainDestruction(IBlockState state) {
+		return checkArrays(state.getBlock(), AdvancedTools.addBlockForPickaxe)
+                && (isProperTool(state) && this.toolMaterial.getHarvestLevel() >= state.getBlock().getHarvestLevel(state));
+	}
+
+    @Override
+    public boolean isProperTool(IBlockState state) {
+        return Optional.fromNullable(state.getBlock().getHarvestTool(state)).or("").equals("pickaxe");
     }
 
     static{
