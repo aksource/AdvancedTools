@@ -66,7 +66,7 @@ public class ItemSpecialSet extends Item
 //            ++par4;
 //        }
 
-        if (!par2EntityPlayer.func_175151_a/*canPlayerEdit*/(blockPos, par7, par1ItemStack))
+        if (!par2EntityPlayer.canPlayerEdit(blockPos, par7, par1ItemStack))
         {
             return false;
         }

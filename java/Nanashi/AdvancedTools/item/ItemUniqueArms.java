@@ -29,7 +29,7 @@ public class ItemUniqueArms extends ItemSword
 
 		if (var1.getItem() == AdvancedTools.SmashBat)
 		{
-			var1.addEnchantment(Enchantment.field_180313_o/*knockback*/, 10);
+			var1.addEnchantment(Enchantment.knockback, 10);
 		}
 	}
 	@Override
@@ -41,7 +41,7 @@ public class ItemUniqueArms extends ItemSword
 		{
 			if (var1.getItem() == AdvancedTools.SmashBat)
 			{
-				var1.addEnchantment(Enchantment.field_180313_o/*knockback*/, 10);
+				var1.addEnchantment(Enchantment.knockback, 10);
 			}
 		}
 	}

@@ -90,7 +90,7 @@ public class ItemUQIceHold extends ItemUniqueArms
 						for (var13 = -6; var13 <= 6; ++var13)
 						{
                             BlockPos blockPos1 = new BlockPos(blockPos).add(var12, var11, var13);
-							if (Math.sqrt((double)(var12 * var12 + var13 * var13)) <= 5.8D && var2.isAirBlock(blockPos1.offsetUp()))
+							if (Math.sqrt((double)(var12 * var12 + var13 * var13)) <= 5.8D && var2.isAirBlock(blockPos1.up()))
 							{
 								var2.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (double)(var8 + var12), (double)(var9 + 1 + var11), (double)(var10 + var13), 0.0D, 0.0D, 0.0D);
                                 Material var14 = var2.getBlockState(blockPos1).getBlock().getMaterial();
@@ -98,9 +98,9 @@ public class ItemUQIceHold extends ItemUniqueArms
 								{
 									var2.setBlockState(blockPos1, Blocks.ice.getDefaultState());
 								}
-								else if (var2.getBlockState(blockPos1.offsetUp()).getBlock() == Blocks.air && Blocks.snow_layer.canPlaceBlockAt(var2, blockPos1.offsetUp()))
+								else if (var2.getBlockState(blockPos1.up()).getBlock() == Blocks.air && Blocks.snow_layer.canPlaceBlockAt(var2, blockPos1.up()))
 								{
-									var2.setBlockState(blockPos1.offsetUp(), Blocks.snow_layer.getDefaultState());
+									var2.setBlockState(blockPos1.up(), Blocks.snow_layer.getDefaultState());
 								}
 							}
 						}
@@ -173,16 +173,16 @@ public class ItemUQIceHold extends ItemUniqueArms
 
 					if (var16.typeOfHit == MovingObjectType.BLOCK)
 					{
-						var10 = var16.func_178782_a().getX();
-						var11 = var16.func_178782_a().getY();
-						var12 = var16.func_178782_a().getZ();
-                        blockPos = var16.func_178782_a();
+						var10 = var16.getBlockPos().getX();
+						var11 = var16.getBlockPos().getY();
+						var12 = var16.getBlockPos().getZ();
+                        blockPos = var16.getBlockPos();
 						for (var13 = -3; var13 <= 3; ++var13)
 						{
 							for (int var25 = -3; var25 <= 3; ++var25)
 							{
                                 BlockPos blockPos2 = new BlockPos(blockPos).add(var13, 0, var25);
-								if (Math.sqrt((double)(var13 * var13 + var25 * var25)) <= 2.8D && var2.isAirBlock(blockPos2.offsetUp()))
+								if (Math.sqrt((double)(var13 * var13 + var25 * var25)) <= 2.8D && var2.isAirBlock(blockPos2.up()))
 								{
 									var2.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (double)(var10 + var13), (double)(var11 + 1), (double)(var12 + var25), 0.0D, 0.0D, 0.0D);
 									Material var23 = var2.getBlockState(blockPos2).getBlock().getMaterial();
@@ -192,9 +192,9 @@ public class ItemUQIceHold extends ItemUniqueArms
 									{
 										var2.setBlockState(blockPos3, Blocks.ice.getDefaultState());
 									}
-									else if (var2.getBlockState(blockPos3.offsetUp()).getBlock() == Blocks.air && Blocks.snow.canPlaceBlockAt(var2, blockPos3.offsetUp()))
+									else if (var2.getBlockState(blockPos3.up()).getBlock() == Blocks.air && Blocks.snow.canPlaceBlockAt(var2, blockPos3.up()))
 									{
-										var2.setBlockState(blockPos3.offsetUp(), Blocks.snow.getDefaultState());
+										var2.setBlockState(blockPos3.up(), Blocks.snow.getDefaultState());
 									}
 								}
 							}

@@ -209,9 +209,9 @@ public class Entity_SBWindEdge extends Entity
 					}
 					else
 					{
-						this.xTile = var4.func_178782_a().getX();
-						this.yTile = var4.func_178782_a().getY();
-						this.zTile = var4.func_178782_a().getZ();
+						this.xTile = var4.getBlockPos().getX();
+						this.yTile = var4.getBlockPos().getY();
+						this.zTile = var4.getBlockPos().getZ();
 //						this.inTile = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
 //						this.inData = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
 						this.motionX = (double)((float)(var4.hitVec.xCoord - this.posX));

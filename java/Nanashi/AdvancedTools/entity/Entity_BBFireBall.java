@@ -257,8 +257,8 @@ public class Entity_BBFireBall extends Entity
 				}
 				else
 				{
-					this.xTile = var4.func_178782_a().getX();//BlockPosから取得
-					this.yTile = var4.func_178782_a().getY();
+					this.xTile = var4.getBlockPos().getX();//BlockPosから取得
+					this.yTile = var4.getBlockPos().getY();
 //					this.zTile = var4.func_178782_a().getZ();
 //					this.inTile = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
 //					this.inData = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);

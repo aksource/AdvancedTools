@@ -49,11 +49,11 @@ public class Entity_SkeletonSniper extends EntitySkeleton
 		if (var1.getEntity() instanceof EntityPlayer && this.rand.nextFloat() <= 0.05F)
 		{
 			ItemStack var2 = new ItemStack(AdvancedTools.SmashBat, 1);
-			var2.addEnchantment(Enchantment.field_180313_o/*knockback*/, 5 + this.rand.nextInt(5));
+			var2.addEnchantment(Enchantment.knockback, 5 + this.rand.nextInt(5));
 
 			if (this.rand.nextFloat() <= 0.5F)
 			{
-				var2.addEnchantment(Enchantment.field_180315_m/*smite*/, 1 + this.rand.nextInt(2));
+				var2.addEnchantment(Enchantment.smite, 1 + this.rand.nextInt(2));
 			}
 
 			this.entityDropItem(var2, 1.0F);
@@ -65,7 +65,7 @@ public class Entity_SkeletonSniper extends EntitySkeleton
         super.onUpdate();
         if (this.nearTarget()) {
             ItemStack subHeldItem = new ItemStack(AdvancedTools.SmashBat);
-            subHeldItem.addEnchantment(Enchantment.field_180313_o/*knockback*/, 10);
+            subHeldItem.addEnchantment(Enchantment.knockback, 10);
             this.setCurrentItemOrArmor(0, subHeldItem);
         } else {
             this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
