@@ -4,158 +4,86 @@ import Nanashi.AdvancedTools.AdvancedTools;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class Entity_SkeletonSniper extends EntitySkeleton
-{
-//	private static final ItemStack mainHeldItem = new ItemStack(Items.bow);
-//	private static final ItemStack subHeldItem = new ItemStack(AdvancedTools.SmashBat);
+public class Entity_SkeletonSniper extends EntitySkeleton {
+    private final ItemStack mainHeldItem = new ItemStack(Items.bow);
+    private final ItemStack subHeldItem = new ItemStack(AdvancedTools.SmashBat);
+    private EntityAIArrowAttack aiArrowAttackSniper = new EntityAIArrowAttack(this, 1.0D, 30, 30, 15.0F);
 
-	public Entity_SkeletonSniper(World var1)
-	{
-		super(var1);
-		this.experienceValue = 7;
-//        this.setNoAI(true);
-	}
-	@Override
-    protected void applyEntityAttributes()
-    {
+    public Entity_SkeletonSniper(World var1) {
+        super(var1);
+        this.experienceValue = 7;
+        subHeldItem.addEnchantment(Enchantment.knockback, 10);
+        ObfuscationReflectionHelper.setPrivateValue(EntitySkeleton.class, this, aiArrowAttackSniper, 0);
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D/*2.0D*/);
     }
-	/**
-	 * Returns true if the newer Entity AI code should be run
-	 */
-//    @Override
-//	public boolean isAIEnabled()
-//	{
-//		return false;
-//	}
 
-	/**
-	 * Called when the mob's health reaches 0.
-	 */
+    /**
+     * Called when the mob's health reaches 0.
+     */
     @Override
-	public void onDeath(DamageSource var1)
-	{
-		super.onDeath(var1);
+    public void onDeath(DamageSource var1) {
+        super.onDeath(var1);
 
-		if (var1.getEntity() instanceof EntityPlayer && this.rand.nextFloat() <= 0.05F)
-		{
-			ItemStack var2 = new ItemStack(AdvancedTools.SmashBat, 1);
-			var2.addEnchantment(Enchantment.knockback, 5 + this.rand.nextInt(5));
+        if (var1.getEntity() instanceof EntityPlayer && this.rand.nextFloat() <= 0.05F) {
+            ItemStack var2 = new ItemStack(AdvancedTools.SmashBat, 1);
+            var2.addEnchantment(Enchantment.knockback, 5 + this.rand.nextInt(5));
 
-			if (this.rand.nextFloat() <= 0.5F)
-			{
-				var2.addEnchantment(Enchantment.smite, 1 + this.rand.nextInt(2));
-			}
+            if (this.rand.nextFloat() <= 0.5F) {
+                var2.addEnchantment(Enchantment.smite, 1 + this.rand.nextInt(2));
+            }
 
-			this.entityDropItem(var2, 1.0F);
-		}
-	}
+            this.entityDropItem(var2, 1.0F);
+        }
+    }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.nearTarget()) {
-            ItemStack subHeldItem = new ItemStack(AdvancedTools.SmashBat);
-            subHeldItem.addEnchantment(Enchantment.knockback, 10);
-            this.setCurrentItemOrArmor(0, subHeldItem);
-        } else {
-            this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
+        if (this.worldObj.getTotalWorldTime() % 10L == 0L) {
+            if (this.nearTarget()) {
+                this.setCurrentItemIfDiff(subHeldItem);
+            } else {
+                this.setCurrentItemIfDiff(mainHeldItem);
+            }
+        }
+    }
+
+    private void setCurrentItemIfDiff(ItemStack itemStack) {
+        ItemStack itemStack1 = this.getHeldItem();
+        if (itemStack != null && !itemStack.isItemEqual(itemStack1)) {
+            this.setCurrentItemOrArmor(0, itemStack);
         }
     }
 
     /**
-	 * Drop 0-2 items of this living's type
-	 */
+     * Drop 0-2 items of this living's type
+     */
     @Override
-	protected void dropFewItems(boolean var1, int var2)
-	{
-		super.dropFewItems(var1, var2);
+    protected void dropFewItems(boolean var1, int var2) {
+        super.dropFewItems(var1, var2);
 
-		if (this.rand.nextFloat() <= 0.2F + 0.1F * (float)var2)
-		{
-			this.dropItem(AdvancedTools.RedEnhancer, 1);
-		}
-	}
-
-//    @Override
-//    public boolean attackEntityAsMob(Entity target) {
-//        return super.attackEntityAsMob(target);
-//    }
-
-    /**
-	 * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
-	 */
-//    @Override
-//	public void attackEntityWithRangedAttack(EntityLivingBase var1, float var2)
-//	{
-//		double var3 = var1.posX - this.posX;
-//		double var5 = var1.posZ - this.posZ;
-
-//		if (var2 > 4.0F/* && var2 < 25.0F*/)
-//		{
-//            super.attackEntityWithRangedAttack(var1, var2);
-//			if (this.attackTime <= 0)
-//			{
-//				for (int var12 = 0; var12 < 5; ++var12)
-//				{
-//					EntityArrow var8 = new EntityArrow(this.worldObj, this, 1.5F);
-//					double var9 = var1.posY + (double)var1.getEyeHeight() - 0.699999988079071D - var8.posY;
-//					float var11 = MathHelper.sqrt_double(var3 * var3 + var5 * var5) * 0.2F;
-//					this.worldObj.playSoundAtEntity(this, "random.bow", 1.0F, 1.0F / (this.rand.nextFloat() * 0.4F + 0.8F));
-//					this.worldObj.spawnEntityInWorld(var8);
-//					var8.setThrowableHeading(var3, var9 + (double)var11, var5, 1.6F, 12.0F);
-//				}
-//
-//				this.attackTime = 50;
-//			}
-//
-//			this.hasAttacked = true;
-//		}
-//		else if (this.attackTime <= 0)
-//		{
-//			if (this.attackTime <= 0 && var2 < 2.0F && var1.boundingBox.maxY > this.boundingBox.minY && var1.boundingBox.minY < this.boundingBox.maxY)
-//			{
-//				this.attackTime = 20;
-//				this.attackEntityAsMob(var1);
-//				if(this.worldObj.isRemote)
-//				{
-//					double var7 = Math.atan2(var5, var3);
-//					var1.addVelocity(Math.cos(var7) * 3.0D, var1.motionY * 1.7D, Math.sin(var7) * 3.0D);
-//				}
-//			}
-//		}
-//		else if (this.attackTime > 20)
-//		{
-//			this.attackTime = 20;
-//		}
-//
-//		this.rotationYaw = (float)(Math.atan2(var5, var3) * 180.0D / Math.PI) - 90.0F;
-//        setCombatTask();
-//	}
-
-	/**
-	 * Returns the item that this EntityLiving is holding, if any.
-	 */
-    @Override
-	public ItemStack getHeldItem()
-	{
-		return /*nearTarget() ? subHeldItem : */new ItemStack(Items.bow);
-	}
+        if (this.rand.nextFloat() <= 0.2F + 0.1F * (float) var2) {
+            this.dropItem(AdvancedTools.RedEnhancer, 1);
+        }
+    }
 
     public boolean nearTarget() {
         EntityLivingBase target = this.getAttackTarget();
         return target != null && this.getDistanceToEntity(target) < 4.0D;
     }
-//    static {
-//        subHeldItem.addEnchantment(Enchantment.field_180313_o/*knockback*/, 10);
-//    }
 }

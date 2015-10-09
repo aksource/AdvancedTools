@@ -2,142 +2,69 @@ package Nanashi.AdvancedTools.entity;
 
 import Nanashi.AdvancedTools.AdvancedTools;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class Entity_HighSkeleton extends EntitySkeleton
-{
-	public Entity_HighSkeleton(World var1)
-	{
-		super(var1);
-		this.experienceValue = 10;
-//        this.setNoAI(true);
-	}
-	protected void applyEntityAttributes()
-	{
-		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D/*2.0D*/);
-	}
+public class Entity_HighSkeleton extends EntitySkeleton {
+    private EntityAIArrowAttack aiArrowAttackHigh = new EntityAIArrowAttack(this, 1.0D, 20, 20, 15.0F);
 
-	/**
-	 * Called when the mob's health reaches 0.
-	 */
-	@Override
-	public void onDeath(DamageSource var1)
-	{
-		super.onDeath(var1);
+    public Entity_HighSkeleton(World var1) {
+        super(var1);
+        this.experienceValue = 10;
+        ObfuscationReflectionHelper.setPrivateValue(EntitySkeleton.class, this, aiArrowAttackHigh, 0);
+        this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
+    }
 
-		if (var1.getEntity() instanceof EntityPlayer)
-		{
-			boolean var2 = false;
-			ItemStack var3 = ((EntityPlayer)var1.getEntity()).getCurrentEquippedItem();
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D/*2.0D*/);
+    }
 
-			if (var3 != null)
-			{
-				var2 = var3.getItem() == AdvancedTools.LuckLuck && this.rand.nextFloat() < 0.5F;
-			}
+    /**
+     * Called when the mob's health reaches 0.
+     */
+    @Override
+    public void onDeath(DamageSource var1) {
+        super.onDeath(var1);
 
-			if (var2 || this.rand.nextFloat() < 0.05F)
-			{
-				this.dropItem(AdvancedTools.CrossBow, 1);
-			}
-		}
-	}
+        if (var1.getEntity() instanceof EntityPlayer) {
+            boolean var2 = false;
+            ItemStack var3 = ((EntityPlayer) var1.getEntity()).getCurrentEquippedItem();
 
-	/**
-	 * Drop 0-2 items of this living's type
-	 */
-	@Override
-	protected void dropFewItems(boolean var1, int var2)
-	{
-		super.dropFewItems(var1, var2);
+            if (var3 != null) {
+                var2 = var3.getItem() == AdvancedTools.LuckLuck && this.rand.nextFloat() < 0.5F;
+            }
 
-		if (this.rand.nextFloat() <= 0.1F + 0.1F * (float)var2)
-		{
-			this.dropItem(AdvancedTools.BlueEnhancer, 1);
-		}
-	}
+            if (var2 || this.rand.nextFloat() < 0.05F) {
+                this.dropItem(AdvancedTools.CrossBow, 1);
+            }
+        }
+    }
 
-	/**
-	 * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
-	 */
-//	@Override
-//	public void attackEntityWithRangedAttack(EntityLivingBase var1, float var2)
-//	{
-//		if (var2 < 15.0F)
-//            super.attackEntityWithRangedAttack(var1, var2);
-//		{
-//			double var3 = var1.posX - this.posX;
-//			double var5 = var1.posZ - this.posZ;
-//
-//			if (this.getLastAttackerTime() <= 10 && this.getLastAttackerTime() % 2 == 0)
-//			{
-//				EntityArrow var7 = new EntityArrow(this.worldObj, this, 1.0F);
-//				double var8 = var1.posY + (double)var1.getEyeHeight() - 0.699999988079071D - var7.posY;
-//				float var10 = MathHelper.sqrt_double(var3 * var3 + var5 * var5) * 0.2F;
-//				this.worldObj.playSoundAtEntity(this, "random.bow", 1.0F, 1.0F / (this.rand.nextFloat() * 0.4F + 0.8F));
-//				this.worldObj.spawnEntityInWorld(var7);
-//				var7.setThrowableHeading(var3, var8 + (double)var10, var5, 1.6F, 12.0F);
-//
-//				if (this.getLastAttackerTime() <= 0)
-//				{
-//					this.attackTime = 30;
-//				}
-//			}
-//
-//			this.rotationYaw = (float)(Math.atan2(var5, var3) * 180.0D / Math.PI) - 90.0F;
-//			this.hasAttacked = true;
-//		}
-//		else
-//		{
-//			this.attackTime = 20;
-//		}
-//	}
+    /**
+     * Drop 0-2 items of this living's type
+     */
+    @Override
+    protected void dropFewItems(boolean var1, int var2) {
+        super.dropFewItems(var1, var2);
 
-	/**
-	 * (abstract) Protected helper method to write subclass entity data to NBT.
-	 */
-//	public void writeEntityToNBT(NBTTagCompound var1)
-//	{
-//		super.writeEntityToNBT(var1);
-//	}
+        if (this.rand.nextFloat() <= 0.1F + 0.1F * (float) var2) {
+            this.dropItem(AdvancedTools.BlueEnhancer, 1);
+        }
+    }
 
-	/**
-	 * (abstract) Protected helper method to read subclass entity data from NBT.
-	 */
-//	public void readEntityFromNBT(NBTTagCompound var1)
-//	{
-//		super.readEntityFromNBT(var1);
-//	}
-
-	/**
-	 * Returns the item ID for the item the mob drops on death.
-	 */
-//	@Override
-//	protected Item getDropItem()
-//	{
-//		return Items.arrow;
-//	}
-
-	/**
-	 * Get this Entity's EnumCreatureAttribute
-	 */
-//	@Override
-//	public EnumCreatureAttribute getCreatureAttribute()
-//	{
-//		return EnumCreatureAttribute.UNDEAD;
-//	}
-
-	/**
-	 * Checks if the entity's current position is a valid location to spawn this entity.
-	 */
-	@Override
-	public boolean getCanSpawnHere()
-	{
-		return this.posY < 50.0D && super.getCanSpawnHere();
-	}
+    /**
+     * Checks if the entity's current position is a valid location to spawn this entity.
+     */
+    @Override
+    public boolean getCanSpawnHere() {
+        return this.posY < 50.0D && super.getCanSpawnHere();
+    }
 }

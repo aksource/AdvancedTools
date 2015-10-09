@@ -47,6 +47,11 @@ public class ItemUGAxe extends ItemUGTool
     }
 
     @Override
+    public int getConnectedDistance() {
+        return 2;
+    }
+
+    @Override
 	protected ArrayList<BlockPos> searchAroundBlock(World world, BlockPos var1, BlockPos minChunkPos, BlockPos maxChunkPos, IBlockState var4, ItemStack var5, EntityPlayer var6)
 	{
 		ArrayList<BlockPos> var7 = new ArrayList<BlockPos>();
