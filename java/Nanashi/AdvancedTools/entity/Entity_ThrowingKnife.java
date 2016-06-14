@@ -87,6 +87,17 @@ public class Entity_ThrowingKnife extends EntityThrowable
 //		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(var3, (double)var10) * 180.0D / Math.PI);
 //	}
 
+
+	@Override
+	public void onUpdate() {
+		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
+			float var1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+			this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(this.motionY, (double) var1) * 180.0D / Math.PI);
+		}
+		super.onUpdate();
+	}
+
 	/**
 	 * Called to update the entity's position/logic.
 	 */

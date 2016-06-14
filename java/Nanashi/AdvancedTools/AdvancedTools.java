@@ -13,6 +13,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -20,6 +21,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -31,6 +33,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Mod(modid = "AdvancedTools", name = "AdvancedTools", version = "@VERSION@", dependencies = "required-after:Forge@[10.12.1.1090,)", useMetadata = true)
@@ -425,16 +428,53 @@ public class AdvancedTools
 	public static MovingObjectPosition setMousePoint(World world, EntityPlayer entityplayer)
 	{
 		float var1 = 1F;
-		double Dislimit = 5.0D;
+		double limit = 5.0D;
 		double viewX = entityplayer.getLookVec().xCoord;
 		double viewY = entityplayer.getLookVec().yCoord;
 		double viewZ = entityplayer.getLookVec().zCoord;
-		double PlayerposX = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double) var1;
-		double PlayerposY = entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double) var1 + 1.62D
+		double dPlayerPosX = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double) var1;
+		double dPlayerPosY = entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double) var1 + 1.62D
 				- (double) entityplayer.yOffset;
-		double PlayerposZ = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double) var1;
-		Vec3 PlayerPosition = Vec3.createVectorHelper(PlayerposX, PlayerposY, PlayerposZ);
-		Vec3 PlayerLookVec = PlayerPosition.addVector(viewX * Dislimit, viewY * Dislimit, viewZ * Dislimit);
-		return  world.rayTraceBlocks(PlayerPosition, PlayerLookVec, true);
+		double dPlayerPosZ = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double) var1;
+		Vec3 vecPos = Vec3.createVectorHelper(dPlayerPosX, dPlayerPosY, dPlayerPosZ);
+		Vec3 vecLook = vecPos.addVector(viewX * limit, viewY * limit, viewZ * limit);
+		Vec3 vecPosCopy = Vec3.createVectorHelper(vecPos.xCoord, vecPos.yCoord, vecPos.zCoord);
+		MovingObjectPosition mop = world.func_147447_a(vecPosCopy, vecLook, false, false, true);//rayTraceBlocks
+		double distBlock = (mop != null && mop.typeOfHit != MovingObjectPosition.MovingObjectType.MISS) ? mop.hitVec.distanceTo(vecPos) : limit;
+		double distBlockCopy = distBlock;
+		Entity pointedEntity = null;
+		Vec3 mopHitVec = null;
+		@SuppressWarnings("unchecked")
+		List<Entity> entityList = world.getEntitiesWithinAABBExcludingEntity(entityplayer,
+				entityplayer.boundingBox
+						.addCoord(viewX * limit, viewY * limit, viewZ * limit)
+						.expand(var1, var1, var1));
+		for (Entity entity : entityList) {
+			if (!entity.canBeCollidedWith()) continue;
+			float size = entity.getCollisionBorderSize();
+			AxisAlignedBB aabb = entity.boundingBox.expand(size, size, size);
+			MovingObjectPosition interceptMop = aabb.calculateIntercept(vecPos, vecLook);
+			Vec3 hitVec = (interceptMop != null) ? interceptMop.hitVec : null;
+			double distance = (hitVec != null) ? vecPos.distanceTo(hitVec) : 0.0d;
+			if ((aabb.isVecInside(vecPos) || interceptMop != null) &&
+					(distance < distBlockCopy || distBlockCopy == 0.0d)) {
+				if (entity == entityplayer.ridingEntity && !entity.canRiderInteract()) {
+					if (distBlockCopy == 0.0d) {
+						pointedEntity = entity;
+						mopHitVec = (hitVec != null) ? hitVec : vecPos;
+					}
+				} else {
+					pointedEntity = entity;
+					mopHitVec = (hitVec != null) ? hitVec : vecPos;
+					distBlockCopy = distance;
+				}
+			}
+		}
+
+		if (pointedEntity != null && distBlockCopy < distBlock) {
+			mop = new MovingObjectPosition(pointedEntity, mopHitVec);
+		}
+
+		return mop;
 	}
 }
