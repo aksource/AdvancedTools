@@ -60,7 +60,7 @@ public class ItemUQAsmoSlasher extends ItemUniqueArms
 					double var9 = Math.PI * (double)var18 / 4.0D;
 					double var11 = var3.posX + 5.5D * Math.sin(var9);
 					double var13 = var3.posZ + 5.5D * Math.cos(var9);
-					double var15 = (double)var2.getHorizon(new BlockPos(var11 - 0.5D, 0, var13 - 0.5D)).getY();
+					double var15 = (double)var2.getHeight(new BlockPos(var11 - 0.5D, 0, var13 - 0.5D)).getY();
 					EntityLightningBolt var17 = new EntityLightningBolt(var2, var11, var15, var13);
 
 //					if (!var2.isRemote)
@@ -80,7 +80,7 @@ public class ItemUQAsmoSlasher extends ItemUniqueArms
 				double var10 = var3.posZ;
 				var8 -= 6.0D * Math.sin((double)(var3.rotationYaw / 180.0F) * Math.PI);
 				var10 += 6.0D * Math.cos((double)(var3.rotationYaw / 180.0F) * Math.PI);
-				double var12 = (double)var2.getHorizon(new BlockPos(var8 - 0.5D, 0, var10 - 0.5D)).getY();
+				double var12 = (double)var2.getHeight(new BlockPos(var8 - 0.5D, 0, var10 - 0.5D)).getY();
 				EntityLightningBolt var14 = new EntityLightningBolt(var2, var8, var12, var10);
 
 //				if (!var2.isRemote)

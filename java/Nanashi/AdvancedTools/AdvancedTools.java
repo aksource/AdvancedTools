@@ -2,6 +2,25 @@ package Nanashi.AdvancedTools;
 
 import Nanashi.AdvancedTools.entity.*;
 import Nanashi.AdvancedTools.item.*;
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -11,35 +30,24 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier;
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
-@Mod(modid = "AdvancedTools",
-        name = "AdvancedTools",
-        version = "@VERSION@",
-        dependencies = "required-after:Forge@[10.12.1.1090,)",
-        useMetadata = true)
+@Mod(modid = AdvancedTools.MOD_ID,
+        name = AdvancedTools.MOD_NAME,
+        version = AdvancedTools.MOD_VERSION,
+        dependencies = AdvancedTools.MOD_DEPENDENCIES,
+        useMetadata = true,
+        acceptedMinecraftVersions = AdvancedTools.MOD_MC_VERSION)
 public class AdvancedTools {
     public static final String MOD_ID = "AdvancedTools";
+    public static final String MOD_NAME = "AdvancedTools";
+    public static final String MOD_VERSION = "@VERSION@";
+    public static final String MOD_DEPENDENCIES = "required-after:Forge@[11.14.0.1237,)";
+    public static final String MOD_MC_VERSION = "[1.8,1.8.9]";
 
     public static int UGTools_DestroyRangeLV;
     public static int UGTools_SafetyCounter;
@@ -431,16 +439,52 @@ public class AdvancedTools {
 
     public static MovingObjectPosition getMousePoint(World world, EntityPlayer entityplayer) {
         float var1 = 1F;
-        double Dislimit = 5.0D;
+        double limit = 5.0D;
         double viewX = entityplayer.getLookVec().xCoord;
         double viewY = entityplayer.getLookVec().yCoord;
         double viewZ = entityplayer.getLookVec().zCoord;
-        double PlayerposX = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double) var1;
-        double PlayerposY = entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double) var1 + 1.62D
+        double dPlayerPosX = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double) var1;
+        double dPlayerPosY = entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double) var1 + 1.62D
 				/*- (double) entityplayer.yOffset*/;
-        double PlayerposZ = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double) var1;
-        Vec3 PlayerPosition = new Vec3(PlayerposX, PlayerposY, PlayerposZ);
-        Vec3 PlayerLookVec = PlayerPosition.addVector(viewX * Dislimit, viewY * Dislimit, viewZ * Dislimit);
-        return world.rayTraceBlocks(PlayerPosition, PlayerLookVec, true);
+        double dPlayerPosZ = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double) var1;
+        Vec3 vecPos = new Vec3(dPlayerPosX, dPlayerPosY, dPlayerPosZ);
+        Vec3 vecLook = vecPos.addVector(viewX * limit, viewY * limit, viewZ * limit);
+        MovingObjectPosition mop = world.rayTraceBlocks(vecPos, vecLook, false, false, true);
+        double distBlock = (mop != null && mop.typeOfHit != MovingObjectPosition.MovingObjectType.MISS) ? mop.hitVec.distanceTo(vecPos) : limit;
+        double distBlockCopy = distBlock;
+        Entity pointedEntity = null;
+        Vec3 mopHitVec = null;
+        @SuppressWarnings("unchecked")
+        List<Entity> entityList = world.getEntitiesWithinAABBExcludingEntity(entityplayer,
+                entityplayer.getEntityBoundingBox()
+                        .addCoord(viewX * limit, viewY * limit, viewZ * limit)
+                        .expand(var1, var1, var1));
+        for (Entity entity : entityList) {
+            if (!entity.canBeCollidedWith()) continue;
+            float size = entity.getCollisionBorderSize();
+            AxisAlignedBB aabb = entity.getEntityBoundingBox().expand(size, size, size);
+            MovingObjectPosition interceptMop = aabb.calculateIntercept(vecPos, vecLook);
+            Vec3 hitVec = (interceptMop != null) ? interceptMop.hitVec : null;
+            double distance = (hitVec != null) ? vecPos.distanceTo(hitVec) : 0.0d;
+            if ((aabb.isVecInside(vecPos) || interceptMop != null) &&
+                    (distance < distBlockCopy || distBlockCopy == 0.0d)) {
+                if (entity == entityplayer.ridingEntity && !entity.canRiderInteract()) {
+                    if (distBlockCopy == 0.0d) {
+                        pointedEntity = entity;
+                        mopHitVec = (hitVec != null) ? hitVec : vecPos;
+                    }
+                } else {
+                    pointedEntity = entity;
+                    mopHitVec = (hitVec != null) ? hitVec : vecPos;
+                    distBlockCopy = distance;
+                }
+            }
+        }
+
+        if (pointedEntity != null && distBlockCopy < distBlock) {
+            mop = new MovingObjectPosition(pointedEntity, mopHitVec);
+        }
+
+        return mop;
     }
 }

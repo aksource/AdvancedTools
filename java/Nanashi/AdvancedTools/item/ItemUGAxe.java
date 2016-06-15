@@ -48,8 +48,12 @@ public class ItemUGAxe extends ItemUGTool
 
     @Override
     public int getConnectedDistance() {
-        return 2;
+        return 3;
     }
+
+	public boolean ignoreMeta() {
+		return true;
+	}
 
     @Override
 	protected ArrayList<BlockPos> searchAroundBlock(World world, BlockPos var1, BlockPos minChunkPos, BlockPos maxChunkPos, IBlockState var4, ItemStack var5, EntityPlayer var6)

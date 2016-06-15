@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.*;
 
 /**
- * ƒAƒbƒvƒOƒŒ[ƒhƒc[ƒ‹‚ÌŠî’êƒNƒ‰ƒXB
+ * ã‚¢ãƒƒãƒ—ã‚°ãƒ¬ãƒ¼ãƒ‰ãƒ„ãƒ¼ãƒ«ã®åŸºåº•ã‚¯ãƒ©ã‚¹ã€‚
  */
 public abstract class ItemUGTool extends ItemTool {
 
@@ -54,6 +54,10 @@ public abstract class ItemUGTool extends ItemTool {
 
     public int getConnectedDistance() {
         return 1;
+    }
+
+    public boolean ignoreMeta() {
+        return false;
     }
 
     @Override
@@ -416,7 +420,9 @@ public abstract class ItemUGTool extends ItemTool {
             bool &= DIRT_SET.contains(block);
         } else {
             bool &= originState.getBlock() == block;
-            bool &= originState.getBlock().getMetaFromState(originState) == checkState.getBlock().getMetaFromState(checkState);
+            if (!ignoreMeta()) {
+                bool &= originState.getBlock().getMetaFromState(originState) == checkState.getBlock().getMetaFromState(checkState);
+            }
         }
 
         return bool;
