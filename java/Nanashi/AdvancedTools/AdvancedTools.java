@@ -426,6 +426,7 @@ public class AdvancedTools {
         GameRegistry.addShapelessRecipe(new ItemStack(PoisonKnife), ThrowingKnife, Items.spider_eye);
     }
 
+    @Deprecated
     public static String getUniqueStrings(Object obj) {
         UniqueIdentifier uId;
         if (obj instanceof Block) {

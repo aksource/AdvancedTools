@@ -383,7 +383,7 @@ public abstract class ItemUGTool extends ItemTool {
     }
 
     public boolean checkArrays(Block block, String[] blockList) {
-        String uIdName = AdvancedTools.getUniqueStrings(block);
+        String uIdName = block.getRegistryName();
         return Arrays.asList(blockList).contains(uIdName);
     }
 
