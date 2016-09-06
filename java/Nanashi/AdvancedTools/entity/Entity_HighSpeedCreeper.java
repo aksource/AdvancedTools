@@ -19,8 +19,8 @@ public class Entity_HighSpeedCreeper extends EntityCreeper
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.365D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.365D);
     }
 
 	/**
@@ -30,29 +30,11 @@ public class Entity_HighSpeedCreeper extends EntityCreeper
 	public void onUpdate()
 	{
 		super.onUpdate();
-
-		if (!this.isPotionActive(Potion.moveSpeed) && this.getHealth() <= 10)
+		Potion speed = Potion.getPotionFromResourceLocation("speed");
+		if (!this.isPotionActive(speed) && this.getHealth() <= 10)
 		{
-			this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 20, 1));
+			this.addPotionEffect(new PotionEffect(speed, 20, 1));
 		}
-	}
-
-	/**
-	 * Returns the sound this mob makes when it is hurt.
-	 */
-    @Override
-	protected String getHurtSound()
-	{
-		return "mob.creeper";
-	}
-
-	/**
-	 * Returns the sound this mob makes on death.
-	 */
-    @Override
-	protected String getDeathSound()
-	{
-		return "mob.creeperdeath";
 	}
 
 	/**

@@ -4,60 +4,59 @@ import Nanashi.AdvancedTools.AdvancedTools;
 import Nanashi.AdvancedTools.entity.Entity_ThrowingKnife;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-public class Item_ThrowingKnife extends Item
-{
-	public boolean addPoison;
+public class Item_ThrowingKnife extends Item {
+    public boolean addPoison;
 
-	public Item_ThrowingKnife(boolean var2)
-	{
-		super();
-		this.maxStackSize = 16;
-		this.addPoison = var2;
-	}
-	@Override
-	public boolean isFull3D()
-	{
-		return true;
-	}
+    public Item_ThrowingKnife(boolean var2) {
+        super();
+        this.maxStackSize = 16;
+        this.addPoison = var2;
+    }
 
-	@Override
-	public ItemStack onItemRightClick(ItemStack var1, World var2, EntityPlayer var3)
-	{
-		if (var3.capabilities.isCreativeMode || var3.inventory.hasItem(this))
-		{
-			Entity_ThrowingKnife var4 = new Entity_ThrowingKnife(var2, var3, 1.0F, this.addPoison);
-			var2.playSoundAtEntity(var3, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 0.5F);
-			--var1.stackSize;
+    @Override
+    public boolean isFull3D() {
+        return true;
+    }
 
-			if (!var2.isRemote)
-			{
-				var2.spawnEntityInWorld(var4);
-			}
-		}
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
+        if (entityPlayer.capabilities.isCreativeMode || entityPlayer.inventory.hasItemStack(itemStack)) {
+            Entity_ThrowingKnife var4 = new Entity_ThrowingKnife(world, entityPlayer, 1.0F, this.addPoison);
+            world.playSound(entityPlayer, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ,
+                    SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL,
+                    1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 1.0f * 0.5F);
+            --itemStack.stackSize;
 
-		return var1;
-	}
+            if (!world.isRemote) {
+                world.spawnEntityInWorld(var4);
+            }
+        }
 
-	@Override
-	public boolean hitEntity(ItemStack var1, EntityLivingBase var2, EntityLivingBase var3)
-	{
-		if (this.addPoison && var3 instanceof EntityPlayer)
-		{
-			var2.addPotionEffect(new PotionEffect(Potion.poison.id, 60, 1));
-			--var1.stackSize;
+        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
+    }
 
-			if (!((EntityPlayer)var3).inventory.addItemStackToInventory(new ItemStack(AdvancedTools.ThrowingKnife)))
-			{
-				var3.dropItem(AdvancedTools.ThrowingKnife, 1);
-			}
-		}
+    @Override
+    public boolean hitEntity(ItemStack var1, EntityLivingBase var2, EntityLivingBase var3) {
+        if (this.addPoison && var3 instanceof EntityPlayer) {
+            var2.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 60, 1));
+            --var1.stackSize;
 
-		return true;
-	}
+            if (!((EntityPlayer) var3).inventory.addItemStackToInventory(new ItemStack(AdvancedTools.ThrowingKnife))) {
+                var3.dropItem(AdvancedTools.ThrowingKnife, 1);
+            }
+        }
+
+        return true;
+    }
 }

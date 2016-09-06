@@ -1,6 +1,5 @@
 package Nanashi.AdvancedTools.item;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,88 +8,74 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class ItemUQDevilSword extends ItemUniqueArms
-{
-	public ItemUQDevilSword(ToolMaterial var2)
-	{
-		super(var2);
-	}
+public class ItemUQDevilSword extends ItemUniqueArms {
+    public ItemUQDevilSword(ToolMaterial var2) {
+        super(var2);
+    }
 
-	public ItemUQDevilSword(ToolMaterial var2, int var3)
-	{
-		super(var2, var3);
-	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//    	this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "GenocideBlade");
-//	}
-	@Override
-	public void onUpdate(ItemStack var1, World var2, Entity var3, int var4, boolean var5)
-	{
-		super.onUpdate(var1, var2, var3, var4, var5);
+    public ItemUQDevilSword(ToolMaterial var2, int var3) {
+        super(var2, var3);
+    }
 
-		if (var3 instanceof EntityPlayer)
-		{
-			EntityPlayer var6 = (EntityPlayer)var3;
+    @Override
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean inHand) {
+        super.onUpdate(itemStack, world, entity, slot, inHand);
 
-			if (var6.getCurrentEquippedItem() != null && var6.getCurrentEquippedItem().getItem() == this && !var6.isPotionActive(Potion.damageBoost))
-			{
-				if (var6.getHealth() > 1)
-				{
-					var6.heal(-1);
-					var6.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 59, 1));
-				}
-				else
-				{
-					var6.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 19, 1));
-				}
-			}
-		}
-	}
-	@Override
-	public ItemStack onItemRightClick(ItemStack var1, World var2, EntityPlayer var3)
-	{
-		int var4 = MathHelper.ceiling_float_int(var3.getHealth());
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
 
-		if (var4 > 1)
-		{
-			var3.attackEntityFrom(DamageSource.generic, var4 - 1);
-		}
-
-		return var1;
-	}
-
-	@Override
-	public boolean hitEntity(ItemStack var1, EntityLivingBase var2, EntityLivingBase var3)
-	{
-		if (var2.hurtTime == 0)
-		{
-			var3.heal(2);
-		}
-		if(var2 instanceof EntityPlayer)
-		{
-			int var4 = MathHelper.ceiling_float_int(var2.getMaxHealth() - var2.getHealth());
-            float dmg = getDamageFromNBT(var1);
-            if (var4 >= 19)
-            {
-                dmg += 10;
+            Potion strength = Potion.getPotionFromResourceLocation("strength");
+            if (player.getHeldItemMainhand() != null
+                    && player.getHeldItemMainhand().getItem() == this
+                    && !player.isPotionActive(strength)) {
+                if (player.getHealth() > 1) {
+                    player.heal(-1);
+                    player.addPotionEffect(new PotionEffect(strength, 59, 1));
+                } else {
+                    player.addPotionEffect(new PotionEffect(strength, 19, 1));
+                }
             }
-            else if (var4 >= 10)
-            {
+        }
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        int var4 = MathHelper.ceiling_float_int(playerIn.getHealth());
+
+        if (var4 > 1) {
+            playerIn.attackEntityFrom(DamageSource.generic, var4 - 1);
+        }
+
+        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+        if (target.hurtTime == 0) {
+            attacker.heal(2);
+        }
+        if (target instanceof EntityPlayer) {
+            int var4 = MathHelper.ceiling_float_int(target.getMaxHealth() - target.getHealth());
+            float dmg = getDamageFromNBT(stack);
+            if (var4 >= 19) {
+                dmg += 10;
+            } else if (var4 >= 10) {
                 ++dmg;
             }
             ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, dmg, 0);
-            setDamageToNBT(var1, dmg);
-		}
-		var1.damageItem(1, var3);
-		return true;
-	}
+            setDamageToNBT(stack, dmg);
+        }
+        stack.damageItem(1, attacker);
+        return true;
+    }
 
     private float getDamageFromNBT(ItemStack itemStack) {
         if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());

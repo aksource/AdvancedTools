@@ -1,87 +1,84 @@
 package Nanashi.AdvancedTools.item;
 
-import Nanashi.AdvancedTools.AdvancedTools;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-public class Item_CrossBow extends ItemBow
-{
-	public Item_CrossBow()
-	{
-		super();
-		this.maxStackSize = 1;
-		this.setMaxDamage(192);
-	}
+public class Item_CrossBow extends ItemBow {
+    public Item_CrossBow() {
+        super();
+        this.maxStackSize = 1;
+        this.setMaxDamage(192);
+    }
 
-	public boolean isFull3D()
-	{
-		return true;
-	}
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
-	{
-		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "CrossBow");
-	}
+    public boolean isFull3D() {
+        return true;
+    }
 
-	public void onPlayerStoppedUsing(ItemStack var1, World var2, EntityPlayer var3, int var4) {}
+    @Override
+    public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityLivingBase entityLiving, int timeLeft) {}
 
 
-	public EnumAction getItemUseAction(ItemStack var1)
-	{
-		return EnumAction.none;
-	}
+    public EnumAction getItemUseAction(ItemStack var1) {
+        return EnumAction.NONE;
+    }
 
-	public ItemStack onItemRightClick(ItemStack var1, World var2, EntityPlayer var3)
-	{
-		boolean var4 = var3.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, var1) > 0;
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
+        boolean flag = entityPlayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, itemStack) > 0;
 
-		if (var4 || var3.inventory.hasItem(Items.arrow))
-		{
-			EntityArrow var5 = new EntityArrow(var2, var3, 0.75F);
-			var1.damageItem(1, var3);
-			var2.playSoundAtEntity(var3, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 0.5F);
+        ItemStack itemArrow = this.findAmmo(entityPlayer);
+        int i = 0;
+        i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(itemStack, world,
+                entityPlayer, i, itemArrow != null || flag);
+        if (flag || itemArrow != null) {
+            ItemArrow itemarrow = ((ItemArrow) (itemArrow.getItem() instanceof ItemArrow ? itemArrow.getItem() : Items.ARROW));
+            EntityArrow entityarrow = itemarrow.createArrow(world, itemArrow, entityPlayer);
+            itemStack.damageItem(1, entityPlayer);
+            world.playSound(entityPlayer, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ,
+                    SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL,
+                    1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 1.0f * 0.5F);
+            if (!flag) {
+                --itemArrow.stackSize;
 
-			if (!var4)
-			{
-				var3.inventory.consumeInventoryItem(Items.arrow);
-			}
+                if (itemArrow.stackSize == 0) {
+                    entityPlayer.inventory.deleteStack(itemArrow);
+                }
+            }
 
-			int var6 = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, var1);
+            int var6 = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, itemStack);
 
-			if (var6 > 0)
-			{
-				var5.setDamage(var5.getDamage() + (double)var6 * 0.5D + 0.5D);
-			}
+            if (var6 > 0) {
+                entityarrow.setDamage(entityarrow.getDamage() + (double) var6 * 0.5D + 0.5D);
+            }
 
-			int var7 = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, var1);
+            int var7 = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, itemStack);
 
-			if (var7 > 0)
-			{
-				var5.setKnockbackStrength(var7);
-			}
+            if (var7 > 0) {
+                entityarrow.setKnockbackStrength(var7);
+            }
 
-			if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, var1) > 0)
-			{
-				var5.setFire(100);
-			}
+            if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, itemStack) > 0) {
+                entityarrow.setFire(100);
+            }
 
-			if (!var2.isRemote)
-			{
-				var2.spawnEntityInWorld(var5);
-			}
-		}
+            if (!world.isRemote) {
+                world.spawnEntityInWorld(entityarrow);
+            }
+        }
 
-		return var1;
-	}
+        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
+    }
 }

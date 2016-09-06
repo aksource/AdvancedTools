@@ -1,28 +1,28 @@
 package Nanashi.AdvancedTools.client;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 @SideOnly(Side.CLIENT)
-public class Render_UQMagics extends Render
-{
-    /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
-     */
-    public void doRender(Entity var1, double var2, double var4, double var6, float var8, float var9) {}
+public class Render_UQMagics extends Render<Entity> {
+    protected Render_UQMagics(RenderManager p_i46179_1_) {
+        super(p_i46179_1_);
+    }
 
-	@Override
 
-	/**
-	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-	 */
-	protected ResourceLocation getEntityTexture(Entity entity) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
-	}
+    public void doRender(@Nullable Entity var1, double var2, double var4, double var6, float var8, float var9) {}
+
+    @Override
+    @Nonnull
+    protected ResourceLocation getEntityTexture(@Nonnull Entity entity) {
+        return TextureMap.LOCATION_MISSING_TEXTURE;
+    }
 }

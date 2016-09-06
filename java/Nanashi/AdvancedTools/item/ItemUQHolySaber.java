@@ -1,68 +1,61 @@
 package Nanashi.AdvancedTools.item;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class ItemUQHolySaber extends ItemUniqueArms
-{
-	public ItemUQHolySaber(ToolMaterial var2)
-	{
-		super(var2);
-	}
+public class ItemUQHolySaber extends ItemUniqueArms {
+    private float baseDmgValue;
 
-	public ItemUQHolySaber(ToolMaterial var2, int var3)
-	{
-		super(var2, var3);
-	}
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public void registerIcons(IIconRegister par1IconRegister)
-//	{
-//		this.itemIcon = par1IconRegister.registerIcon(AdvancedTools.textureDomain + "HolySaber");
-//	}
-	@Override
-	public void onUpdate(ItemStack var1, World var2, Entity var3, int var4, boolean var5)
-	{
-		super.onUpdate(var1, var2, var3, var4, var5);
+    public ItemUQHolySaber(ToolMaterial toolMaterial) {
+        super(toolMaterial);
+        this.baseDmgValue = 4.0F + toolMaterial.getDamageVsEntity();
+    }
 
-		if (var3 instanceof EntityPlayer)
-		{
-			EntityPlayer var6 = (EntityPlayer)var3;
+    public ItemUQHolySaber(ToolMaterial toolMaterial, int damageValue) {
+        super(toolMaterial, damageValue);
+        this.baseDmgValue = damageValue;
+    }
 
-			if (var6.getHealth() < var6.getMaxHealth() && var6.getCurrentEquippedItem() != null && var6.getCurrentEquippedItem().getItem() == this /*&& !var6.activePotionsMap.containsKey(Integer.valueOf(Potion.regeneration.id))*/)
-			{
-				var6.addPotionEffect(new PotionEffect(Potion.regeneration.id, 40, 0));
-			}
-		}
-	}
-	@Override
-	public boolean onLeftClickEntity(ItemStack itemstack, EntityPlayer player, Entity var1)
-	{
-		byte var2 = 0;
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean ishand) {
+        super.onUpdate(stack, world, entity, slot, ishand);
 
-		if (var1 instanceof EntityLiving)
-		{
-			EntityLiving var3 = (EntityLiving)var1;
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
 
-			if (var3.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD)
-			{
-				var2 = 7;
-			}
-			else if (var1 instanceof EntityEnderman)
-			{
-				var2 = 10;
-			}
-		}
-        ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, var2, 0);
-		return false;
-	}
+            if (player.getHealth() < player.getMaxHealth()
+                    && player.getHeldItemMainhand() != null
+                    && player.getHeldItemMainhand().getItem() == this) {
+                player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("regeneration"), 40, 0));
+            }
+        }
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack itemstack, EntityPlayer player, Entity var1) {
+        byte var2 = 0;
+
+        if (var1 instanceof EntityLiving) {
+            EntityLiving var3 = (EntityLiving) var1;
+
+            if (var3.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
+                var2 = 7;
+            } else if (var1 instanceof EntityEnderman) {
+                var2 = 10;
+            }
+        }
+        ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, this.baseDmgValue + var2, 0);
+        player.getAttributeMap().applyAttributeModifiers(itemstack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND));
+        return false;
+    }
 }
