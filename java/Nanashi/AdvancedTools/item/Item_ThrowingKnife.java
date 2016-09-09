@@ -32,14 +32,15 @@ public class Item_ThrowingKnife extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
         if (entityPlayer.capabilities.isCreativeMode || entityPlayer.inventory.hasItemStack(itemStack)) {
-            Entity_ThrowingKnife var4 = new Entity_ThrowingKnife(world, entityPlayer, 1.0F, this.addPoison);
             world.playSound(entityPlayer, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ,
                     SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL,
                     1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 1.0f * 0.5F);
             --itemStack.stackSize;
 
             if (!world.isRemote) {
-                world.spawnEntityInWorld(var4);
+                Entity_ThrowingKnife entityThrowingKnife = new Entity_ThrowingKnife(world, entityPlayer, 1.0F, this.addPoison);
+                entityThrowingKnife.setHeadingFromThrower(entityPlayer, entityPlayer.rotationPitch, entityPlayer.rotationYaw, 0F, 0.7F, 1.0F);
+                world.spawnEntityInWorld(entityThrowingKnife);
             }
         }
 

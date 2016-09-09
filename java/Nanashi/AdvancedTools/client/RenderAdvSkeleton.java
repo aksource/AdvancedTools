@@ -24,22 +24,8 @@ public class RenderAdvSkeleton extends RenderBiped<EntitySkeleton> {
         super(renderManager1, new ModelSkeleton(), 0.5F);
     }
 
-    protected void scaleSkeleton(EntitySkeleton par1EntitySkeleton, float par2) {
-        if (par1EntitySkeleton.getSkeletonType() == 1) {
-            GL11.glScalef(1.2F, 1.2F, 1.2F);
-        }
-    }
-
     public void func_82422_c() {
         GL11.glTranslatef(0.09375F, 0.1875F, 0.0F);
-    }
-
-    /**
-     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
-     * entityLiving, partialTickTime
-     */
-    protected void preRenderCallback(EntitySkeleton entitySkeleton, float par2) {
-        this.scaleSkeleton(entitySkeleton, par2);
     }
 
     /**
