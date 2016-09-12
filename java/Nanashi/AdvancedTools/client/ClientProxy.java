@@ -5,12 +5,12 @@ import Nanashi.AdvancedTools.entity.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import static Nanashi.AdvancedTools.AdvancedTools.*;
+import static Nanashi.AdvancedTools.item.ItemSpawnATMob.COLOR_MAP;
 
 public class ClientProxy extends CommonProxy {
     private Minecraft mc = Minecraft.getMinecraft();
@@ -70,7 +70,15 @@ public class ClientProxy extends CommonProxy {
         registerItemModel(UGStoneShovel, "ugstoneshovel");
         registerItemModel(spawnItem, "spawn_item");
         ItemColors itemColors = mc.getItemColors();
-        itemColors.registerItemColorHandler((IItemColor) spawnItem, spawnItem);
+        itemColors.registerItemColorHandler(((stack, tintIndex) -> {
+            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("mob_name")) {
+                String mobName = stack.getTagCompound().getString("mob_name");
+                if (COLOR_MAP.containsKey(mobName)) {
+                    return COLOR_MAP.get(mobName);
+                }
+            }
+            return 0;
+        }), spawnItem);
     }
 
     private void registerItemModel(Item item, String registeredName) {

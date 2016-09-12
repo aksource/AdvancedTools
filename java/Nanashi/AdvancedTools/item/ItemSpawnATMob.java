@@ -2,7 +2,6 @@ package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
 import com.google.common.collect.Maps;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -25,8 +24,8 @@ import java.util.Map;
  * 追加モブ用スポーンエッグアイテム
  * Created by A.K. on 14/12/16.
  */
-public class ItemSpawnATMob extends Item implements IItemColor{
-    private static final Map<String, Integer> COLOR_MAP = Maps.newHashMap();
+public class ItemSpawnATMob extends Item {
+    public static final Map<String, Integer> COLOR_MAP = Maps.newHashMap();
 
     public ItemSpawnATMob() {
         super();
@@ -53,17 +52,6 @@ public class ItemSpawnATMob extends Item implements IItemColor{
             stack.stackSize--;
         }
         return EnumActionResult.SUCCESS;
-    }
-
-    @Override
-    public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("mob_name")) {
-            String mobName = stack.getTagCompound().getString("mob_name");
-            if (COLOR_MAP.containsKey(mobName)) {
-                return COLOR_MAP.get(mobName);
-            }
-        }
-        return 0;
     }
 
     @Override
