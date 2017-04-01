@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "advancedtools:items/EnhancerR"
+        "layer0": "advancedtools:items/enhancer_r"
     }
 }

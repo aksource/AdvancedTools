@@ -14,8 +14,8 @@ import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class RenderAdvZombie extends RenderZombie {
-    private static final ResourceLocation Fire = new ResourceLocation(AdvancedTools.textureassets, "textures/mob/fzombie.png");
-    private static final ResourceLocation Warrior = new ResourceLocation(AdvancedTools.textureassets, "textures/mob/zombiew.png");
+    private static final ResourceLocation Fire = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/fzombie.png");
+    private static final ResourceLocation Warrior = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/zombiew.png");
     private static final ResourceLocation Zombie = new ResourceLocation("textures/entity/zombie/zombie.png");
 
     public RenderAdvZombie(RenderManager var1) {

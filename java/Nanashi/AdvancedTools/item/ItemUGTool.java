@@ -21,12 +21,15 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -37,23 +40,38 @@ public abstract class ItemUGTool extends ItemTool {
     private static final String KEY_SIDE = "advancedtools|side";
     private static final Set<Block> REDSTONE_SET = ImmutableSet.of(Blocks.REDSTONE_ORE, Blocks.LIT_REDSTONE_ORE);
     private static final Set<Block> DIRT_SET = ImmutableSet.of(Blocks.DIRT, Blocks.GRASS);
-    public String BaseName;
-    protected int cDestroyRange;
-    private int[] rangeArray = new int[]{2, 4, 7, 9, 9};
-    private int safetyCount;
-    @Deprecated
-    private int breakCount;
 
-    protected ItemUGTool(float attackDamageIn, float attackSpeedIn, ToolMaterial toolMaterial, Set effectiveBlocksIn, float var5) {
+    private final float durationModifier;
+    private final String toolKind;
+    private String BaseName;
+    private int[] rangeArray = new int[]{2, 4, 7, 9, 9};
+
+    /**
+     * コンストラクタ
+     * @param attackDamageIn 攻撃力
+     * @param attackSpeedIn 攻撃速度
+     * @param toolMaterial 素材
+     * @param effectiveBlocksIn 破壊適用ブロック
+     * @param durationModifier 耐久値係数
+     * @param toolKind 道具種別
+     */
+    ItemUGTool(float attackDamageIn, float attackSpeedIn, ToolMaterial toolMaterial,
+                         Set<Block> effectiveBlocksIn, float durationModifier, String toolKind) {
         super(attackDamageIn, attackSpeedIn, toolMaterial, effectiveBlocksIn);
-        this.cDestroyRange = AdvancedTools.UGTools_SafetyCounter;
-        this.safetyCount = AdvancedTools.UGTools_SafetyCounter;
-        this.setMaxDamage((int) (var5 * (float) this.getMaxDamage()));
+        this.durationModifier = durationModifier;
+        this.toolKind = toolKind;
+    }
+
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        return MathHelper.floor(durationModifier * super.getMaxDamage(stack));
     }
 
     public abstract boolean doChainDestruction(IBlockState state);
 
-    public abstract boolean isProperTool(IBlockState state);
+    public boolean isProperTool(IBlockState state) {
+        return Optional.ofNullable(state.getBlock().getHarvestTool(state)).orElse("").equals(this.toolKind);
+    }
 
     public int getConnectedDistance() {
         return 1;
@@ -64,50 +82,49 @@ public abstract class ItemUGTool extends ItemTool {
     }
 
     @Override
-    public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-        getRange(par1ItemStack);
+    public void onCreated(ItemStack itemStack, World worldIn, EntityPlayer playerIn) {
+        getRange(itemStack);
     }
 
     @Override
-    public Item setUnlocalizedName(String var1) {
-        super.setUnlocalizedName(var1);
+    @Nonnull
+    public Item setUnlocalizedName(@Nonnull String unlocalizedName) {
+        super.setUnlocalizedName(unlocalizedName);
 
         if (this.BaseName == null) {
-            this.BaseName = var1;
+            this.BaseName = unlocalizedName;
         }
 
         return this;
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack item, World world, IBlockState state, BlockPos blockPos, EntityLivingBase breaker) {
-        super.onBlockDestroyed(item, world, state, blockPos, breaker);
-        if (!world.isRemote) {
-            //long start = System.nanoTime();
-            item.damageItem(1, breaker);
-            int range = getRange(item);
-            if (range != 0 && breaker instanceof EntityPlayer && ForgeHooks.canHarvestBlock(state.getBlock(), (EntityPlayer) breaker, world, blockPos)) {
-//                this.destroyAroundBlock(item, world, state, blockPos, (EntityPlayer) breaker, range);
-                Set<BlockPos> searchedBlockPosSet = this.getSearchingBlockPosSet(item, world, getSide(item), state, blockPos);
-                List<BlockPos> connectedBlockPosList = this.getConnectedBlockList(blockPos, searchedBlockPosSet);
+    public boolean onBlockDestroyed(@Nonnull ItemStack itemStack, World worldIn, @Nonnull IBlockState blockState, @Nonnull BlockPos pos, @Nonnull EntityLivingBase breaker) {
+        super.onBlockDestroyed(itemStack, worldIn, blockState, pos, breaker);
+        if (!worldIn.isRemote) {
+            itemStack.damageItem(1, breaker);
+            int range = getRange(itemStack);
+            if (range != 0 && breaker instanceof EntityPlayer && ForgeHooks.canHarvestBlock(blockState.getBlock(), (EntityPlayer) breaker, worldIn, pos)) {
+                Set<BlockPos> searchedBlockPosSet = this.getSearchingBlockPosSet(itemStack, worldIn, getSide(itemStack), blockState, pos);
+                List<BlockPos> connectedBlockPosList = this.getConnectedBlockList(pos, searchedBlockPosSet);
                 for (BlockPos breakingBlockPos : connectedBlockPosList) {
-                    this.checkAndDestroy(world, breakingBlockPos, state, item,(EntityPlayer) breaker);
+                    this.checkAndDestroy(worldIn, breakingBlockPos, blockState, itemStack,(EntityPlayer) breaker);
                 }
             }
-            //System.out.println("Time:" + (System.nanoTime() - start) / 1000000f + "ms");
             return true;
         }
         return false;
     }
 
-    @Deprecated
+    /*@Deprecated
     private boolean destroyAroundBlock(ItemStack var1, World world, IBlockState state, BlockPos blockPos, EntityPlayer var6, int range) {
         EnumFacing side = getSide(var1);
         this.searchAndDestroyBlock(world, blockPos, side, state, var1, var6, range);
         return true;
-    }
+    }*/
 
-    private List<BlockPos> getConnectedBlockList(BlockPos origin, Set<BlockPos> searchedBlockSet) {
+    @Nonnull
+    private List<BlockPos> getConnectedBlockList(BlockPos origin, @Nonnull Set<BlockPos> searchedBlockSet) {
         List<BlockPos> connectedBlockList = Lists.newArrayList();
         connectedBlockList.add(origin);
         boolean check = true;
@@ -130,8 +147,8 @@ public abstract class ItemUGTool extends ItemTool {
         return connectedBlockList;
     }
 
-
-    protected Set<BlockPos> getSearchingBlockPosSet(ItemStack tool, World world, EnumFacing side, IBlockState originState, BlockPos blockPos) {
+    @Nonnull
+    private Set<BlockPos> getSearchingBlockPosSet(@Nonnull ItemStack tool, World world, @Nonnull EnumFacing side, IBlockState originState, BlockPos blockPos) {
         int range = this.getRange(tool);
         int minX, minY, minZ, maxX, maxY, maxZ;
 
@@ -161,37 +178,34 @@ public abstract class ItemUGTool extends ItemTool {
                 maxX = blockPos.getX();
             }
         } else {
-            minX = blockPos.getX() - range/*this.cDestroyRange*/;
-            minY = blockPos.getY() - range/*this.cDestroyRange*/;
-            minZ = blockPos.getZ() - range/*this.cDestroyRange*/;
-            maxX = blockPos.getX() + range/*this.cDestroyRange*/;
-            maxY = blockPos.getY() + range/*this.cDestroyRange*/;
-            maxZ = blockPos.getZ() + range/*this.cDestroyRange*/;
+            minX = blockPos.getX() - range;
+            minY = blockPos.getY() - range;
+            minZ = blockPos.getZ() - range;
+            maxX = blockPos.getX() + range;
+            maxY = blockPos.getY() + range;
+            maxZ = blockPos.getZ() + range;
         }
 
         BlockPos minChunkPos = new BlockPos(minX, minY, minZ);
         BlockPos maxChunkPos = new BlockPos(maxX, maxY, maxZ);
-        @SuppressWarnings("unchecked")
         Iterable<BlockPos> allBlockPos = BlockPos.getAllInBox(minChunkPos, maxChunkPos);
         return getBlockPosToBeBroken(allBlockPos, originState, world);
     }
 
-    private Set<BlockPos> getBlockPosToBeBroken(Iterable<BlockPos> allBlockPos, IBlockState blockState, World world) {
+    @Nonnull
+    private Set<BlockPos> getBlockPosToBeBroken(@Nonnull Iterable<BlockPos> allBlockPos, IBlockState blockState, World world) {
         Set<BlockPos> beBrokenBlockSet = Sets.newHashSet();
-        //int count = 0;
         for (BlockPos blockPos : allBlockPos) {
-            //count++;
             IBlockState state = world.getBlockState(blockPos);
             if (isSimilarBlock(blockState, state)) {
                 beBrokenBlockSet.add(blockPos);
             }
         }
-        //System.out.println(count);
         return beBrokenBlockSet;
     }
 
-    @Deprecated
-    protected void searchAndDestroyBlock(World world, BlockPos blockPos, EnumFacing side, IBlockState state, ItemStack var6, EntityPlayer var7, int range) {
+    /*@Deprecated
+    protected void searchAndDestroyBlock(World world, BlockPos blockPos, @Nonnull EnumFacing side, IBlockState state, ItemStack var6, EntityPlayer var7, int range) {
         ArrayList<BlockPos> var8 = new ArrayList<>();
         var8.add(blockPos);
         int minX, minY, minZ, maxX, maxY, maxZ;
@@ -247,9 +261,9 @@ public abstract class ItemUGTool extends ItemTool {
             var8.clear();
             var8.addAll(var18);
         }
-    }
+    }*/
 
-    @Deprecated
+    /*@Deprecated
     protected ArrayList<BlockPos> searchAroundBlock(World world, BlockPos var1, BlockPos minChunkPos, BlockPos maxChunkPos, IBlockState var4, ItemStack var5, EntityPlayer var6) {
         ArrayList<BlockPos> var7 = new ArrayList<>();
 
@@ -264,9 +278,9 @@ public abstract class ItemUGTool extends ItemTool {
             }
         }
         return var7;
-    }
+    }*/
 
-    @Deprecated
+    /*@Deprecated
     public boolean checkBlockPositionInRange(BlockPos check, BlockPos min, BlockPos max, int index) {
         switch (index) {
             case 0:
@@ -284,9 +298,9 @@ public abstract class ItemUGTool extends ItemTool {
             default:
                 return false;
         }
-    }
+    }*/
 
-    @Deprecated
+/*    @Deprecated
     protected boolean destroyBlock(World world, BlockPos var1, IBlockState state, ItemStack var3, EntityPlayer var4) {
 
         Block var5 = world.getBlockState(var1).getBlock();
@@ -300,7 +314,7 @@ public abstract class ItemUGTool extends ItemTool {
         }
 
         return bool && this.checkAndDestroy(world, var1, state, var3, var4);
-    }
+    }*/
 
     private boolean checkAndDestroy(World world, BlockPos blockPos, IBlockState originalState, ItemStack tool, EntityPlayer breaker) {
         originalState.getBlock().onBlockHarvested(world, blockPos, originalState, breaker);
@@ -329,17 +343,19 @@ public abstract class ItemUGTool extends ItemTool {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
-        if (!world.isRemote) {
-            EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
-            int range = this.setRange(itemStack, entityPlayer);
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
+        ItemStack itemStack = playerIn.getHeldItem(handIn);
+        if (!worldIn.isRemote) {
+            EntityPlayerMP player = (EntityPlayerMP) playerIn;
+            int range = this.setRange(itemStack, playerIn);
             String chat;
             if (range == 0) {
                 chat = this.BaseName + " will harvest only one.";
             } else {
                 chat = this.BaseName + "\'s range was changed to " + (range * 2 + 1) + "x" + (range * 2 + 1);
             }
-            player.addChatMessage(new TextComponentString(chat));
+            player.sendMessage(new TextComponentString(chat));
         }
         return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
     }
@@ -356,7 +372,7 @@ public abstract class ItemUGTool extends ItemTool {
         return range;
     }
 
-    protected int getRange(ItemStack item) {
+    private int getRange(ItemStack item) {
         int range;
         NBTTagCompound nbt;
         if (!item.hasTagCompound()) {
@@ -374,23 +390,22 @@ public abstract class ItemUGTool extends ItemTool {
     }
 
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings({"unchecked", "rawtype"})
-    public void addInformation(ItemStack item, EntityPlayer player, List par3List, boolean par4) {
-        super.addInformation(item, player, par3List, par4);
-        int range = getRange(item);
+    public void addInformation(ItemStack itemStack, EntityPlayer playerIn, List<String > tooltip, boolean advanced) {
+        super.addInformation(itemStack, playerIn, tooltip, advanced);
+        int range = getRange(itemStack);
         if (range == 0) {
-            par3List.add("Range: Only one");
+            tooltip.add("Range: Only one");
         } else {
-            par3List.add("Range: " + (range * 2 + 1) + "x" + (range * 2 + 1));
+            tooltip.add("Range: " + (range * 2 + 1) + "x" + (range * 2 + 1));
         }
     }
 
-    public boolean checkArrays(Block block, String[] blockList) {
+    boolean checkArrays(Block block, String[] blockList) {
         String uIdName = block.getRegistryName().toString();
         return Arrays.asList(blockList).contains(uIdName);
     }
 
-    public boolean isSilkTouch(ItemStack itemStack) {
+    private boolean isSilkTouch(ItemStack itemStack) {
         return itemStack.isItemEnchanted() && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemStack) > 0;
     }
 
@@ -401,10 +416,11 @@ public abstract class ItemUGTool extends ItemTool {
         itemStack.getTagCompound().setInteger(KEY_SIDE, side.getIndex());
     }
 
-    public EnumFacing getSide(ItemStack itemStack) {
+    private EnumFacing getSide(ItemStack itemStack) {
         EnumFacing facing = EnumFacing.DOWN;
-        if (itemStack.hasTagCompound()) {
-            int side = itemStack.getTagCompound().getInteger(KEY_SIDE);
+        NBTTagCompound nbtTagCompound = itemStack.getTagCompound();
+        if (nbtTagCompound != null && nbtTagCompound.hasKey(KEY_SIDE, Constants.NBT.TAG_INT)) {
+            int side = nbtTagCompound.getInteger(KEY_SIDE);
             facing = EnumFacing.getFront(side);
         }
         return facing;
@@ -414,7 +430,7 @@ public abstract class ItemUGTool extends ItemTool {
         return this.getConnectedDistance() >= listedBlockPos.distanceSq(checkedBlockPos);
     }
 
-    protected boolean isSimilarBlock(IBlockState originState, IBlockState checkState) {
+    private boolean isSimilarBlock(IBlockState originState, IBlockState checkState) {
         Block block = checkState.getBlock();
         boolean bool = block != Blocks.AIR;
         if (REDSTONE_SET.contains(originState.getBlock())) {

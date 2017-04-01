@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/CrossBow"
+        "layer0": "advancedtools:items/cross_bow"
     }
 }

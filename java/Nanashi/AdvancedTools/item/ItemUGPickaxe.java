@@ -1,7 +1,6 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -12,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ItemUGPickaxe extends ItemUGTool {
+    private static final String TOOL_KIND = "pickaxe";
     public static final Set<Block> blocksEffectiveAgainst = new HashSet<>();
     public static final Set<Material> materialEffectiveAgainst = new HashSet<>();
 
@@ -63,9 +63,9 @@ public class ItemUGPickaxe extends ItemUGTool {
         materialEffectiveAgainst.add(Material.PACKED_ICE);
     }
 
-    public ItemUGPickaxe(ToolMaterial var2, float var3) {
-        super(1.0F, -2.8F, var2, blocksEffectiveAgainst, var3);
-        setHarvestLevel("pickaxe", var2.getHarvestLevel());
+    public ItemUGPickaxe(ToolMaterial toolMaterial, float durationModifier) {
+        super(1.0F, -2.8F, toolMaterial, blocksEffectiveAgainst, durationModifier, TOOL_KIND);
+        setHarvestLevel(TOOL_KIND, toolMaterial.getHarvestLevel());
     }
 
     @Override
@@ -74,18 +74,14 @@ public class ItemUGPickaxe extends ItemUGTool {
     }
 
     @Override
-    public float getStrVsBlock(ItemStack var1, IBlockState state) {
-        return state.getBlock() != null && (materialEffectiveAgainst.contains(state.getMaterial())) ? this.efficiencyOnProperMaterial : super.getStrVsBlock(var1, state);
+    public float getStrVsBlock(ItemStack itemStack, IBlockState state) {
+        return state.getBlock() != Blocks.AIR
+                && (materialEffectiveAgainst.contains(state.getMaterial())) ? this.efficiencyOnProperMaterial : super.getStrVsBlock(itemStack, state);
     }
 
     @Override
     public boolean doChainDestruction(IBlockState state) {
         return checkArrays(state.getBlock(), AdvancedTools.addBlockForPickaxe)
                 && (isProperTool(state) && this.toolMaterial.getHarvestLevel() >= state.getBlock().getHarvestLevel(state));
-    }
-
-    @Override
-    public boolean isProperTool(IBlockState state) {
-        return Optional.fromNullable(state.getBlock().getHarvestTool(state)).or("").equals("pickaxe");
     }
 }

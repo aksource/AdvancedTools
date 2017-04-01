@@ -46,7 +46,7 @@ public class Entity_FireZombie extends EntityZombie {
         super.onLivingUpdate();
 
         if (this.isWet()) {
-            this.attackEntityFrom(DamageSource.drown, 2);
+            this.attackEntityFrom(DamageSource.DROWN, 2);
         } else {
             this.setFire(1);
         }

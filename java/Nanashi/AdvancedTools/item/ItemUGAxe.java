@@ -1,23 +1,21 @@
 package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.AdvancedTools;
-import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class ItemUGAxe extends ItemUGTool {
-    public static final Set<Block> blocksEffectiveAgainst = new HashSet<>();
-    public static final Set<Material> materialEffectiveAgainst = new HashSet<>();
+    private static final String TOOL_KIND = "axe";
+    private static final Set<Block> blocksEffectiveAgainst = new HashSet<>();
+    private static final Set<Material> materialEffectiveAgainst = new HashSet<>();
 
     static {
         blocksEffectiveAgainst.add(Blocks.PLANKS);
@@ -46,15 +44,14 @@ public class ItemUGAxe extends ItemUGTool {
         materialEffectiveAgainst.add(Material.CACTUS);
     }
 
-    public ItemUGAxe(ToolMaterial toolMaterial, float damage, float speed, float var3) {
-        super(damage, speed, toolMaterial, blocksEffectiveAgainst, var3);
-        setHarvestLevel("axe", toolMaterial.getHarvestLevel());
+    public ItemUGAxe(ToolMaterial toolMaterial, float damage, float speed, float durationModifier) {
+        super(damage, speed, toolMaterial, blocksEffectiveAgainst, durationModifier, TOOL_KIND);
+        setHarvestLevel(TOOL_KIND, toolMaterial.getHarvestLevel());
     }
 
     @Override
-    public float getStrVsBlock(ItemStack itemStack, IBlockState state) {
-        return state != null
-                && (state.getMaterial() == Material.WOOD
+    public float getStrVsBlock(@Nonnull ItemStack itemStack, @Nonnull IBlockState state) {
+        return (state.getMaterial() == Material.WOOD
                 || state.getMaterial() == Material.PLANTS
                 || state.getMaterial() == Material.VINE)
                 ? this.efficiencyOnProperMaterial : super.getStrVsBlock(itemStack, state);
@@ -68,7 +65,7 @@ public class ItemUGAxe extends ItemUGTool {
 
     @Override
     public boolean isProperTool(IBlockState state) {
-        return Optional.fromNullable(state.getBlock().getHarvestTool(state)).or("").equals("axe");
+        return Optional.ofNullable(state.getBlock().getHarvestTool(state)).orElse("").equals("axe");
     }
 
     @Override
@@ -80,7 +77,7 @@ public class ItemUGAxe extends ItemUGTool {
         return true;
     }
 
-    @Override
+    /*@Override
     protected ArrayList<BlockPos> searchAroundBlock(World world, BlockPos var1, BlockPos minChunkPos, BlockPos maxChunkPos, IBlockState var4, ItemStack var5, EntityPlayer var6) {
         ArrayList<BlockPos> var7 = new ArrayList<BlockPos>();
         BlockPos[] var8 = new BlockPos[17];
@@ -166,5 +163,5 @@ public class ItemUGAxe extends ItemUGTool {
         }
 
         return var7;
-    }
+    }*/
 }

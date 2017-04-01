@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/AsmoSlasher"
+        "layer0": "advancedtools:items/asmo_slasher"
     }
 }

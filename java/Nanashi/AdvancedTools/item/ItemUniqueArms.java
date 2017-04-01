@@ -7,17 +7,22 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nonnull;
+
 public class ItemUniqueArms extends ItemSword {
-    public ItemUniqueArms(ToolMaterial var2) {
-        super(var2);
+    public ItemUniqueArms(ToolMaterial toolMaterial) {
+        super(toolMaterial);
     }
 
-    public ItemUniqueArms(ToolMaterial var2, int var3) {
-        super(var2);
-        ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, (float) var3, 0);
+    public ItemUniqueArms(ToolMaterial toolMaterial, int attackDamage) {
+        super(toolMaterial);
+        ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, (float) attackDamage, 0);
     }
 
     @Override
@@ -47,5 +52,16 @@ public class ItemUniqueArms extends ItemSword {
     @Override
     public int getMaxItemUseDuration(ItemStack stack) {
         return 72000;
+    }
+
+    protected ActionResult<ItemStack> setActiveHand(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
+        ItemStack itemStack = playerIn.getHeldItem(hand);
+        int foodLevel = playerIn.getFoodStats().getFoodLevel();
+
+        if (foodLevel > 6) {
+            playerIn.setActiveHand(hand);
+        }
+
+        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
     }
 }

@@ -8,6 +8,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class Entity_HighSpeedCreeper extends EntityCreeper {
     public Entity_HighSpeedCreeper(World var1) {
         super(var1);
@@ -27,7 +29,7 @@ public class Entity_HighSpeedCreeper extends EntityCreeper {
     public void onUpdate() {
         super.onUpdate();
         Potion speed = Potion.getPotionFromResourceLocation("speed");
-        if (!this.isPotionActive(speed) && this.getHealth() <= 10) {
+        if (speed != null && !this.isPotionActive(speed) && this.getHealth() <= 10) {
             this.addPotionEffect(new PotionEffect(speed, 20, 1));
         }
     }
@@ -36,22 +38,22 @@ public class Entity_HighSpeedCreeper extends EntityCreeper {
      * Called when the entity is attacked.
      */
     @Override
-    public boolean attackEntityFrom(DamageSource var1, float var2) {
-        return !var1.damageType.equals("arrow") && super.attackEntityFrom(var1, var2);
+    public boolean attackEntityFrom(@Nonnull DamageSource damageSource, float amount) {
+        return !damageSource.damageType.equals("arrow") && super.attackEntityFrom(damageSource, amount);
     }
 
     /**
      * Drop 0-2 items of this living's type
      */
     @Override
-    protected void dropFewItems(boolean var1, int var2) {
-        super.dropFewItems(var1, var2);
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
+        super.dropFewItems(wasRecentlyHit, lootingModifier);
 
-        if (this.rand.nextFloat() <= 0.25F + 0.1F * (float) var2) {
+        if (this.rand.nextFloat() <= 0.25F + 0.1F * (float) lootingModifier) {
             this.dropItem(AdvancedTools.RedEnhancer, 1);
         }
 
-        if (this.rand.nextFloat() <= 0.1F + 0.1F * (float) var2) {
+        if (this.rand.nextFloat() <= 0.1F + 0.1F * (float) lootingModifier) {
             this.dropItem(AdvancedTools.BlueEnhancer, 1);
         }
     }

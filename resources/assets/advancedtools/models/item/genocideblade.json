@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/GenocideBlade"
+        "layer0": "advancedtools:items/genocide_blade"
     }
 }

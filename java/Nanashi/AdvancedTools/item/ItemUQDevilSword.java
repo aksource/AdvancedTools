@@ -16,13 +16,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class ItemUQDevilSword extends ItemUniqueArms {
-    public ItemUQDevilSword(ToolMaterial var2) {
-        super(var2);
-    }
+import javax.annotation.Nonnull;
 
-    public ItemUQDevilSword(ToolMaterial var2, int var3) {
-        super(var2, var3);
+public class ItemUQDevilSword extends ItemUniqueArms {
+
+    public ItemUQDevilSword(ToolMaterial toolMaterial, int attackDamage) {
+        super(toolMaterial, attackDamage);
     }
 
     @Override
@@ -33,8 +32,9 @@ public class ItemUQDevilSword extends ItemUniqueArms {
             EntityPlayer player = (EntityPlayer) entity;
 
             Potion strength = Potion.getPotionFromResourceLocation("strength");
-            if (player.getHeldItemMainhand() != null
+            if (!player.getHeldItemMainhand().isEmpty()
                     && player.getHeldItemMainhand().getItem() == this
+                    && strength != null
                     && !player.isPotionActive(strength)) {
                 if (player.getHealth() > 1) {
                     player.heal(-1);
@@ -47,23 +47,25 @@ public class ItemUQDevilSword extends ItemUniqueArms {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        int var4 = MathHelper.ceiling_float_int(playerIn.getHealth());
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
+        ItemStack itemStack = playerIn.getHeldItem(hand);
+        int playerHealth = MathHelper.ceil(playerIn.getHealth());
 
-        if (var4 > 1) {
-            playerIn.attackEntityFrom(DamageSource.generic, var4 - 1);
+        if (playerHealth > 1) {
+            playerIn.attackEntityFrom(DamageSource.GENERIC, playerHealth - 1);
         }
 
-        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target, @Nonnull EntityLivingBase attacker) {
         if (target.hurtTime == 0) {
             attacker.heal(2);
         }
         if (target instanceof EntityPlayer) {
-            int var4 = MathHelper.ceiling_float_int(target.getMaxHealth() - target.getHealth());
+            int var4 = MathHelper.ceil(target.getMaxHealth() - target.getHealth());
             float dmg = getDamageFromNBT(stack);
             if (var4 >= 19) {
                 dmg += 10;

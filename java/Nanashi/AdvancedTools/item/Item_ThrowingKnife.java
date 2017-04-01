@@ -15,13 +15,18 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class Item_ThrowingKnife extends Item {
     public boolean addPoison;
 
-    public Item_ThrowingKnife(boolean var2) {
+    /**
+     * @param addPoison 毒付きかそうでないか
+     */
+    public Item_ThrowingKnife(boolean addPoison) {
         super();
         this.maxStackSize = 16;
-        this.addPoison = var2;
+        this.addPoison = addPoison;
     }
 
     @Override
@@ -30,17 +35,19 @@ public class Item_ThrowingKnife extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
-        if (entityPlayer.capabilities.isCreativeMode || entityPlayer.inventory.hasItemStack(itemStack)) {
-            world.playSound(entityPlayer, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ,
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack itemStack = playerIn.getHeldItem(handIn);
+        if (playerIn.capabilities.isCreativeMode || playerIn.inventory.hasItemStack(itemStack)) {
+            worldIn.playSound(playerIn, playerIn.posX, playerIn.posY, playerIn.posZ,
                     SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL,
                     1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 1.0f * 0.5F);
-            --itemStack.stackSize;
+            itemStack.shrink(1);
 
-            if (!world.isRemote) {
-                Entity_ThrowingKnife entityThrowingKnife = new Entity_ThrowingKnife(world, entityPlayer, 1.0F, this.addPoison);
-                entityThrowingKnife.setHeadingFromThrower(entityPlayer, entityPlayer.rotationPitch, entityPlayer.rotationYaw, 0F, 0.7F, 1.0F);
-                world.spawnEntityInWorld(entityThrowingKnife);
+            if (!worldIn.isRemote) {
+                Entity_ThrowingKnife entityThrowingKnife = new Entity_ThrowingKnife(worldIn, playerIn, 1.0F, this.addPoison);
+                entityThrowingKnife.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0F, 0.7F, 1.0F);
+                worldIn.spawnEntity(entityThrowingKnife);
             }
         }
 
@@ -48,13 +55,16 @@ public class Item_ThrowingKnife extends Item {
     }
 
     @Override
-    public boolean hitEntity(ItemStack var1, EntityLivingBase var2, EntityLivingBase var3) {
-        if (this.addPoison && var3 instanceof EntityPlayer) {
-            var2.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 60, 1));
-            --var1.stackSize;
+    public boolean hitEntity(ItemStack itemStack, EntityLivingBase target, EntityLivingBase attacker) {
+        if (this.addPoison && attacker instanceof EntityPlayer) {
+            Potion poison = Potion.getPotionFromResourceLocation("poison");
+            if (poison != null) {
+                target.addPotionEffect(new PotionEffect(poison, 60, 1));
+            }
+            itemStack.shrink(1);
 
-            if (!((EntityPlayer) var3).inventory.addItemStackToInventory(new ItemStack(AdvancedTools.ThrowingKnife))) {
-                var3.dropItem(AdvancedTools.ThrowingKnife, 1);
+            if (!((EntityPlayer) attacker).inventory.addItemStackToInventory(new ItemStack(AdvancedTools.ThrowingKnife))) {
+                attacker.dropItem(AdvancedTools.ThrowingKnife, 1);
             }
         }
 

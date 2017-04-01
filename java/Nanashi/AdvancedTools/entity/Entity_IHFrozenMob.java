@@ -13,6 +13,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nonnull;
+
 public class Entity_IHFrozenMob extends Entity {
     EntityLiving frozen;
     EntityLivingBase attacker;
@@ -54,11 +56,11 @@ public class Entity_IHFrozenMob extends Entity {
 
     private void originalMethodForAI() {
         this.entityTasks = this.frozen.tasks;
-        ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this.frozen, new EntityAITasks(this.worldObj.theProfiler), 7);
+        ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this.frozen, new EntityAITasks(this.getEntityWorld().theProfiler), 7);
     }
 
     public void onUpdate() {
-        if (!this.worldObj.isRemote) {
+        if (!this.getEntityWorld().isRemote) {
             --this.FrozenRest;
 
             if (this.frozen == null) {
@@ -69,7 +71,6 @@ public class Entity_IHFrozenMob extends Entity {
                     this.rotationYaw = this.frozen.rotationYaw;
                     this.frozen.onGround = false;
                     if (this.frozen instanceof EntityMob) {
-//						((EntityMob)this.frozen).attackTime = 20;
                         this.frozen.setAttackTarget(this.frozen);
                         this.frozen.setLastAttacker(this.frozen);
                     }
@@ -77,9 +78,9 @@ public class Entity_IHFrozenMob extends Entity {
                     this.setDead();
                 }
             } else {
-                this.worldObj.playSound(this.posX, this.posY, this.posZ,
+                this.getEntityWorld().playSound(this.posX, this.posY, this.posZ,
                         SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.VOICE,
-                        1.0F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F, false);
+                        1.0F, this.getEntityWorld().rand.nextFloat() * 0.1F + 0.9F, false);
                 this.setDead();
             }
         } else {
@@ -89,11 +90,12 @@ public class Entity_IHFrozenMob extends Entity {
                 double var6 = this.posX + var2 * Math.sin(var4);
                 double var8 = this.posY + (double) this.height * this.rand.nextDouble();
                 double var10 = this.posZ + var2 * Math.cos(var4);
-                this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, var6, var8, var10, 0.0D, 0.0D, 0.0D);
+                this.getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, var6, var8, var10, 0.0D, 0.0D, 0.0D);
             }
         }
     }
 
+    @Override
     public void setDead() {
         if (this.entityTasks != null) {
             ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this.frozen, this.entityTasks, 7);
@@ -103,21 +105,26 @@ public class Entity_IHFrozenMob extends Entity {
         super.setDead();
     }
 
+    @Override
     public float getBrightness(float var1) {
         return 1.0f;
     }
 
+    @Override
     public boolean canBeCollidedWith() {
         return false;
     }
 
+    @Override
     protected void entityInit() {}
 
-    protected void readEntityFromNBT(NBTTagCompound var1) {
-        this.FrozenRest = var1.getInteger("frozenRest");
+    @Override
+    protected void readEntityFromNBT(@Nonnull NBTTagCompound nbtTagCompound) {
+        this.FrozenRest = nbtTagCompound.getInteger("frozenRest");
     }
 
-    protected void writeEntityToNBT(NBTTagCompound var1) {
-        var1.setInteger("frozenRest", FrozenRest);
+    @Override
+    protected void writeEntityToNBT(@Nonnull NBTTagCompound nbtTagCompound) {
+        nbtTagCompound.setInteger("frozenRest", FrozenRest);
     }
 }

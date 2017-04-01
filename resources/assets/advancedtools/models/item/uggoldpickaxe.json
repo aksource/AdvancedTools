@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/UGGoldpickaxe"
+        "layer0": "advancedtools:items/u_g_gold_pickaxe"
     }
 }

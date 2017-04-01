@@ -16,8 +16,8 @@ import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class RenderAdvSkeleton extends RenderBiped<EntitySkeleton> {
-    private static final ResourceLocation HSke = new ResourceLocation(AdvancedTools.textureassets, "textures/mob/hskeleton.png");
-    private static final ResourceLocation SkeSni = new ResourceLocation(AdvancedTools.textureassets, "textures/mob/skeletons.png");
+    private static final ResourceLocation HSke = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/hskeleton.png");
+    private static final ResourceLocation SkeSni = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/skeletons.png");
     private static final ResourceLocation Ske = new ResourceLocation("textures/entity/skeleton/skeleton.png");
 
     public RenderAdvSkeleton(RenderManager renderManager1) {

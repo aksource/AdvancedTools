@@ -2,27 +2,24 @@ package Nanashi.AdvancedTools.item;
 
 import Nanashi.AdvancedTools.entity.Entity_PGPowerBomb;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemUQPlanetGuardian extends ItemUniqueArms {
-    public ItemUQPlanetGuardian(ToolMaterial var2) {
-        super(var2);
-    }
 
-    public ItemUQPlanetGuardian(ToolMaterial var2, int var3) {
-        super(var2);
+    public ItemUQPlanetGuardian(ToolMaterial toolMaterial, int attackDamage) {
+        super(toolMaterial, attackDamage);
     }
 
     @Override
@@ -45,7 +42,7 @@ public class ItemUQPlanetGuardian extends ItemUniqueArms {
             Entity_PGPowerBomb var8 = new Entity_PGPowerBomb(worldIn, entityLiving, var7);
 
             if (!worldIn.isRemote) {
-                worldIn.spawnEntityInWorld(var8);
+                worldIn.spawnEntity(var8);
             }
 
             if (entityLiving instanceof EntityPlayer && !((EntityPlayer) entityLiving).capabilities.isCreativeMode) {
@@ -60,25 +57,20 @@ public class ItemUQPlanetGuardian extends ItemUniqueArms {
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack var1) {
+    @Nonnull
+    public EnumAction getItemUseAction(ItemStack itemStack) {
         return EnumAction.BOW;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4) {
-        par3List.add("Ability : Ground Banish");
+    public void addInformation(ItemStack itemStack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        tooltip.add("Ability : Ground Banish");
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        int var4 = playerIn.getFoodStats().getFoodLevel();
-
-        if (var4 > 6) {
-//			playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
-            playerIn.setActiveHand(hand);
-        }
-
-        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
+        return setActiveHand(worldIn, playerIn, hand);
     }
 }

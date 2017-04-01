@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/Infinitysword"
+        "layer0": "advancedtools:items/infinity_sword"
     }
 }

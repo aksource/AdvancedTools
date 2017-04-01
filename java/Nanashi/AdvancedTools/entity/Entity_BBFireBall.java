@@ -20,8 +20,6 @@ public class Entity_BBFireBall extends Entity {
     private int xTile;
     private int yTile;
     private int zTile;
-    //	private Block inTile;
-//	private int inData;
     private boolean inGround;
     private boolean explodeFlag;
     private int ticksInAir;
@@ -76,7 +74,7 @@ public class Entity_BBFireBall extends Entity {
         float var1 = this.explodeFlag ? this.expower * 1.2F : 1.5F;
 
         if (!this.isWet()) {
-            List var2 = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, this.getEntityBoundingBox().expand((double) var1, (double) var1, (double) var1));
+            List var2 = this.getEntityWorld().getEntitiesWithinAABB(EntityLiving.class, this.getEntityBoundingBox().expand((double) var1, (double) var1, (double) var1));
             int var3;
 
             for (var3 = 0; var3 < var2.size(); ++var3) {
@@ -89,8 +87,8 @@ public class Entity_BBFireBall extends Entity {
 //			int var5 = MathHelper.floor_double(this.posZ);
             BlockPos blockPos = new BlockPos(this.posX, this.posY, this.posZ);
 
-            if (this.worldObj.getBlockState(blockPos).getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(this.worldObj, blockPos)) {
-                this.worldObj.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
+            if (this.getEntityWorld().getBlockState(blockPos).getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(this.getEntityWorld(), blockPos)) {
+                this.getEntityWorld().setBlockState(blockPos, Blocks.FIRE.getDefaultState());
             }
 
             for (int var6 = 0; var6 < 4; ++var6) {
@@ -99,19 +97,19 @@ public class Entity_BBFireBall extends Entity {
 //				var5 = MathHelper.floor_double(this.posZ) + this.rand.nextInt(3) - 1;
                 blockPos = new BlockPos(this.posX + this.rand.nextInt(3) - 1, this.posY + this.rand.nextInt(3) - 1, this.posZ + this.rand.nextInt(3) - 1);
 
-                if (this.worldObj.getBlockState(blockPos).getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(this.worldObj, blockPos)) {
-                    this.worldObj.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
+                if (this.getEntityWorld().getBlockState(blockPos).getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(this.getEntityWorld(), blockPos)) {
+                    this.getEntityWorld().setBlockState(blockPos, Blocks.FIRE.getDefaultState());
                 }
             }
 
             if (this.explodeFlag) {
-                this.worldObj.createExplosion(null, this.posX, this.posY, this.posZ, this.expower, true);
+                this.getEntityWorld().createExplosion(null, this.posX, this.posY, this.posZ, this.expower, true);
             } else {
-                this.worldObj.createExplosion(null, this.posX, this.posY, this.posZ, 0.0F, true);
+                this.getEntityWorld().createExplosion(null, this.posX, this.posY, this.posZ, 0.0F, true);
             }
         } else {
             for (int var7 = 0; var7 < 10; ++var7) {
-                this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+                this.getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -119,7 +117,7 @@ public class Entity_BBFireBall extends Entity {
     protected void entityInit() {}
 
     public void setArrowHeading(double var1, double var3, double var5, float var7, float var8) {
-        float var9 = MathHelper.sqrt_double(var1 * var1 + var3 * var3 + var5 * var5);
+        float var9 = MathHelper.sqrt(var1 * var1 + var3 * var3 + var5 * var5);
         var1 /= (double) var9;
         var3 /= (double) var9;
         var5 /= (double) var9;
@@ -132,7 +130,7 @@ public class Entity_BBFireBall extends Entity {
         this.motionX = var1;
         this.motionY = var3;
         this.motionZ = var5;
-        float entity = MathHelper.sqrt_double(var1 * var1 + var5 * var5);
+        float entity = MathHelper.sqrt(var1 * var1 + var5 * var5);
         this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(var1, var5) * 180.0D / Math.PI);
         this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(var3, (double) entity) * 180.0D / Math.PI);
     }
@@ -146,18 +144,18 @@ public class Entity_BBFireBall extends Entity {
         this.setFire(1);
 
         if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
-            float var1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+            float var1 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
             this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
             this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(this.motionY, (double) var1) * 180.0D / Math.PI);
         }
 
         BlockPos blockPos = new BlockPos(this.xTile, this.yTile, this.zTile);
 
-        IBlockState blockState = this.worldObj.getBlockState(blockPos);
+        IBlockState blockState = this.getEntityWorld().getBlockState(blockPos);
 
         if (blockState.getBlock() != Blocks.AIR) {
-//            blockState.getBlock().setBlockBoundsBasedOnState(this.worldObj, blockPos);
-            AxisAlignedBB var2 = blockState.getBlock().getCollisionBoundingBox(this.worldObj.getBlockState(blockPos), this.worldObj, blockPos);
+//            blockState.getBlock().setBlockBoundsBasedOnState(this.getEntityWorld(), blockPos);
+            AxisAlignedBB var2 = blockState.getBoundingBox(this.getEntityWorld(), blockPos);
 
             if (var2 != null && var2.isVecInside(new Vec3d(this.posX, this.posY, this.posZ))) {
                 this.inGround = true;
@@ -168,7 +166,7 @@ public class Entity_BBFireBall extends Entity {
             ++this.ticksInAir;
             Vec3d var18 = new Vec3d(this.posX, this.posY, this.posZ);
             Vec3d var3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-            RayTraceResult rayTraceResult = this.worldObj.rayTraceBlocks(var18, var3, false, true, false);
+            RayTraceResult rayTraceResult = this.getEntityWorld().rayTraceBlocks(var18, var3, false, true, false);
             var18 = new Vec3d(this.posX, this.posY, this.posZ);
             var3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
@@ -177,9 +175,9 @@ public class Entity_BBFireBall extends Entity {
             }
 
             Entity var5 = null;
-            List<Entity> var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+            List<Entity> var6 = this.getEntityWorld().getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
             double var7 = 0.0D;
-            if (!this.worldObj.isRemote) {
+            if (!this.getEntityWorld().isRemote) {
                 for (Entity entityTmp : var6) {
 
                     if (entityTmp.canBeCollidedWith() && (entityTmp != this.FB_Master || this.ticksInAir >= 5)) {
@@ -206,7 +204,7 @@ public class Entity_BBFireBall extends Entity {
                 float var19;
 
                 if (rayTraceResult.entityHit != null) {
-//                    var19 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+//                    var19 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                     DamageSource var22;
 
                     if (this.FB_Master == null) {
@@ -222,12 +220,12 @@ public class Entity_BBFireBall extends Entity {
                     this.xTile = rayTraceResult.getBlockPos().getX();//BlockPosから取得
                     this.yTile = rayTraceResult.getBlockPos().getY();
 //					this.zTile = var4.func_178782_a().getZ();
-//					this.inTile = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
-//					this.inData = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
+//					this.inTile = this.getEntityWorld().getBlock(this.xTile, this.yTile, this.zTile);
+//					this.inData = this.getEntityWorld().getBlockMetadata(this.xTile, this.yTile, this.zTile);
                     this.motionX = (double) ((float) (rayTraceResult.hitVec.xCoord - this.posX));
                     this.motionY = (double) ((float) (rayTraceResult.hitVec.yCoord - this.posY));
                     this.motionZ = (double) ((float) (rayTraceResult.hitVec.zCoord - this.posZ));
-                    var19 = MathHelper.sqrt_double(
+                    var19 = MathHelper.sqrt(
                             this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                     this.posX -= this.motionX / (double) var19 * 0.05000000074505806D;
                     this.posY -= this.motionY / (double) var19 * 0.05000000074505806D;
@@ -248,14 +246,14 @@ public class Entity_BBFireBall extends Entity {
 
             for (int var15 = 0; var15 < 10; ++var15) {
                 float var16 = 0.1F * (float) var15;
-                this.worldObj.spawnParticle(
+                this.getEntityWorld().spawnParticle(
                         EnumParticleTypes.SMOKE_NORMAL,
                         this.posX + var21 * (double) var16,
                         this.posY + 0.5D + var20 * (double) var16,
                         this.posZ + var23 * (double) var16, 0.0D, 0.0D, 0.0D);
 
                 if (this.explodeFlag) {
-                    this.worldObj.spawnParticle(
+                    this.getEntityWorld().spawnParticle(
                             EnumParticleTypes.REDSTONE,
                             this.posX + var21 * (double) var16,
                             this.posY + 0.5D + var20 * (double) var16,
@@ -263,7 +261,7 @@ public class Entity_BBFireBall extends Entity {
                 }
             }
 
-            float var24 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+            float var24 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
             this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 
             for (this.rotationPitch = (float) (Math.atan2(this.motionY,
@@ -300,35 +298,30 @@ public class Entity_BBFireBall extends Entity {
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
      */
-    public void writeEntityToNBT(NBTTagCompound var1) {
-        var1.setShort("xTile", (short) this.xTile);
-        var1.setShort("yTile", (short) this.yTile);
-        var1.setShort("zTile", (short) this.zTile);
-        //		 var1.setByte("inTile", (byte)this.inTile);
-//		var1.setByte("inData", (byte)this.inData);
-        var1.setByte("inGround", (byte) (this.inGround ? 1 : 0));
-        var1.setBoolean("attacker", this.doesArrowBelongToPlayer);
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound.setShort("xTile", (short) this.xTile);
+        nbtTagCompound.setShort("yTile", (short) this.yTile);
+        nbtTagCompound.setShort("zTile", (short) this.zTile);
+        nbtTagCompound.setByte("inGround", (byte) (this.inGround ? 1 : 0));
+        nbtTagCompound.setBoolean("attacker", this.doesArrowBelongToPlayer);
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readEntityFromNBT(NBTTagCompound var1) {
-        this.xTile = var1.getShort("xTile");
-        this.yTile = var1.getShort("yTile");
-        this.zTile = var1.getShort("zTile");
-        //		 this.inTile = var1.getByte("inTile") & 255;
-//		this.inData = var1.getByte("inData") & 255;
-        this.inGround = var1.getByte("inGround") == 1;
-        this.doesArrowBelongToPlayer = var1.getBoolean("attacker");
+    @Override
+    public void readEntityFromNBT(NBTTagCompound nbtTagCompound) {
+        this.xTile = nbtTagCompound.getShort("xTile");
+        this.yTile = nbtTagCompound.getShort("yTile");
+        this.zTile = nbtTagCompound.getShort("zTile");
+        this.inGround = nbtTagCompound.getByte("inGround") == 1;
+        this.doesArrowBelongToPlayer = nbtTagCompound.getBoolean("attacker");
     }
 
     /**
      * Called by a attacker entity when they collide with an entity
      */
+    @Override
     public void onCollideWithPlayer(EntityPlayer var1) {}
-
-    public float getShadowSize() {
-        return 0.0F;
-    }
 }

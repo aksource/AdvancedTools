@@ -16,11 +16,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 public class ItemUQHolySaber extends ItemUniqueArms {
     private float baseDmgValue;
 
-    public ItemUQHolySaber(ToolMaterial toolMaterial) {
-        super(toolMaterial);
-        this.baseDmgValue = 4.0F + toolMaterial.getDamageVsEntity();
-    }
-
     public ItemUQHolySaber(ToolMaterial toolMaterial, int damageValue) {
         super(toolMaterial, damageValue);
         this.baseDmgValue = damageValue;
@@ -32,30 +27,32 @@ public class ItemUQHolySaber extends ItemUniqueArms {
 
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
+            Potion regeneration = Potion.getPotionFromResourceLocation("regeneration");
 
             if (player.getHealth() < player.getMaxHealth()
-                    && player.getHeldItemMainhand() != null
-                    && player.getHeldItemMainhand().getItem() == this) {
-                player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("regeneration"), 40, 0));
+                    && !player.getHeldItemMainhand().isEmpty()
+                    && player.getHeldItemMainhand().getItem() == this
+                    && regeneration != null) {
+                player.addPotionEffect(new PotionEffect(regeneration, 40, 0));
             }
         }
     }
 
     @Override
-    public boolean onLeftClickEntity(ItemStack itemstack, EntityPlayer player, Entity var1) {
+    public boolean onLeftClickEntity(ItemStack itemStack, EntityPlayer entityPlayer, Entity entity) {
         byte var2 = 0;
 
-        if (var1 instanceof EntityLiving) {
-            EntityLiving var3 = (EntityLiving) var1;
+        if (entity instanceof EntityLiving) {
+            EntityLiving var3 = (EntityLiving) entity;
 
             if (var3.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
                 var2 = 7;
-            } else if (var1 instanceof EntityEnderman) {
+            } else if (entity instanceof EntityEnderman) {
                 var2 = 10;
             }
         }
         ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, this.baseDmgValue + var2, 0);
-        player.getAttributeMap().applyAttributeModifiers(itemstack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND));
+        entityPlayer.getAttributeMap().applyAttributeModifiers(itemStack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND));
         return false;
     }
 }

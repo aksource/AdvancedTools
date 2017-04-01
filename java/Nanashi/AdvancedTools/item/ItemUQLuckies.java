@@ -12,20 +12,18 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 public class ItemUQLuckies extends ItemUniqueArms {
     private int dmg;
 
-    public ItemUQLuckies(ToolMaterial var2) {
-        super(var2);
-    }
-
     public ItemUQLuckies(ToolMaterial var2, int var3) {
         super(var2, var3);
         dmg = var3;
     }
 
+    @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer entityPlayer) {
         super.onCreated(stack, world, entityPlayer);
         stack.addEnchantment(Enchantments.LOOTING, 7);
     }
 
+    @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHand) {
         super.onUpdate(stack, world, entity, slot, isHand);
 
@@ -34,12 +32,12 @@ public class ItemUQLuckies extends ItemUniqueArms {
         }
     }
 
-
+    @Override
     public boolean onLeftClickEntity(ItemStack itemstack, EntityPlayer player, Entity entity) {
         int var2 = this.dmg;
         if (entity instanceof EntityLiving) {
             EntityLiving var3 = (EntityLiving) entity;
-            int var4 = MathHelper.floor_float(var3.getHealth());
+            int var4 = MathHelper.floor(var3.getHealth());
 
             if (var4 <= var2 && var4 > 0 && var3.hurtTime <= 0) {
                 int exp = ObfuscationReflectionHelper.getPrivateValue(EntityLiving.class, var3, 1);

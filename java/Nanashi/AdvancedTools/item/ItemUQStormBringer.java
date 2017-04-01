@@ -12,23 +12,20 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemUQStormBringer extends ItemUniqueArms {
     private int coolTime;
     private int safetyCnt;
 
-    public ItemUQStormBringer(ToolMaterial var2) {
-        super(var2);
-    }
-
-    public ItemUQStormBringer(ToolMaterial var2, int var3) {
-        super(var2);
+    public ItemUQStormBringer(ToolMaterial toolMaterial, int attackDamage) {
+        super(toolMaterial, attackDamage);
     }
 
     @Override
-    public void onUpdate(ItemStack var1, World var2, Entity var3, int var4, boolean var5) {
-        super.onUpdate(var1, var2, var3, var4, var5);
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHand) {
+        super.onUpdate(itemStack, world, entity, slot, isHand);
 
         if (this.coolTime > 0) {
             --this.coolTime;
@@ -50,8 +47,8 @@ public class ItemUQStormBringer extends ItemUniqueArms {
 
                 for (int var8 = 0; var8 < 3; ++var8) {
                     for (var9 = 0; var9 < 100; ++var9) {
-                        double var10 = (double) entityLiving.rotationYaw / 180.0D * Math.PI;
-                        var12 = (double) (-entityLiving.rotationPitch) / 180.0D * Math.PI;
+//                        double var10 = (double) entityLiving.rotationYaw / 180.0D * Math.PI;
+//                        var12 = (double) (-entityLiving.rotationPitch) / 180.0D * Math.PI;
                         float var14 = 0.0628F * (float) var9;
                         double var15 = 0.9D * Math.cos((double) var14);
                         double var17 = 0.9D * -Math.sin((double) var14);
@@ -75,7 +72,7 @@ public class ItemUQStormBringer extends ItemUniqueArms {
                 Entity_SBWindEdge var20 = new Entity_SBWindEdge(worldIn, entityLiving, var7 * 2.0F);
 
                 if (!worldIn.isRemote) {
-                    worldIn.spawnEntityInWorld(var20);
+                    worldIn.spawnEntity(var20);
                 }
             }
 
@@ -115,26 +112,20 @@ public class ItemUQStormBringer extends ItemUniqueArms {
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack var1) {
+    @Nonnull
+    public EnumAction getItemUseAction(ItemStack itemStack) {
         return EnumAction.BOW;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-        par3List.add("Ability : Gale Impact");
+    public void addInformation(ItemStack itemStack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        tooltip.add("Ability : Gale Impact");
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        int var4 = playerIn.getFoodStats().getFoodLevel();
-
-        if (var4 > 6) {
-//            playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
-            playerIn.setActiveHand(hand);
-        }
-
-        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
+        return setActiveHand(worldIn, playerIn, hand);
     }
 }

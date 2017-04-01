@@ -18,11 +18,8 @@ public class Entity_SBWindEdge extends Entity {
     private int xTile;
     private int yTile;
     private int zTile;
-    //	private Block inTile;
-//	private int inData;
     private boolean inGround;
     private int ticksInAir;
-//	private float expower;
 
     public Entity_SBWindEdge(World var1) {
         super(var1);
@@ -33,13 +30,11 @@ public class Entity_SBWindEdge extends Entity {
         super(var1);
         this.Init();
         this.setPosition(var2, var4, var6);
-//		this.yOffset = 0.0F;
     }
 
     public Entity_SBWindEdge(World var1, EntityLivingBase var2, float var3) {
         super(var1);
         this.Init();
-//		this.yOffset = 0.0F;
         this.doesArrowBelongToPlayer = false;
         this.FB_Master = var2;
         this.doesArrowBelongToPlayer = var2 instanceof EntityPlayer;
@@ -58,11 +53,8 @@ public class Entity_SBWindEdge extends Entity {
         this.xTile = -1;
         this.yTile = -1;
         this.zTile = -1;
-//		this.inTile = Blocks.air;
-//		this.inData = 0;
         this.inGround = false;
         this.ticksInAir = 0;
-//		this.expower = 2.0F;
         this.setSize(0.5F, 0.5F);
     }
 
@@ -70,14 +62,14 @@ public class Entity_SBWindEdge extends Entity {
         super.setDead();
 
         for (int var1 = 0; var1 < 10; ++var1) {
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
         }
     }
 
     protected void entityInit() {}
 
     public void setHeading(double var1, double var3, double var5, float var7, float var8) {
-        float var9 = MathHelper.sqrt_double(var1 * var1 + var3 * var3 + var5 * var5);
+        float var9 = MathHelper.sqrt(var1 * var1 + var3 * var3 + var5 * var5);
         var1 /= (double) var9;
         var3 /= (double) var9;
         var5 /= (double) var9;
@@ -90,7 +82,7 @@ public class Entity_SBWindEdge extends Entity {
         this.motionX = var1;
         this.motionY = var3;
         this.motionZ = var5;
-        float var10 = MathHelper.sqrt_double(var1 * var1 + var5 * var5);
+        float var10 = MathHelper.sqrt(var1 * var1 + var5 * var5);
         this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(var1, var5) * 180.0D / Math.PI);
         this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(var3, (double) var10) * 180.0D / Math.PI);
     }
@@ -105,15 +97,15 @@ public class Entity_SBWindEdge extends Entity {
             this.setEntityDead();
         } else {
             if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
-                float var1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+                float var1 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
                 this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
                 this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(this.motionY, (double) var1) * 180.0D / Math.PI);
             }
 
             BlockPos blockPos = new BlockPos(this.xTile, this.yTile, this.zTile);
-            IBlockState blockState = this.worldObj.getBlockState(blockPos);
+            IBlockState blockState = this.getEntityWorld().getBlockState(blockPos);
 
-            AxisAlignedBB var2 = blockState.getBlock().getCollisionBoundingBox(blockState, this.worldObj, blockPos);
+            AxisAlignedBB var2 = blockState.getBlock().getCollisionBoundingBox(blockState, this.getEntityWorld(), blockPos);
 
             if (var2 != null && var2.isVecInside(new Vec3d(this.posX, this.posY, this.posZ))) {
                 this.inGround = true;
@@ -122,7 +114,7 @@ public class Entity_SBWindEdge extends Entity {
                 ++this.ticksInAir;
                 Vec3d startPosition = new Vec3d(this.posX, this.posY, this.posZ);
                 Vec3d movedPosition = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-                RayTraceResult rayTraceResult = this.worldObj.rayTraceBlocks(startPosition, movedPosition, false, true, false);
+                RayTraceResult rayTraceResult = this.getEntityWorld().rayTraceBlocks(startPosition, movedPosition, false, true, false);
                 movedPosition = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
                 if (rayTraceResult != null) {
@@ -130,9 +122,9 @@ public class Entity_SBWindEdge extends Entity {
                 }
 
                 Entity var5 = null;
-                List<Entity> var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+                List<Entity> var6 = this.getEntityWorld().getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
                 double var7 = 0.0D;
-                if (!this.worldObj.isRemote) {
+                if (!this.getEntityWorld().isRemote) {
                     for (Entity entity : var6) {
                         if (entity.canBeCollidedWith() && (entity != this.FB_Master || this.ticksInAir >= 5)) {
                             float var11 = 0.3F;
@@ -174,12 +166,12 @@ public class Entity_SBWindEdge extends Entity {
                         this.xTile = rayTraceResult.getBlockPos().getX();
                         this.yTile = rayTraceResult.getBlockPos().getY();
                         this.zTile = rayTraceResult.getBlockPos().getZ();
-//						this.inTile = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
-//						this.inData = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
+//						this.inTile = this.getEntityWorld().getBlock(this.xTile, this.yTile, this.zTile);
+//						this.inData = this.getEntityWorld().getBlockMetadata(this.xTile, this.yTile, this.zTile);
                         this.motionX = (double) ((float) (rayTraceResult.hitVec.xCoord - this.posX));
                         this.motionY = (double) ((float) (rayTraceResult.hitVec.yCoord - this.posY));
                         this.motionZ = (double) ((float) (rayTraceResult.hitVec.zCoord - this.posZ));
-                        var33 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+                        var33 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                         this.posX -= this.motionX / (double) var33 * 0.05000000074505806D;
                         this.posY -= this.motionY / (double) var33 * 0.05000000074505806D;
                         this.posZ -= this.motionZ / (double) var33 * 0.05000000074505806D;
@@ -200,7 +192,7 @@ public class Entity_SBWindEdge extends Entity {
 
                 for (var15 = 0; var15 < 10; ++var15) {
                     float var16 = 0.1F * (float) var15;
-                    this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX + var35 * (double) var16, this.posY + 0.5D + var37 * (double) var16, this.posZ + var38 * (double) var16, 0.0D, 0.0D, 0.0D);
+                    this.getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX + var35 * (double) var16, this.posY + 0.5D + var37 * (double) var16, this.posZ + var38 * (double) var16, 0.0D, 0.0D, 0.0D);
                 }
 
                 for (var15 = 0; var15 < 40; ++var15) {
@@ -212,10 +204,10 @@ public class Entity_SBWindEdge extends Entity {
                     double var25 = var21 * Math.cos(var40) + var23 * Math.sin(var18) * Math.sin(var40);
                     double var27 = var23 * Math.cos(var18);
                     double var29 = -var21 * Math.sin(var40) + var23 * Math.sin(var18) * Math.cos(var40);
-                    this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY + 0.5D, this.posZ, var25, var27, var29);
+                    this.getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX, this.posY + 0.5D, this.posZ, var25, var27, var29);
                 }
 
-                float var39 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+                float var39 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
                 this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 
 //				for (this.rotationPitch = (float)(Math.atan2(this.motionY, (double)var39) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)

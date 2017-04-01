@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools.item;
 
-import Nanashi.AdvancedTools.AdvancedTools;
+import Nanashi.AdvancedTools.AdvToolsUtil;
 import Nanashi.AdvancedTools.entity.Entity_IHFrozenMob;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockSnow;
@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemUQIceHold extends ItemUniqueArms {
@@ -35,8 +36,8 @@ public class ItemUQIceHold extends ItemUniqueArms {
     }
 
     @Override
-    public boolean onLeftClickEntity(ItemStack itemstack, EntityPlayer player, Entity var1) {
-        int weapondmg = var1 instanceof EntityEnderman ? dmg * 3 : dmg;
+    public boolean onLeftClickEntity(ItemStack itemstack, EntityPlayer player, Entity entity) {
+        int weapondmg = entity instanceof EntityEnderman ? dmg * 3 : dmg;
         ObfuscationReflectionHelper.setPrivateValue(ItemSword.class, this, (float) weapondmg, 0);
         return false;
     }
@@ -86,12 +87,12 @@ public class ItemUQIceHold extends ItemUniqueArms {
                         Entity_IHFrozenMob var15 = new Entity_IHFrozenMob(worldIn, living, entityLiving);
 
                         if (!worldIn.isRemote) {
-                            worldIn.spawnEntityInWorld(var15);
+                            worldIn.spawnEntity(var15);
                         }
                     }
                 }
             } else {
-                RayTraceResult mousePoint = AdvancedTools.getMousePoint(worldIn, entityLiving);
+                RayTraceResult mousePoint = AdvToolsUtil.getMousePoint(worldIn, entityLiving);
                 boolean var17 = false;
 
                 if (mousePoint != null && mousePoint.typeOfHit == RayTraceResult.Type.ENTITY) {
@@ -107,7 +108,7 @@ public class ItemUQIceHold extends ItemUniqueArms {
                             Entity_IHFrozenMob var22 = new Entity_IHFrozenMob(worldIn, (EntityLiving) entityHit, entityLiving);
 
                             if (!worldIn.isRemote) {
-                                worldIn.spawnEntityInWorld(var22);
+                                worldIn.spawnEntity(var22);
                             }
                         }
 
@@ -116,8 +117,6 @@ public class ItemUQIceHold extends ItemUniqueArms {
                 }
 
                 if (!var17) {
-//                    mousePoint = this.rayTrace(worldIn, entityLiving, true);
-
                     if (mousePoint == null) {
                         return;
                     }
@@ -145,6 +144,14 @@ public class ItemUQIceHold extends ItemUniqueArms {
         }
     }
 
+    /**
+     * 雪タイル設置処理
+     * @param world World
+     * @param centerPos BlockPos
+     * @param x x
+     * @param y y
+     * @param z z
+     */
     private void setSnowLayer(World world, BlockPos centerPos, double x, double y, double z) {
         BlockPos blockPos2 = new BlockPos(centerPos).add(x, y, z);
         if (Math.sqrt(x * x + z * z) <= 2.8D && world.isAirBlock(blockPos2.up())) {
@@ -172,25 +179,20 @@ public class ItemUQIceHold extends ItemUniqueArms {
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack var1) {
+    @Nonnull
+    public EnumAction getItemUseAction(ItemStack itemStack) {
         return EnumAction.BOW;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4) {
-        par3List.add("Ability : Ice Coffin");
+    public void addInformation(ItemStack itemStack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        tooltip.add("Ability : Ice Coffin");
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        int var4 = playerIn.getFoodStats().getFoodLevel();
-
-        if (var4 > 6) {
-//            playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
-            playerIn.setActiveHand(hand);
-        }
-
-        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
+        return setActiveHand(worldIn, playerIn, hand);
     }
 }

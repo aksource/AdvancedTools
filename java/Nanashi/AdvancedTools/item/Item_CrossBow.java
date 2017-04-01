@@ -7,15 +7,14 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemArrow;
-import net.minecraft.item.ItemBow;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class Item_CrossBow extends ItemBow {
     public Item_CrossBow() {
@@ -24,36 +23,41 @@ public class Item_CrossBow extends ItemBow {
         this.setMaxDamage(192);
     }
 
+    @Override
     public boolean isFull3D() {
         return true;
     }
 
     @Override
-    public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityLivingBase entityLiving, int timeLeft) {}
+    public void onPlayerStoppedUsing(@Nonnull ItemStack itemStack, @Nonnull World world, EntityLivingBase entityLiving, int timeLeft) {}
 
-
+    @Override
+    @Nonnull
     public EnumAction getItemUseAction(ItemStack var1) {
         return EnumAction.NONE;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer entityPlayer, EnumHand hand) {
+        ItemStack itemStack = entityPlayer.getHeldItem(hand);
         boolean flag = entityPlayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, itemStack) > 0;
 
         ItemStack itemArrow = this.findAmmo(entityPlayer);
         int i = 0;
         i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(itemStack, world,
-                entityPlayer, i, itemArrow != null || flag);
-        if (flag || itemArrow != null) {
-            ItemArrow itemarrow = ((ItemArrow) (itemArrow.getItem() instanceof ItemArrow ? itemArrow.getItem() : Items.ARROW));
-            EntityArrow entityarrow = itemarrow.createArrow(world, itemArrow, entityPlayer);
+                entityPlayer, i, hasAmmo(entityPlayer, hand));
+        if (hasAmmo(entityPlayer, hand)) {
+            ItemArrow arrow = ((ItemArrow) (itemArrow.getItem() instanceof ItemArrow ? itemArrow.getItem() : Items.ARROW));
+            EntityArrow entityarrow = arrow.createArrow(world, itemArrow, entityPlayer);
             itemStack.damageItem(1, entityPlayer);
             world.playSound(entityPlayer, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ,
                     SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL,
                     1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 1.0f * 0.5F);
             if (!flag) {
-                --itemArrow.stackSize;
+                itemArrow.shrink(1);
 
-                if (itemArrow.stackSize == 0) {
+                if (itemArrow.getCount() == 0) {
                     entityPlayer.inventory.deleteStack(itemArrow);
                 }
             }
@@ -75,10 +79,17 @@ public class Item_CrossBow extends ItemBow {
             }
 
             if (!world.isRemote) {
-                world.spawnEntityInWorld(entityarrow);
+                world.spawnEntity(entityarrow);
             }
         }
 
         return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
+    }
+
+    private boolean hasAmmo(@Nonnull EntityPlayer entityPlayer, EnumHand hand) {
+        ItemStack heldItem = entityPlayer.getHeldItem(hand);
+        ItemStack itemArrow = this.findAmmo(entityPlayer);
+        boolean flag = entityPlayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, heldItem) > 0;
+        return flag || !itemArrow.isEmpty();
     }
 }

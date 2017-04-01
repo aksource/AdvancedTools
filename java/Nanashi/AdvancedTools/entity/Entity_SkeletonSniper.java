@@ -55,7 +55,7 @@ public class Entity_SkeletonSniper extends EntitySkeleton {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.worldObj.getTotalWorldTime() % 10L == 0L) {
+        if (this.getEntityWorld().getTotalWorldTime() % 10L == 0L) {
             if (this.nearTarget()) {
                 this.setCurrentItemIfDiff(subHeldItem);
             } else {

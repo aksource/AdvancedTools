@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/StormBringer"
+        "layer0": "advancedtools:items/storm_bringer"
     }
 }

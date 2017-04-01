@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class Item_Negi extends ItemFood {
@@ -31,16 +32,22 @@ public class Item_Negi extends ItemFood {
     }
 
     @Override
-    protected void onFoodEaten(ItemStack var1, World var2, EntityPlayer var3) {
-        super.onFoodEaten(var1, var2, var3);
-        float var4 = 0.5F * (float) var1.getItemDamage() / (float) this.getMaxDamage();
+    protected void onFoodEaten(ItemStack itemStack, World worldIn, @Nonnull EntityPlayer entityPlayer) {
+        super.onFoodEaten(itemStack, worldIn, entityPlayer);
+        float var4 = 0.5F * (float) itemStack.getItemDamage() / (float) this.getMaxDamage(itemStack);
 
         if (var4 > 0.0F) {
-            this.setPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("hunger"), 30, 0), var4);
+            Potion hunger = Potion.getPotionFromResourceLocation("hunger");
+            if (hunger != null) {
+                this.setPotionEffect(new PotionEffect(hunger, 30, 0), var4);
+            }
         }
 
-        if (0.65F - var4 >= var2.rand.nextFloat()) {
-            var3.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("heal"), 1, 0));
+        if (0.65F - var4 >= worldIn.rand.nextFloat()) {
+            Potion heal = Potion.getPotionFromResourceLocation("heal");
+            if (heal != null) {
+                entityPlayer.addPotionEffect(new PotionEffect(heal, 1, 0));
+            }
         }
     }
 
@@ -57,11 +64,12 @@ public class Item_Negi extends ItemFood {
     }
 
     @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+    @Nonnull
+    public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot slot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
         if (slot == EntityEquipmentSlot.MAINHAND) {
-            multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName());
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
+            multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
                     new AttributeModifier("Weapon modifier", (double) 3, 0));
         }
         return multimap;
@@ -69,7 +77,7 @@ public class Item_Negi extends ItemFood {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4) {
-        par3List.add("You can eat this.");
+    public void addInformation(ItemStack itemStack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        tooltip.add("You can eat this.");
     }
 }

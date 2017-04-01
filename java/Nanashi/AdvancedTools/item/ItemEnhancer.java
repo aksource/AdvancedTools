@@ -4,28 +4,27 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ItemEnhancer extends Item
-{
+import javax.annotation.Nonnull;
+
+public class ItemEnhancer extends Item {
     private int id;
 
-    public ItemEnhancer(int var1)
-    {
+    public ItemEnhancer(int var1) {
         super();
         this.id = var1;
     }
 
     @Override
-    public boolean hasEffect(ItemStack par1ItemStack)
-    {
+    public boolean hasEffect(ItemStack itemStack) {
         return true;
     }
 
     @Override
-    public EnumRarity getRarity(ItemStack var1)
-    {
-        if(this.id == 0)
-        	return EnumRarity.UNCOMMON;
+    @Nonnull
+    public EnumRarity getRarity(ItemStack itemStack) {
+        if (this.id == 0)
+            return EnumRarity.UNCOMMON;
         else
-        	return EnumRarity.RARE;
+            return EnumRarity.RARE;
     }
 }

@@ -14,6 +14,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class Entity_GoldCreeper extends EntityCreeper {
 
     public Entity_GoldCreeper(World var1) {
@@ -29,10 +31,9 @@ public class Entity_GoldCreeper extends EntityCreeper {
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
     }
 
-    @SuppressWarnings("unchecked")
     private void changeAITask() {
         EntityAITasks.EntityAITaskEntry oldEntry = null;
-        EntityAITasks.EntityAITaskEntry replacingEntry = new EntityAITasks(this.worldObj.theProfiler)
+        EntityAITasks.EntityAITaskEntry replacingEntry = new EntityAITasks(this.getEntityWorld().theProfiler)
                 .new EntityAITaskEntry(1, new EntityAIHurtByTarget(this, false));
         for (EntityAITasks.EntityAITaskEntry entityAITaskEntry : this.targetTasks.taskEntries) {
             if (entityAITaskEntry.priority == 1 && entityAITaskEntry.action instanceof EntityAINearestAttackableTarget) {
@@ -46,14 +47,14 @@ public class Entity_GoldCreeper extends EntityCreeper {
     @Override
     public void onUpdate() {
         if (this.getAITarget() == null && this.getPowered()) {
-            this.dataManager.set(POWERED, Boolean.valueOf(false));
+            this.dataManager.set(POWERED, false);
         }
 
 
         super.onUpdate();
         Potion speed = Potion.getPotionFromResourceLocation("speed");
         Potion jump_boost = Potion.getPotionFromResourceLocation("jump_boost");
-        if (!this.isPotionActive(speed) && this.getPowered()) {
+        if (speed != null && jump_boost != null && !this.isPotionActive(speed) && this.getPowered()) {
             this.addPotionEffect(new PotionEffect(speed, 20, 1));
             this.addPotionEffect(new PotionEffect(jump_boost, 20, 1));
         }
@@ -61,16 +62,16 @@ public class Entity_GoldCreeper extends EntityCreeper {
 
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float var2) {
+    public boolean attackEntityFrom(@Nonnull  DamageSource damageSource, float amount) {
         if (!this.getPowered()) {
-            this.dataManager.set(POWERED, Boolean.valueOf(true));
+            this.dataManager.set(POWERED, true);
         }
-        if (!this.worldObj.isRemote) {
-            if (damageSource.getEntity() instanceof EntityPlayer && var2 > 0) {
+        if (!this.getEntityWorld().isRemote) {
+            if (damageSource.getEntity() instanceof EntityPlayer && amount > 0) {
                 boolean hasLuckLuck = false;
                 ItemStack heldItemMainhand = ((EntityPlayer) damageSource.getEntity()).getHeldItemMainhand();
 
-                if (heldItemMainhand != null) {
+                if (!heldItemMainhand.isEmpty()) {
                     hasLuckLuck = heldItemMainhand.getItem() == AdvancedTools.LuckLuck;
                 }
 
@@ -79,18 +80,18 @@ public class Entity_GoldCreeper extends EntityCreeper {
                 }
             }
         }
-        return super.attackEntityFrom(damageSource, var2);
+        return super.attackEntityFrom(damageSource, amount);
     }
 
     @Override
-    public void onDeath(DamageSource damageSource) {
+    public void onDeath(@Nonnull DamageSource damageSource) {
         super.onDeath(damageSource);
 
         if (damageSource.getEntity() instanceof EntityPlayer) {
             boolean hasLuckLuck = false;
             ItemStack heldItemMainhand = ((EntityPlayer) damageSource.getEntity()).getHeldItemMainhand();
 
-            if (heldItemMainhand != null) {
+            if (!heldItemMainhand.isEmpty()) {
                 hasLuckLuck = heldItemMainhand.getItem() == AdvancedTools.LuckLuck;
             }
 

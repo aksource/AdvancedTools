@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/Infinityshovel"
+        "layer0": "advancedtools:items/infinity_shovel"
     }
 }

@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/PlanetGuardian"
+        "layer0": "advancedtools:items/planet_guardian"
     }
 }

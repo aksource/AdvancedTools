@@ -39,7 +39,7 @@ public class Entity_HighSkeleton extends EntitySkeleton {
             boolean var2 = false;
             ItemStack var3 = ((EntityPlayer) damageSource.getEntity()).getHeldItemMainhand();
 
-            if (var3 != null) {
+            if (!var3.isEmpty()) {
                 var2 = var3.getItem() == AdvancedTools.LuckLuck && this.rand.nextFloat() < 0.5F;
             }
 

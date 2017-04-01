@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "advancedtools:items/UGGoldshovel"
+        "layer0": "advancedtools:items/u_g_gold_shovel"
     }
 }

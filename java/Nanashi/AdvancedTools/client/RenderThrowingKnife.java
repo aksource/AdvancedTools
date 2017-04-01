@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class RenderThrowingKnife extends Render<Entity_ThrowingKnife> {
-    private static final ResourceLocation tex = new ResourceLocation(AdvancedTools.textureassets, "textures/items/knife.png");
+    private static final ResourceLocation tex = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/items/knife.png");
 
     protected RenderThrowingKnife(RenderManager p_i46179_1_) {
         super(p_i46179_1_);
