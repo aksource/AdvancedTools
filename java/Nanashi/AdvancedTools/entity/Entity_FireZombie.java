@@ -62,7 +62,7 @@ public class Entity_FireZombie extends EntityZombie {
     public void onDeath(DamageSource var1) {
         super.onDeath(var1);
 
-        if (var1.getEntity() instanceof EntityPlayer && this.rand.nextFloat() <= 0.05F) {
+        if (var1.getTrueSource() instanceof EntityPlayer && this.rand.nextFloat() <= 0.05F) {
             ItemStack var2 = new ItemStack(Items.STONE_AXE, 1);
 
             if (this.rand.nextFloat() <= 0.5F) {

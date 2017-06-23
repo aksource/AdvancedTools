@@ -45,9 +45,9 @@ public class AdvToolsUtil {
     public static RayTraceResult getMousePoint(World world, EntityLivingBase entityLivingBase) {
         float var1 = 1F;
         double limit = 5.0D;
-        double viewX = entityLivingBase.getLookVec().xCoord;
-        double viewY = entityLivingBase.getLookVec().yCoord;
-        double viewZ = entityLivingBase.getLookVec().zCoord;
+        double viewX = entityLivingBase.getLookVec().x;
+        double viewY = entityLivingBase.getLookVec().y;
+        double viewZ = entityLivingBase.getLookVec().z;
         double dPlayerPosX = entityLivingBase.prevPosX + (entityLivingBase.posX - entityLivingBase.prevPosX) * (double) var1;
         double dPlayerPosY = entityLivingBase.prevPosY + (entityLivingBase.posY - entityLivingBase.prevPosY) * (double) var1 + 1.62D;
         double dPlayerPosZ = entityLivingBase.prevPosZ + (entityLivingBase.posZ - entityLivingBase.prevPosZ) * (double) var1;
@@ -60,7 +60,7 @@ public class AdvToolsUtil {
         Vec3d mopHitVec = null;
         List<Entity> entityList = world.getEntitiesWithinAABBExcludingEntity(entityLivingBase,
                 entityLivingBase.getEntityBoundingBox()
-                        .addCoord(viewX * limit, viewY * limit, viewZ * limit)
+                        .contract(viewX * limit, viewY * limit, viewZ * limit)
                         .expand(var1, var1, var1));
         for (Entity entity : entityList) {
             if (!entity.canBeCollidedWith()) continue;
@@ -69,7 +69,7 @@ public class AdvToolsUtil {
             RayTraceResult interceptMop = aabb.calculateIntercept(vecPos, vecLook);
             Vec3d hitVec = (interceptMop != null) ? interceptMop.hitVec : null;
             double distance = (hitVec != null) ? vecPos.distanceTo(hitVec) : 0.0d;
-            if ((aabb.isVecInside(vecPos) || interceptMop != null) &&
+            if ((aabb.contains(vecPos) || interceptMop != null) &&
                     (distance < distBlockCopy || distBlockCopy == 0.0d)) {
                 if (entity == entityLivingBase.getRidingEntity() && !entity.canRiderInteract()) {
                     if (distBlockCopy == 0.0d) {

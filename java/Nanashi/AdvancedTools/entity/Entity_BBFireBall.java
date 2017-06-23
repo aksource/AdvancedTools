@@ -157,7 +157,7 @@ public class Entity_BBFireBall extends Entity {
 //            blockState.getBlock().setBlockBoundsBasedOnState(this.getEntityWorld(), blockPos);
             AxisAlignedBB var2 = blockState.getBoundingBox(this.getEntityWorld(), blockPos);
 
-            if (var2 != null && var2.isVecInside(new Vec3d(this.posX, this.posY, this.posZ))) {
+            if (var2 != null && var2.contains(new Vec3d(this.posX, this.posY, this.posZ))) {
                 this.inGround = true;
             }
         }
@@ -171,11 +171,11 @@ public class Entity_BBFireBall extends Entity {
             var3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
             if (rayTraceResult != null) {
-                var3 = new Vec3d(rayTraceResult.hitVec.xCoord, rayTraceResult.hitVec.yCoord, rayTraceResult.hitVec.zCoord);
+                var3 = new Vec3d(rayTraceResult.hitVec.x, rayTraceResult.hitVec.y, rayTraceResult.hitVec.z);
             }
 
             Entity var5 = null;
-            List<Entity> var6 = this.getEntityWorld().getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+            List<Entity> var6 = this.getEntityWorld().getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().contract(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
             double var7 = 0.0D;
             if (!this.getEntityWorld().isRemote) {
                 for (Entity entityTmp : var6) {
@@ -222,9 +222,9 @@ public class Entity_BBFireBall extends Entity {
 //					this.zTile = var4.func_178782_a().getZ();
 //					this.inTile = this.getEntityWorld().getBlock(this.xTile, this.yTile, this.zTile);
 //					this.inData = this.getEntityWorld().getBlockMetadata(this.xTile, this.yTile, this.zTile);
-                    this.motionX = (double) ((float) (rayTraceResult.hitVec.xCoord - this.posX));
-                    this.motionY = (double) ((float) (rayTraceResult.hitVec.yCoord - this.posY));
-                    this.motionZ = (double) ((float) (rayTraceResult.hitVec.zCoord - this.posZ));
+                    this.motionX = (double) ((float) (rayTraceResult.hitVec.x - this.posX));
+                    this.motionY = (double) ((float) (rayTraceResult.hitVec.y - this.posY));
+                    this.motionZ = (double) ((float) (rayTraceResult.hitVec.z - this.posZ));
                     var19 = MathHelper.sqrt(
                             this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                     this.posX -= this.motionX / (double) var19 * 0.05000000074505806D;

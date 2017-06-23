@@ -33,7 +33,7 @@ public class Entity_GoldCreeper extends EntityCreeper {
 
     private void changeAITask() {
         EntityAITasks.EntityAITaskEntry oldEntry = null;
-        EntityAITasks.EntityAITaskEntry replacingEntry = new EntityAITasks(this.getEntityWorld().theProfiler)
+        EntityAITasks.EntityAITaskEntry replacingEntry = new EntityAITasks(this.getEntityWorld().profiler)
                 .new EntityAITaskEntry(1, new EntityAIHurtByTarget(this, false));
         for (EntityAITasks.EntityAITaskEntry entityAITaskEntry : this.targetTasks.taskEntries) {
             if (entityAITaskEntry.priority == 1 && entityAITaskEntry.action instanceof EntityAINearestAttackableTarget) {
@@ -46,7 +46,7 @@ public class Entity_GoldCreeper extends EntityCreeper {
 
     @Override
     public void onUpdate() {
-        if (this.getAITarget() == null && this.getPowered()) {
+        if (this.getAttackTarget() == null && this.getPowered()) {
             this.dataManager.set(POWERED, false);
         }
 
@@ -67,9 +67,9 @@ public class Entity_GoldCreeper extends EntityCreeper {
             this.dataManager.set(POWERED, true);
         }
         if (!this.getEntityWorld().isRemote) {
-            if (damageSource.getEntity() instanceof EntityPlayer && amount > 0) {
+            if (damageSource.getTrueSource() instanceof EntityPlayer && amount > 0) {
                 boolean hasLuckLuck = false;
-                ItemStack heldItemMainhand = ((EntityPlayer) damageSource.getEntity()).getHeldItemMainhand();
+                ItemStack heldItemMainhand = ((EntityPlayer) damageSource.getTrueSource()).getHeldItemMainhand();
 
                 if (!heldItemMainhand.isEmpty()) {
                     hasLuckLuck = heldItemMainhand.getItem() == AdvancedTools.LuckLuck;
@@ -87,9 +87,9 @@ public class Entity_GoldCreeper extends EntityCreeper {
     public void onDeath(@Nonnull DamageSource damageSource) {
         super.onDeath(damageSource);
 
-        if (damageSource.getEntity() instanceof EntityPlayer) {
+        if (damageSource.getTrueSource() instanceof EntityPlayer) {
             boolean hasLuckLuck = false;
-            ItemStack heldItemMainhand = ((EntityPlayer) damageSource.getEntity()).getHeldItemMainhand();
+            ItemStack heldItemMainhand = ((EntityPlayer) damageSource.getTrueSource()).getHeldItemMainhand();
 
             if (!heldItemMainhand.isEmpty()) {
                 hasLuckLuck = heldItemMainhand.getItem() == AdvancedTools.LuckLuck;

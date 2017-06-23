@@ -30,9 +30,9 @@ public class Entity_ZombieWarrior extends EntityZombie {
     public void onDeath(DamageSource var1) {
         super.onDeath(var1);
 
-        if (var1.getEntity() instanceof EntityPlayer) {
+        if (var1.getTrueSource() instanceof EntityPlayer) {
             boolean var2 = false;
-            ItemStack heldItemMainhand = ((EntityPlayer) var1.getEntity()).getHeldItemMainhand();
+            ItemStack heldItemMainhand = ((EntityPlayer) var1.getTrueSource()).getHeldItemMainhand();
 
             if (!heldItemMainhand.isEmpty()) {
                 var2 = heldItemMainhand.getItem() == AdvancedTools.LuckLuck && this.rand.nextFloat() < 0.5F;

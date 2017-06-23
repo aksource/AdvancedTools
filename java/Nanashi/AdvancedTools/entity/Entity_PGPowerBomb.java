@@ -47,7 +47,7 @@ public class Entity_PGPowerBomb extends Entity {
             this.setPosition(var4, var8, var6);
         } else {
             Vec3d var13 = rayTraceResult.hitVec;
-            this.setPosition(var13.xCoord, var13.yCoord, var13.zCoord);
+            this.setPosition(var13.x, var13.y, var13.z);
         }
     }
 

@@ -77,9 +77,9 @@ public class Entity_ThrowingKnife extends EntityThrowable {
             this.setEntityDead(rayTraceResult.entityHit.attackEntityFrom(var20, this.isPoison() ? 2 : 4));
         } else {
             float var18;
-            this.motionX = (double) ((float) (rayTraceResult.hitVec.xCoord - this.posX));
-            this.motionY = (double) ((float) (rayTraceResult.hitVec.yCoord - this.posY));
-            this.motionZ = (double) ((float) (rayTraceResult.hitVec.zCoord - this.posZ));
+            this.motionX = (double) ((float) (rayTraceResult.hitVec.x - this.posX));
+            this.motionY = (double) ((float) (rayTraceResult.hitVec.y - this.posY));
+            this.motionZ = (double) ((float) (rayTraceResult.hitVec.z - this.posZ));
             var18 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
             this.posX -= this.motionX / (double) var18 * 0.05000000074505806D;
             this.posY -= this.motionY / (double) var18 * 0.05000000074505806D;

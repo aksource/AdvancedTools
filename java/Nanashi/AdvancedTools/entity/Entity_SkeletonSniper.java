@@ -40,7 +40,7 @@ public class Entity_SkeletonSniper extends EntitySkeleton {
     public void onDeath(DamageSource var1) {
         super.onDeath(var1);
 
-        if (var1.getEntity() instanceof EntityPlayer && this.rand.nextFloat() <= 0.05F) {
+        if (var1.getTrueSource() instanceof EntityPlayer && this.rand.nextFloat() <= 0.05F) {
             ItemStack var2 = new ItemStack(AdvancedTools.SmashBat, 1);
             var2.addEnchantment(Enchantments.KNOCKBACK, 5 + this.rand.nextInt(5));
 

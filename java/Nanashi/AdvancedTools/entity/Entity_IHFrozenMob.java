@@ -56,7 +56,7 @@ public class Entity_IHFrozenMob extends Entity {
 
     private void originalMethodForAI() {
         this.entityTasks = this.frozen.tasks;
-        ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this.frozen, new EntityAITasks(this.getEntityWorld().theProfiler), 7);
+        ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this.frozen, new EntityAITasks(this.getEntityWorld().profiler), 7);
     }
 
     public void onUpdate() {
@@ -72,7 +72,7 @@ public class Entity_IHFrozenMob extends Entity {
                     this.frozen.onGround = false;
                     if (this.frozen instanceof EntityMob) {
                         this.frozen.setAttackTarget(this.frozen);
-                        this.frozen.setLastAttacker(this.frozen);
+                        this.frozen.setLastAttackedEntity(this.frozen);
                     }
                 } else {
                     this.setDead();
@@ -100,7 +100,7 @@ public class Entity_IHFrozenMob extends Entity {
         if (this.entityTasks != null) {
             ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this.frozen, this.entityTasks, 7);
             this.frozen.setAttackTarget(this.attacker);
-            this.frozen.setLastAttacker(this.attacker);
+            this.frozen.setLastAttackedEntity(this.attacker);
         }
         super.setDead();
     }
