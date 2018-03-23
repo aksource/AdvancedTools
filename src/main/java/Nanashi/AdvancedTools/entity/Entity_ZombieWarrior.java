@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools.entity;
 
-import Nanashi.AdvancedTools.AdvancedTools;
+import Nanashi.AdvancedTools.utils.Items;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
@@ -15,7 +15,7 @@ public class Entity_ZombieWarrior extends EntityZombie {
     public Entity_ZombieWarrior(World var1) {
         super(var1);
         this.experienceValue = 10;
-        this.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(AdvancedTools.DevilSword, 1));
+        this.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.DevilSword, 1));
     }
 
     @Override
@@ -35,11 +35,11 @@ public class Entity_ZombieWarrior extends EntityZombie {
             ItemStack heldItemMainhand = ((EntityPlayer) var1.getTrueSource()).getHeldItemMainhand();
 
             if (!heldItemMainhand.isEmpty()) {
-                var2 = heldItemMainhand.getItem() == AdvancedTools.LuckLuck && this.rand.nextFloat() < 0.5F;
+                var2 = heldItemMainhand.getItem() == Items.LuckLuck && this.rand.nextFloat() < 0.5F;
             }
 
             if (var2 || this.rand.nextFloat() < 0.05F) {
-                this.dropItem(AdvancedTools.DevilSword, 1);
+                this.dropItem(Items.DevilSword, 1);
             }
         }
     }
@@ -49,7 +49,7 @@ public class Entity_ZombieWarrior extends EntityZombie {
         super.dropFewItems(var1, var2);
 
         if (this.rand.nextFloat() <= 0.1F + 0.1F * (float) var2) {
-            this.dropItem(AdvancedTools.BlueEnhancer, 1);
+            this.dropItem(Items.BlueEnhancer, 1);
         }
     }
 

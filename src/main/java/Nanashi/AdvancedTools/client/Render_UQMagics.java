@@ -13,12 +13,12 @@ import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
 public class Render_UQMagics extends Render<Entity> {
-    protected Render_UQMagics(RenderManager p_i46179_1_) {
-        super(p_i46179_1_);
+    protected Render_UQMagics(RenderManager renderManager) {
+        super(renderManager);
     }
 
 
-    public void doRender(@Nullable Entity var1, double var2, double var4, double var6, float var8, float var9) {}
+    public void doRender(@Nullable Entity entity, double x, double y, double z, float entityYaw, float partialTicks) {}
 
     @Override
     @Nonnull

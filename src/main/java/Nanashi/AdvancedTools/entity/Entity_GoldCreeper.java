@@ -72,7 +72,7 @@ public class Entity_GoldCreeper extends EntityCreeper {
                 ItemStack heldItemMainhand = ((EntityPlayer) damageSource.getTrueSource()).getHeldItemMainhand();
 
                 if (!heldItemMainhand.isEmpty()) {
-                    hasLuckLuck = heldItemMainhand.getItem() == AdvancedTools.LuckLuck;
+                    hasLuckLuck = heldItemMainhand.getItem() == Nanashi.AdvancedTools.utils.Items.LuckLuck;
                 }
 
                 if (hasLuckLuck || this.rand.nextFloat() < 0.3F && this.getHealth() > 0) {
@@ -92,7 +92,7 @@ public class Entity_GoldCreeper extends EntityCreeper {
             ItemStack heldItemMainhand = ((EntityPlayer) damageSource.getTrueSource()).getHeldItemMainhand();
 
             if (!heldItemMainhand.isEmpty()) {
-                hasLuckLuck = heldItemMainhand.getItem() == AdvancedTools.LuckLuck;
+                hasLuckLuck = heldItemMainhand.getItem() == Nanashi.AdvancedTools.utils.Items.LuckLuck;
             }
 
             if (hasLuckLuck || this.rand.nextFloat() < 0.3F) {

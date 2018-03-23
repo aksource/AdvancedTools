@@ -1,10 +1,11 @@
 package Nanashi.AdvancedTools.item;
 
-import Nanashi.AdvancedTools.AdvToolsUtil;
 import Nanashi.AdvancedTools.entity.Entity_IHFrozenMob;
+import Nanashi.AdvancedTools.utils.AdvToolsUtil;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,10 +21,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemUQIceHold extends ItemUniqueArms {
@@ -184,9 +184,8 @@ public class ItemUQIceHold extends ItemUniqueArms {
         return EnumAction.BOW;
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         tooltip.add("Ability : Ice Coffin");
     }
 

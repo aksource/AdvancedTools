@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools.item;
 
-import Nanashi.AdvancedTools.AdvancedTools;
+import Nanashi.AdvancedTools.utils.Items;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +29,7 @@ public class ItemUniqueArms extends ItemSword {
     public void onCreated(ItemStack var1, World var2, EntityPlayer var3) {
         super.onCreated(var1, var2, var3);
 
-        if (var1.getItem() == AdvancedTools.SmashBat) {
+        if (var1.getItem() == Items.SmashBat) {
             var1.addEnchantment(Enchantments.KNOCKBACK, 10);
         }
     }
@@ -39,7 +39,7 @@ public class ItemUniqueArms extends ItemSword {
         super.onUpdate(var1, var2, var3, var4, var5);
 
         if (!var1.hasTagCompound() || !var1.isItemEnchanted()) {
-            if (var1.getItem() == AdvancedTools.SmashBat) {
+            if (var1.getItem() == Items.SmashBat) {
                 var1.addEnchantment(Enchantments.KNOCKBACK, 10);
             }
         }

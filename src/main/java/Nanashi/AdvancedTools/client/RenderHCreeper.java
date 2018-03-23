@@ -13,15 +13,15 @@ import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
 public class RenderHCreeper extends RenderCreeper {
-    private static final ResourceLocation creeperTextures = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/hscreeper.png");
+    private static final ResourceLocation HI_SPEED_CREEPER = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/hscreeper.png");
 
-    public RenderHCreeper(RenderManager var1) {
-        super(var1/*, new ModelCreeper(), 0.5F*/);
+    public RenderHCreeper(RenderManager renderManager) {
+        super(renderManager);
     }
 
     @Override
     @Nullable
     protected ResourceLocation getEntityTexture(@Nonnull EntityCreeper par1Entity) {
-        return creeperTextures;
+        return HI_SPEED_CREEPER;
     }
 }

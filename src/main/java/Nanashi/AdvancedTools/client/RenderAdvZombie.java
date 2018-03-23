@@ -14,12 +14,12 @@ import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class RenderAdvZombie extends RenderZombie {
-    private static final ResourceLocation Fire = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/fzombie.png");
-    private static final ResourceLocation Warrior = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/zombiew.png");
-    private static final ResourceLocation Zombie = new ResourceLocation("textures/entity/zombie/zombie.png");
+    private static final ResourceLocation FIRE_ZOMBIE = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/fzombie.png");
+    private static final ResourceLocation ZOMBIE_WARRIOR = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/zombiew.png");
+    private static final ResourceLocation ZOMBIE = new ResourceLocation("textures/entity/zombie/zombie.png");
 
-    public RenderAdvZombie(RenderManager var1) {
-        super(var1);
+    public RenderAdvZombie(RenderManager renderManager) {
+        super(renderManager);
     }
 
 
@@ -29,6 +29,6 @@ public class RenderAdvZombie extends RenderZombie {
     @Override
     @Nonnull
     protected ResourceLocation getEntityTexture(EntityZombie par1Entity) {
-        return par1Entity instanceof Entity_FireZombie ? Fire : (par1Entity instanceof Entity_ZombieWarrior ? Warrior : Zombie);
+        return par1Entity instanceof Entity_FireZombie ? FIRE_ZOMBIE : (par1Entity instanceof Entity_ZombieWarrior ? ZOMBIE_WARRIOR : ZOMBIE);
     }
 }

@@ -12,9 +12,9 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 public class ItemUQLuckies extends ItemUniqueArms {
     private int dmg;
 
-    public ItemUQLuckies(ToolMaterial var2, int var3) {
-        super(var2, var3);
-        dmg = var3;
+    public ItemUQLuckies(ToolMaterial toolMaterial, int damageValue) {
+        super(toolMaterial, damageValue);
+        dmg = damageValue;
     }
 
     @Override

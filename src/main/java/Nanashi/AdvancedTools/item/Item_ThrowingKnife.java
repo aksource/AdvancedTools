@@ -1,7 +1,7 @@
 package Nanashi.AdvancedTools.item;
 
-import Nanashi.AdvancedTools.AdvancedTools;
 import Nanashi.AdvancedTools.entity.Entity_ThrowingKnife;
+import Nanashi.AdvancedTools.utils.Items;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -63,8 +63,8 @@ public class Item_ThrowingKnife extends Item {
             }
             itemStack.shrink(1);
 
-            if (!((EntityPlayer) attacker).inventory.addItemStackToInventory(new ItemStack(AdvancedTools.ThrowingKnife))) {
-                attacker.dropItem(AdvancedTools.ThrowingKnife, 1);
+            if (!((EntityPlayer) attacker).inventory.addItemStackToInventory(new ItemStack(Items.ThrowingKnife))) {
+                attacker.dropItem(Items.ThrowingKnife, 1);
             }
         }
 

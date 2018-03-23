@@ -16,15 +16,15 @@ public class RenderGCreeper extends RenderCreeper {
     /**
      * The creeper model.
      */
-    private static final ResourceLocation tex = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/gcreeper.png");
+    private static final ResourceLocation GOLD_CREEPER = new ResourceLocation(AdvancedTools.TEXTURE_ASSETS, "textures/mob/gcreeper.png");
 
-    public RenderGCreeper(RenderManager var1) {
-        super(var1/*, new ModelCreeper(), 0.5F*/);
+    public RenderGCreeper(RenderManager renderManager) {
+        super(renderManager);
     }
 
     @Override
     @Nullable
     protected ResourceLocation getEntityTexture(@Nonnull EntityCreeper entity) {
-        return tex;
+        return GOLD_CREEPER;
     }
 }

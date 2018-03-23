@@ -1,9 +1,9 @@
 package Nanashi.AdvancedTools.entity;
 
-import Nanashi.AdvancedTools.AdvancedTools;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
+import net.minecraft.entity.monster.AbstractSkeleton;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
@@ -16,14 +16,14 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class Entity_SkeletonSniper extends EntitySkeleton {
     private final ItemStack mainHeldItem = new ItemStack(Items.BOW);
-    private final ItemStack subHeldItem = new ItemStack(AdvancedTools.SmashBat);
+    private final ItemStack subHeldItem = new ItemStack(Nanashi.AdvancedTools.utils.Items.SmashBat);
     private EntityAIAttackRangedBow aiArrowAttackSniper = new EntityAIAttackRangedBow(this, 1.0D, 30, 15.0F);
 
     public Entity_SkeletonSniper(World var1) {
         super(var1);
         this.experienceValue = 7;
         subHeldItem.addEnchantment(Enchantments.KNOCKBACK, 10);
-        ObfuscationReflectionHelper.setPrivateValue(EntitySkeleton.class, this, aiArrowAttackSniper, 2);
+        ObfuscationReflectionHelper.setPrivateValue(AbstractSkeleton.class, this, aiArrowAttackSniper, 1);
     }
 
     @Override
@@ -33,15 +33,12 @@ public class Entity_SkeletonSniper extends EntitySkeleton {
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D/*2.0D*/);
     }
 
-    /**
-     * Called when the mob's health reaches 0.
-     */
     @Override
     public void onDeath(DamageSource var1) {
         super.onDeath(var1);
 
         if (var1.getTrueSource() instanceof EntityPlayer && this.rand.nextFloat() <= 0.05F) {
-            ItemStack var2 = new ItemStack(AdvancedTools.SmashBat, 1);
+            ItemStack var2 = new ItemStack(Nanashi.AdvancedTools.utils.Items.SmashBat, 1);
             var2.addEnchantment(Enchantments.KNOCKBACK, 5 + this.rand.nextInt(5));
 
             if (this.rand.nextFloat() <= 0.5F) {
@@ -71,15 +68,12 @@ public class Entity_SkeletonSniper extends EntitySkeleton {
         }
     }
 
-    /**
-     * Drop 0-2 items of this living's type
-     */
     @Override
     protected void dropFewItems(boolean var1, int var2) {
         super.dropFewItems(var1, var2);
 
         if (this.rand.nextFloat() <= 0.2F + 0.1F * (float) var2) {
-            this.dropItem(AdvancedTools.RedEnhancer, 1);
+            this.dropItem(Nanashi.AdvancedTools.utils.Items.RedEnhancer, 1);
         }
     }
 

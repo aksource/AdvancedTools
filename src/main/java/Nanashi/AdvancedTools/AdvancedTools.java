@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools;
 
-import net.minecraft.creativetab.CreativeTabs;
+import Nanashi.AdvancedTools.utils.AdvToolsUtil;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,74 +25,38 @@ public class AdvancedTools {
     public static final String MOD_ID = "advancedtools";
     public static final String MOD_NAME = "AdvancedTools";
     public static final String MOD_VERSION = "@VERSION@";
-    public static final String MOD_DEPENDENCIES = "required-after:forge@[13.19.1,)";
-    public static final String MOD_MC_VERSION = "[1.11,1.99.99]";
+    public static final String MOD_DEPENDENCIES = "required-after:forge@[14.23.2,)";
+    public static final String MOD_MC_VERSION = "[1.12,1.99.99]";
 
     public static int UGTools_DestroyRangeLV;
     public static int UGTools_SafetyCounter;
     public static String[] addBlockForPickaxe;
     public static String[] addBlockForShovel;
     public static String[] addBlockForAxe;
-    static boolean spawnHiGradeMob;
+    public static boolean spawnHiGradeMob;
     static boolean hasMultiToolHolder;
     public static boolean dropGather;
     public static int digUnder;
 
-    static boolean spawnFireZombie;
-    static boolean spawnGoldCreeper;
-    static boolean spawnHighSkeleton;
-    static boolean spawnHighSpeedCreeper;
-    static boolean spawnSkeletonSniper;
-    static boolean spawnZombieWarrior;
+    public static boolean spawnFireZombie;
+    public static boolean spawnGoldCreeper;
+    public static boolean spawnHighSkeleton;
+    public static boolean spawnHighSpeedCreeper;
+    public static boolean spawnSkeletonSniper;
+    public static boolean spawnZombieWarrior;
 
-    public static Item RedEnhancer;
-    public static Item BlueEnhancer;
-    public static Item UGWoodShovel;
-    public static Item UGStoneShovel;
-    public static Item UGIronShovel;
-    public static Item UGDiamondShovel;
-    public static Item UGGoldShovel;
-    public static Item UGWoodPickaxe;
-    public static Item UGStonePickaxe;
-    public static Item UGIronPickaxe;
-    public static Item UGDiamondPickaxe;
-    public static Item UGGoldPickaxe;
-    public static Item UGWoodAxe;
-    public static Item UGStoneAxe;
-    public static Item UGIronAxe;
-    public static Item UGDiamondAxe;
-    public static Item UGGoldAxe;
-    public static Item BlazeBlade;
-    public static Item IceHold;
-    public static Item AsmoSlasher;
-    public static Item PlanetGuardian;
-    public static Item StormBringer;
-    public static Item NEGI;
-    public static Item LuckLuck;
-    public static Item SmashBat;
-    public static Item DevilSword;
-    public static Item HolySaber;
-    public static Item ThrowingKnife;
-    public static Item PoisonKnife;
-    public static Item CrossBow;
-    public static Item InfiniteSword;
-    public static Item InfinitePickaxe;
-    public static Item InfiniteAxe;
-    public static Item InfiniteShovel;
-    public static Item InfiniteHoe;
-    public static Item GenocideBlade;
-//    public static Item spawnItem;
+    //    public static Item spawnItem;
 
     public static final String TEXTURE_ASSETS = "advancedtools";
 
     @SidedProxy(clientSide = "Nanashi.AdvancedTools.client.ClientProxy", serverSide = "Nanashi.AdvancedTools.CommonProxy")
     public static CommonProxy proxy;
     public AdvToolsUtil util = new AdvToolsUtil();
-    static final CreativeTabs tabsAT = new CreativeTabAT("AdvancedTools");
     public static final ArrayList<Item> list = new ArrayList<>();
     public static final Logger LOGGER = Logger.getLogger("AdvancedTools");
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event) {
         Configuration config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
@@ -124,21 +88,21 @@ public class AdvancedTools {
         spawnZombieWarrior = config.get("Mob Spawn Setting", "ZombieWarrior", true).getBoolean(true);
 
         config.save();
-        this.util.itemSetup();
+        MinecraftForge.EVENT_BUS.register(util);
         proxy.preInit();
     }
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void load(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new PlayerClickHook());
-        this.util.addRecipe();
         this.util.entitySetup(this);
         proxy.init();
     }
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void postInit(FMLPostInitializationEvent event) {
         hasMultiToolHolder = Loader.isModLoaded("multiToolHolders");
     }
-
 }

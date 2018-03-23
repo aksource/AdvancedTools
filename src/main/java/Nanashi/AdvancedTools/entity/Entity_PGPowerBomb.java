@@ -21,19 +21,19 @@ public class Entity_PGPowerBomb extends Entity {
 
     public Entity_PGPowerBomb(World var1) {
         super(var1);
-        this.Init();
+        this.init();
     }
 
     public Entity_PGPowerBomb(World var1, double var2, double var4, double var6) {
         super(var1);
-        this.Init();
+        this.init();
         this.setPosition(var2, var4, var6);
     }
 
     public Entity_PGPowerBomb(World var1, EntityLivingBase var2, float var3) {
         super(var1);
         this.expower = var3;
-        this.Init();
+        this.init();
         this.PB_Master = var2;
         this.setLocationAndAngles(var2.posX, var2.posY + (double) var2.getEyeHeight(), var2.posZ, var2.rotationYaw, var2.rotationPitch);
         double var4 = this.posX + 4.0D * (double) (-MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI)) * (double) MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
@@ -51,7 +51,7 @@ public class Entity_PGPowerBomb extends Entity {
         }
     }
 
-    private void Init() {
+    private void init() {
         this.setSize(0.5F, 0.5F);
     }
 

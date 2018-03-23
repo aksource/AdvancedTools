@@ -1,6 +1,6 @@
 package Nanashi.AdvancedTools.entity;
 
-import Nanashi.AdvancedTools.AdvancedTools;
+import Nanashi.AdvancedTools.utils.Items;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.potion.Potion;
@@ -35,9 +35,9 @@ public class Entity_ThrowingKnife extends EntityThrowable {
 
         if (!var1 && !this.getEntityWorld().isRemote) {
             if (this.isPoison()) {
-                this.dropItem(AdvancedTools.PoisonKnife, 1);
+                this.dropItem(Items.PoisonKnife, 1);
             } else {
-                this.dropItem(AdvancedTools.ThrowingKnife, 1);
+                this.dropItem(Items.ThrowingKnife, 1);
             }
         }
     }

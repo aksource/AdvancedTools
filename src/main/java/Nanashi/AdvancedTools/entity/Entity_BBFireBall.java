@@ -12,6 +12,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class Entity_BBFireBall extends Entity {
@@ -25,27 +26,19 @@ public class Entity_BBFireBall extends Entity {
     private int ticksInAir;
     private float expower;
 
-    public Entity_BBFireBall(World var1) {
-        super(var1);
-        this.Init();
+    public Entity_BBFireBall(World world) {
+        super(world);
+        this.init();
     }
 
-    public Entity_BBFireBall(World var1, double var2, double var4, double var6) {
-        super(var1);
-        this.Init();
-        this.setPosition(var2, var4, var6);
-//		this.yOffset = 0.0F;
-    }
-
-    public Entity_BBFireBall(World var1, EntityLivingBase var2, float var3, boolean var4) {
-        super(var1);
-        this.Init();
-//		this.yOffset = 0.0F;
+    public Entity_BBFireBall(World world, EntityLivingBase entityLivingBase, float var3, boolean var4) {
+        super(world);
+        this.init();
         this.explodeFlag = var4;
         this.doesArrowBelongToPlayer = false;
-        this.FB_Master = var2;
-        this.doesArrowBelongToPlayer = var2 instanceof EntityPlayer;
-        this.setLocationAndAngles(var2.posX, var2.posY + (double) var2.getEyeHeight(), var2.posZ, var2.rotationYaw, var2.rotationPitch);
+        this.FB_Master = entityLivingBase;
+        this.doesArrowBelongToPlayer = entityLivingBase instanceof EntityPlayer;
+        this.setLocationAndAngles(entityLivingBase.posX, entityLivingBase.posY + (double) entityLivingBase.getEyeHeight(), entityLivingBase.posZ, entityLivingBase.rotationYaw, entityLivingBase.rotationPitch);
         this.posX -= (double) (MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * 0.08F);
         this.posY -= 0.12D;
         this.posZ -= (double) (MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * 0.08F);
@@ -56,12 +49,10 @@ public class Entity_BBFireBall extends Entity {
         this.setArrowHeading(this.motionX, this.motionY, this.motionZ, 1.8F, 1.0F);
     }
 
-    private void Init() {
+    private void init() {
         this.xTile = -1;
         this.yTile = -1;
         this.zTile = -1;
-//		this.inTile = Blocks.air;
-//		this.inData = 0;
         this.inGround = false;
         this.explodeFlag = false;
         this.ticksInAir = 0;
@@ -82,9 +73,6 @@ public class Entity_BBFireBall extends Entity {
                 var4.setFire(5);
             }
 
-//			var3 = MathHelper.floor_double(this.posX);
-//			int var8 = MathHelper.floor_double(this.posY);
-//			int var5 = MathHelper.floor_double(this.posZ);
             BlockPos blockPos = new BlockPos(this.posX, this.posY, this.posZ);
 
             if (this.getEntityWorld().getBlockState(blockPos).getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(this.getEntityWorld(), blockPos)) {
@@ -92,9 +80,6 @@ public class Entity_BBFireBall extends Entity {
             }
 
             for (int var6 = 0; var6 < 4; ++var6) {
-//				var3 = MathHelper.floor_double(this.posX) + this.rand.nextInt(3) - 1;
-//				var8 = MathHelper.floor_double(this.posY) + this.rand.nextInt(3) - 1;
-//				var5 = MathHelper.floor_double(this.posZ) + this.rand.nextInt(3) - 1;
                 blockPos = new BlockPos(this.posX + this.rand.nextInt(3) - 1, this.posY + this.rand.nextInt(3) - 1, this.posZ + this.rand.nextInt(3) - 1);
 
                 if (this.getEntityWorld().getBlockState(blockPos).getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(this.getEntityWorld(), blockPos)) {
@@ -135,9 +120,6 @@ public class Entity_BBFireBall extends Entity {
         this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(var3, (double) entity) * 180.0D / Math.PI);
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     @Override
     public void onUpdate() {
         super.onUpdate();
@@ -154,7 +136,6 @@ public class Entity_BBFireBall extends Entity {
         IBlockState blockState = this.getEntityWorld().getBlockState(blockPos);
 
         if (blockState.getBlock() != Blocks.AIR) {
-//            blockState.getBlock().setBlockBoundsBasedOnState(this.getEntityWorld(), blockPos);
             AxisAlignedBB var2 = blockState.getBoundingBox(this.getEntityWorld(), blockPos);
 
             if (var2 != null && var2.contains(new Vec3d(this.posX, this.posY, this.posZ))) {
@@ -204,7 +185,6 @@ public class Entity_BBFireBall extends Entity {
                 float var19;
 
                 if (rayTraceResult.entityHit != null) {
-//                    var19 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                     DamageSource var22;
 
                     if (this.FB_Master == null) {
@@ -219,9 +199,6 @@ public class Entity_BBFireBall extends Entity {
                 } else {
                     this.xTile = rayTraceResult.getBlockPos().getX();//BlockPosから取得
                     this.yTile = rayTraceResult.getBlockPos().getY();
-//					this.zTile = var4.func_178782_a().getZ();
-//					this.inTile = this.getEntityWorld().getBlock(this.xTile, this.yTile, this.zTile);
-//					this.inData = this.getEntityWorld().getBlockMetadata(this.xTile, this.yTile, this.zTile);
                     this.motionX = (double) ((float) (rayTraceResult.hitVec.x - this.posX));
                     this.motionY = (double) ((float) (rayTraceResult.hitVec.y - this.posY));
                     this.motionZ = (double) ((float) (rayTraceResult.hitVec.z - this.posZ));
@@ -295,11 +272,8 @@ public class Entity_BBFireBall extends Entity {
         }
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbtTagCompound) {
+    public void writeEntityToNBT(@Nonnull NBTTagCompound nbtTagCompound) {
         nbtTagCompound.setShort("xTile", (short) this.xTile);
         nbtTagCompound.setShort("yTile", (short) this.yTile);
         nbtTagCompound.setShort("zTile", (short) this.zTile);
@@ -307,11 +281,8 @@ public class Entity_BBFireBall extends Entity {
         nbtTagCompound.setBoolean("attacker", this.doesArrowBelongToPlayer);
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbtTagCompound) {
+    public void readEntityFromNBT(@Nonnull NBTTagCompound nbtTagCompound) {
         this.xTile = nbtTagCompound.getShort("xTile");
         this.yTile = nbtTagCompound.getShort("yTile");
         this.zTile = nbtTagCompound.getShort("zTile");
@@ -319,9 +290,6 @@ public class Entity_BBFireBall extends Entity {
         this.doesArrowBelongToPlayer = nbtTagCompound.getBoolean("attacker");
     }
 
-    /**
-     * Called by a attacker entity when they collide with an entity
-     */
     @Override
-    public void onCollideWithPlayer(EntityPlayer var1) {}
+    public void onCollideWithPlayer(EntityPlayer entityIn) {}
 }

@@ -8,7 +8,7 @@ jar {
         attributes 'FMLAT' : 'advancedtools_at.cfg'
     }
 }
-version = "1.12-2.2.1"
+version = "1.12-2.2.2"
 
 minecraft {
     // replacing stuff in the source

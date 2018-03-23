@@ -10,6 +10,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class Entity_SBWindEdge extends Entity {
@@ -23,18 +24,12 @@ public class Entity_SBWindEdge extends Entity {
 
     public Entity_SBWindEdge(World var1) {
         super(var1);
-        this.Init();
-    }
-
-    public Entity_SBWindEdge(World var1, double var2, double var4, double var6) {
-        super(var1);
-        this.Init();
-        this.setPosition(var2, var4, var6);
+        this.init();
     }
 
     public Entity_SBWindEdge(World var1, EntityLivingBase var2, float var3) {
         super(var1);
-        this.Init();
+        this.init();
         this.doesArrowBelongToPlayer = false;
         this.FB_Master = var2;
         this.doesArrowBelongToPlayer = var2 instanceof EntityPlayer;
@@ -49,7 +44,7 @@ public class Entity_SBWindEdge extends Entity {
         this.setHeading(this.motionX, this.motionY, this.motionZ, 1.8F, 1.0F);
     }
 
-    private void Init() {
+    private void init() {
         this.xTile = -1;
         this.yTile = -1;
         this.zTile = -1;
@@ -87,9 +82,6 @@ public class Entity_SBWindEdge extends Entity {
         this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(var3, (double) var10) * 180.0D / Math.PI);
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate() {
         super.onUpdate();
 
@@ -166,8 +158,6 @@ public class Entity_SBWindEdge extends Entity {
                         this.xTile = rayTraceResult.getBlockPos().getX();
                         this.yTile = rayTraceResult.getBlockPos().getY();
                         this.zTile = rayTraceResult.getBlockPos().getZ();
-//						this.inTile = this.getEntityWorld().getBlock(this.xTile, this.yTile, this.zTile);
-//						this.inData = this.getEntityWorld().getBlockMetadata(this.xTile, this.yTile, this.zTile);
                         this.motionX = (double) ((float) (rayTraceResult.hitVec.x - this.posX));
                         this.motionY = (double) ((float) (rayTraceResult.hitVec.y - this.posY));
                         this.motionZ = (double) ((float) (rayTraceResult.hitVec.z - this.posZ));
@@ -241,34 +231,21 @@ public class Entity_SBWindEdge extends Entity {
         }
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
-    public void writeEntityToNBT(NBTTagCompound var1) {
-        var1.setShort("xTile", (short) this.xTile);
-        var1.setShort("yTile", (short) this.yTile);
-        var1.setShort("zTile", (short) this.zTile);
-        //		 var1.setByte("inTile", (byte)this.inTile);
-//		var1.setByte("inData", (byte)this.inData);
-        var1.setByte("inGround", (byte) (this.inGround ? 1 : 0));
-        var1.setBoolean("attacker", this.doesArrowBelongToPlayer);
+    public void writeEntityToNBT(@Nonnull NBTTagCompound nbtTagCompound) {
+        nbtTagCompound.setShort("xTile", (short) this.xTile);
+        nbtTagCompound.setShort("yTile", (short) this.yTile);
+        nbtTagCompound.setShort("zTile", (short) this.zTile);
+        nbtTagCompound.setByte("inGround", (byte) (this.inGround ? 1 : 0));
+        nbtTagCompound.setBoolean("attacker", this.doesArrowBelongToPlayer);
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
-    public void readEntityFromNBT(NBTTagCompound var1) {
-        this.xTile = var1.getShort("xTile");
-        this.yTile = var1.getShort("yTile");
-        this.zTile = var1.getShort("zTile");
-        //		 this.inTile = var1.getByte("inTile") & 255;
-//		this.inData = var1.getByte("inData") & 255;
-        this.inGround = var1.getByte("inGround") == 1;
-        this.doesArrowBelongToPlayer = var1.getBoolean("attacker");
+    public void readEntityFromNBT(@Nonnull NBTTagCompound nbtTagCompound) {
+        this.xTile = nbtTagCompound.getShort("xTile");
+        this.yTile = nbtTagCompound.getShort("yTile");
+        this.zTile = nbtTagCompound.getShort("zTile");
+        this.inGround = nbtTagCompound.getByte("inGround") == 1;
+        this.doesArrowBelongToPlayer = nbtTagCompound.getBoolean("attacker");
     }
 
-    /**
-     * Called by a attacker entity when they collide with an entity
-     */
     public void onCollideWithPlayer(EntityPlayer var1) {}
 }

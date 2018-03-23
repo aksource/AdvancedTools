@@ -44,9 +44,7 @@ public class Entity_IHFrozenMob extends Entity {
                 this.frozen = null;
             } else {
                 this.frozen.setFire(0);
-//				this.originalMethodDoubleEntity(var1);
                 if (this.frozen instanceof EntityMob) {
-//					this.altenativeMethodForAI();
                     this.originalMethodForAI();
                 }
                 this.FrozenRest = 200;
@@ -103,11 +101,6 @@ public class Entity_IHFrozenMob extends Entity {
             this.frozen.setLastAttackedEntity(this.attacker);
         }
         super.setDead();
-    }
-
-    @Override
-    public float getBrightness(float var1) {
-        return 1.0f;
     }
 
     @Override

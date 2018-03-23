@@ -1,6 +1,5 @@
 package Nanashi.AdvancedTools.entity;
 
-import Nanashi.AdvancedTools.AdvancedTools;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
@@ -82,7 +81,7 @@ public class Entity_FireZombie extends EntityZombie {
         super.dropFewItems(var1, var2);
 
         if (this.rand.nextFloat() <= 0.2F + 0.1F * (float) var2) {
-            this.dropItem(AdvancedTools.RedEnhancer, 1);
+            this.dropItem(Nanashi.AdvancedTools.utils.Items.RedEnhancer, 1);
         }
     }
 }
